@@ -27,7 +27,7 @@ export function ErrorState({ message = 'We could not load this information.', re
         <b>Something went wrong</b>
         <p className="text-sm">{message}</p>
         {retry && (
-          <button className="btn-outline mt-2" onClick={retry}>
+          <button className="btn-secondary mt-2" onClick={retry}>
             Try again
           </button>
         )}
@@ -44,7 +44,7 @@ export function Toast({ notice, onClose }) {
     >
       <CheckCircle2 className="text-emerald-400" size={18} />
       {notice}
-      <button aria-label="Dismiss" onClick={onClose}>
+      <button className="icon-btn icon-btn-dark" aria-label="Dismiss" onClick={onClose}>
         <X size={16} />
       </button>
     </div>
@@ -69,7 +69,7 @@ export function ConfirmDialog({
         <h2 className="text-lg font-bold text-navy">{title}</h2>
         <p className="mt-2 text-sm text-slate-600">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
-          <button className="btn-outline" onClick={onCancel}>
+          <button className="btn-secondary" onClick={onCancel}>
             Cancel
           </button>
           <button className="btn-primary" onClick={onConfirm}>
