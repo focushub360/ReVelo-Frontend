@@ -1,0 +1,2 @@
+const toneFor=status=>status?.includes('Rejected')||status==='Fail'?'bg-red-100 text-red-700':status?.includes('Pending')||status?.includes('Hold')||status==='Submitted'?'bg-amber-100 text-amber-700':status?.includes('Approved')||status?.includes('Ready')||status?.includes('Sold')||status==='Verified'?'bg-emerald-100 text-emerald-700':'bg-slate-100 text-slate-700';
+export default function StatusBadge({status}){return <span className={`badge ${toneFor(status)}`}>{status||'—'}</span>}
