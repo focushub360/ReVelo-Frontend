@@ -199,8 +199,23 @@
   }
 }
 .app-shell > aside {
+  overflow-x: hidden;
+  /* The sidebar is a fixed navigation rail, not a second scroll container. */
+  overflow-y: hidden;
   background: linear-gradient(165deg, #071d36 0%, #0a2948 58%, #113c61 100%);
   box-shadow: 12px 0 32px rgba(5, 25, 45, 0.12);
+}
+@media (min-width: 768px) {
+  .app-shell > aside {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+  }
+  .app-shell > section {
+    margin-left: 16rem;
+  }
 }
 .app-shell > aside::after {
   position: absolute;
@@ -213,8 +228,21 @@
   content: '';
 }
 .topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 50;
   background: linear-gradient(105deg, #06182c 0%, #092947 55%, #0b3655 100%) !important;
   backdrop-filter: none;
+}
+.app-shell > section {
+  padding-top: 76px;
+}
+@media (min-width: 768px) {
+  .topbar {
+    left: 16rem;
+  }
 }
 .workspace {
   max-width: 1600px;
