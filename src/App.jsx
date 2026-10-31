@@ -33,6 +33,10 @@ import { api, setCsrf } from './lib/api';
 import reveloLogo from './assets/revelo-logo.png';
 import showroomImage from './assets/login-showroom.png';
 import ProfileSettingsPanel from './components/ProfileSettings';
+import PublicSellerForm from './components/PublicSellerForm';
+import PublicLeadSettings from './components/PublicLeadSettings';
+import AcceptInvitation from './components/AcceptInvitation';
+import PublicSellerLanding from './components/PublicSellerLanding';
 
 const ICONS = {
   Dashboard: LayoutDashboard,
@@ -55,6 +59,7 @@ const navFor = (user) => {
     return [
       ['dashboard', 'Platform Dashboard'],
       ['dealers', 'Dealers'],
+      ['public-lead-settings', 'Public Lead Form'],
       ['admins', 'Admin Management'],
       ['activity', 'Platform Activity'],
       ['profile', 'My Profile'],
@@ -914,6 +919,7 @@ function Dealers() {
   const qc = useQueryClient();
   const [show, setShow] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [inviteNotice, setInviteNotice] = useState('');
   const [form, setForm] = useState({
     name: '',
     code: '',
@@ -943,8 +949,9 @@ function Dealers() {
         },
         admin: { name: form.adminName, email: form.adminEmail },
       }),
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       qc.invalidateQueries({ queryKey: ['dealers'] });
+      setInviteNotice(data.inviteDelivery === 'sent' ? `Invitation email sent to ${data.dealerAdmin?.email}.` : data.inviteDelivery === 'not_configured' ? 'Dealership created, but SMTP is not configured. Add SMTP settings before resending the invitation.' : 'Dealership created, but the invitation email could not be delivered.');
       setForm({
         name: '',
         code: '',
@@ -980,6 +987,10 @@ function Dealers() {
   const remove = useMutation({
     mutationFn: (id) => api.delete(`/dealers/${id}`),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['dealers'] }),
+  });
+  const resendInvite = useMutation({
+    mutationFn: (id) => api.post(`/dealers/${id}/resend-invitation`),
+    onSuccess: ({ data }) => setInviteNotice(data.inviteDelivery === 'sent' ? 'Invitation email sent.' : 'SMTP is not configured; invitation was not emailed.'),
   });
   const beginEdit = (dealer) => {
     setEditing({
@@ -1130,6 +1141,7 @@ function Dealers() {
           </div>
         </form>
       )}
+      {inviteNotice && <p className="mt-6 rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm text-blue-800">{inviteNotice}</p>}
       <section className="card mt-6 overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
           <div>
@@ -1142,9 +1154,9 @@ function Dealers() {
             {q.isLoading ? 'Loading…' : `${dealers.length} tenants`}
           </span>
         </div>
-        {(setStatus.error || remove.error) && (
+        {(setStatus.error || remove.error || resendInvite.error) && (
           <p className="border-b border-red-100 bg-red-50 px-5 py-3 text-sm text-red-700">
-            {(setStatus.error || remove.error).response?.data?.error?.message ||
+            {(setStatus.error || remove.error || resendInvite.error).response?.data?.error?.message ||
               'Unable to update dealership.'}
           </p>
         )}
@@ -1251,6 +1263,7 @@ function Dealers() {
                         >
                           <Pencil size={16} />
                         </button>
+                        {dealer.onboardingStatus !== 'Active' && <button type="button" className="icon-btn" title="Resend administrator invitation" aria-label={`Resend administrator invitation for ${dealer.name}`} disabled={resendInvite.isPending} onClick={() => resendInvite.mutate(dealer._id)}><Mail size={16} /></button>}
                         <button
                           type="button"
                           className="icon-btn icon-btn-danger"
@@ -3702,6 +3715,7 @@ function ParkingYardBoard({ title, rows, loading, error, onAddSpace }) {
   );
 }
 function Records({ title, endpoint, onAddSpace }) {
+  const [selectedEnquiryId, setSelectedEnquiryId] = useState('');
   const q = useQuery({
     queryKey: [endpoint],
     queryFn: () =>
@@ -3712,7 +3726,14 @@ function Records({ title, endpoint, onAddSpace }) {
         .then((r) => r.data),
     retry: false,
   });
+  const enquiryDetail = useQuery({
+    queryKey: ['enquiry-review', selectedEnquiryId],
+    queryFn: () => api.get(`/enquiries/${selectedEnquiryId}`).then((response) => response.data),
+    enabled: endpoint === 'enquiries' && Boolean(selectedEnquiryId),
+    retry: false,
+  });
   const rows = Array.isArray(q.data) ? q.data : q.data?.items || [];
+  const hasActions = Boolean(recordEditing[endpoint]) || endpoint === 'enquiries';
   const columns = recordEditing[endpoint]?.fields.map(([key, label]) => [key, label]) ||
     recordColumns[endpoint] || [
       ['createdAt', 'Created'],
@@ -3783,7 +3804,7 @@ function Records({ title, endpoint, onAddSpace }) {
                   {columns.map(([, label]) => (
                     <th key={label}>{label}</th>
                   ))}
-                  {recordEditing[endpoint] && <th>Actions</th>}
+                  {hasActions && <th>Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -3807,6 +3828,13 @@ function Records({ title, endpoint, onAddSpace }) {
                           </span>
                         </td>
                       ))}
+                      {endpoint === 'enquiries' && (
+                        <td>
+                          <button className="btn-secondary px-3 py-1.5 text-xs" onClick={() => setSelectedEnquiryId(row._id)}>
+                            Review
+                          </button>
+                        </td>
+                      )}
                       {recordEditing[endpoint] && (
                         <td>
                           <RecordActions endpoint={endpoint} row={row} />
@@ -3817,7 +3845,7 @@ function Records({ title, endpoint, onAddSpace }) {
                 ) : (
                   <tr>
                     <td
-                      colSpan={columns.length + (recordEditing[endpoint] ? 1 : 0)}
+                      colSpan={columns.length + (hasActions ? 1 : 0)}
                       className="py-14 text-center text-slate-500"
                     >
                       <p className="font-semibold text-navy">No records yet</p>
@@ -3835,11 +3863,43 @@ function Records({ title, endpoint, onAddSpace }) {
               </p>
             )}
           </div>
+          {selectedEnquiryId && (
+            <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-4" role="dialog" aria-modal="true" aria-label="Seller enquiry review">
+              <section className="card max-h-[90vh] w-full max-w-3xl overflow-auto p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Protected seller review</p>
+                    <h2 className="mt-1 text-xl font-bold text-navy">{enquiryDetail.data?.enquiry?.enquiryCode || 'Seller enquiry'}</h2>
+                  </div>
+                  <button className="icon-btn" onClick={() => setSelectedEnquiryId('')} aria-label="Close review"><X size={17} /></button>
+                </div>
+                {enquiryDetail.isLoading && <p className="mt-6 text-sm text-slate-500">Loading submitted details…</p>}
+                {enquiryDetail.isError && <p className="mt-6 text-sm text-red-700">{errorMessage(enquiryDetail.error, 'Unable to load this enquiry.')}</p>}
+                {enquiryDetail.data && (() => {
+                  const { enquiry } = enquiryDetail.data;
+                  const submission = enquiry.publicSubmission;
+                  return <div className="mt-6 grid gap-4 text-sm md:grid-cols-2">
+                    <ReviewBlock title="Seller" items={[["Name", enquiry.person?.name], ["Phone", enquiry.person?.phone], ["Email", enquiry.person?.email], ["Seller ID", enquiry.person?.customerReference]]} />
+                    <ReviewBlock title="Vehicle" items={[["Registration", enquiry.vehicle?.registration], ["Vehicle", [enquiry.vehicle?.make, enquiry.vehicle?.model].filter(Boolean).join(' ')], ["Year", enquiry.vehicle?.year], ["Odometer", enquiry.vehicle?.odometer ? `${enquiry.vehicle.odometer.toLocaleString()} km` : '—']]} />
+                    <ReviewBlock title="Address" items={[["Address", submission?.address ? [submission.address.line1, submission.address.locality, submission.address.city, submission.address.state, submission.address.postalCode].filter(Boolean).join(', ') : '—'], ["Nearest location", [submission?.nearestLocation?.city, submission?.nearestLocation?.state].filter(Boolean).join(', ')]]} />
+                    <ReviewBlock title="Declarations" items={[["Owner count", submission?.ownerCount], ["First owner", yesNo(submission?.isFirstOwner)], ["RC available", yesNo(submission?.rcAvailable)], ["Insurance renewal", submission?.insuranceRenewalDate ? new Date(submission.insuranceRenewalDate).toLocaleDateString() : '—'], ["Active loan / hypothecation", yesNo(submission?.hasActiveLoan)], ["Loan provider", submission?.loanProvider], ["Proof status", submission?.proofStatus || 'Not requested']]} />
+                    {submission?.customFields?.length ? <ReviewBlock title="Additional submitted details" items={submission.customFields.map((field) => [field.label, typeof field.value === 'boolean' ? yesNo(field.value) : String(field.value)])} /> : null}
+                    <div className="md:col-span-2 rounded-xl bg-slate-50 p-4"><p className="font-semibold text-navy">Accident or major repair declaration</p><p className="mt-2 whitespace-pre-wrap text-slate-600">{enquiry.declaredAccidentHistory || 'None provided'}</p></div>
+                    <p className="md:col-span-2 text-xs leading-5 text-slate-500">This is an initial customer declaration. Request proof through the upcoming secure private workflow; do not request Aadhaar or RC files through email or WhatsApp.</p>
+                  </div>;
+                })()}
+              </section>
+            </div>
+          )}
         </>
       )}
     </>
   );
 }
+function ReviewBlock({ title, items }) {
+  return <section className="rounded-xl border border-slate-200 p-4"><h3 className="font-bold text-navy">{title}</h3><dl className="mt-3 space-y-2">{items.map(([label, value]) => <div key={label}><dt className="text-xs text-slate-500">{label}</dt><dd className="break-words font-medium text-slate-700">{value || '—'}</dd></div>)}</dl></section>;
+}
+function yesNo(value) { return value === undefined ? '—' : value ? 'Yes' : 'No'; }
 function Activity() {
   const q = useQuery({
     queryKey: ['activity'],
@@ -4187,6 +4247,7 @@ function Shell() {
               path="/dealers"
               element={user.role === 'Super Admin' ? <Dealers /> : <Navigate to="/dashboard" />}
             />
+            <Route path="/public-lead-settings" element={user.role === 'Super Admin' ? <PublicLeadSettings /> : <Navigate to="/dashboard" />} />
             <Route
               path="/employees"
               element={
@@ -4222,6 +4283,9 @@ function Shell() {
 export default function App() {
   return (
     <Routes>
+      <Route path="/sell-your-car" element={<PublicSellerLanding />} />
+      <Route path="/sell-your-car/start" element={<PublicSellerForm />} />
+      <Route path="/accept-invitation" element={<AcceptInvitation />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admins" element={<AdminGate />} />
       <Route path="/*" element={<Shell />} />
