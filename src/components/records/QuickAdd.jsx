@@ -18,7 +18,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
   const [error, setError] = useState({ endpoint: '', message: '' });
   const [selectedVehicle, setSelectedVehicle] = useState('');
   const [vehicleImages, setVehicleImages] = useState([]);
-  const needsVehicles = ['inspections', 'enquiries', 'work-orders', 'parking/slots'].includes(endpoint);
+  const needsVehicles = ['inspections', 'enquiries', 'work-orders', 'parking/slots', 'sales'].includes(endpoint);
   const eligibleWorkOrderVehicles = useQuery({
     queryKey: ['work-order-eligible-vehicles'],
     queryFn: () => api.get('/work-orders/eligible-vehicles').then((response) => response.data),
@@ -37,10 +37,14 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
     enabled: endpoint === 'inspections',
     retry: false,
   });
-  const vehicleRows =
+  const loadedVehicleRows =
     endpoint === 'work-orders'
       ? eligibleWorkOrderVehicles.data || []
       : vehicles.data?.items || [];
+  const vehicleRows =
+    endpoint === 'sales'
+      ? loadedVehicleRows.filter((vehicle) => vehicle.lifecycle === 'Ready for Sale')
+      : loadedVehicleRows;
   const employeeRows = employees.data || [];
   const save = useMutation({
     mutationFn: () => {
@@ -99,7 +103,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
       >
         {needsVehicles && endpoint !== 'parking/slots' && (
           <label className="label">
-            Vehicle registration
+            {endpoint === 'sales' ? 'Vehicle ID' : 'Vehicle registration'}
             {(endpoint === 'work-orders'
               ? eligibleWorkOrderVehicles.isLoading
               : vehicles.isLoading) ? (
@@ -112,12 +116,12 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
               disabled={
                 endpoint === 'work-orders'
                   ? eligibleWorkOrderVehicles.isLoading || !vehicleRows.length
-                  : vehicles.isLoading
+                  : vehicles.isLoading || vehicles.isError || (endpoint === 'sales' && !vehicleRows.length)
               }
               onChange={(e) => {
                 const selected = vehicleRows.find((vehicle) => vehicle._id === e.target.value);
                 setSelectedVehicle(e.target.value);
-                if (endpoint === 'inspections' || endpoint === 'work-orders')
+                if (['inspections', 'work-orders', 'sales'].includes(endpoint))
                   setValues({ ...values, vehicle: e.target.value });
                 else
                   setValues({
@@ -133,12 +137,17 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
                   ? 'New vehicle / enter details below'
                   : endpoint === 'work-orders' && !eligibleWorkOrderVehicles.isLoading && !vehicleRows.length
                     ? 'No purchased vehicles available'
+                    : endpoint === 'sales' && vehicles.isError
+                      ? 'Unable to load vehicles'
+                      : endpoint === 'sales' && !vehicles.isLoading && !vehicleRows.length
+                        ? 'No sale-ready vehicles available'
                     : 'Select a vehicle registration'}
               </option>
               {vehicleRows.map((vehicle) => (
                 <option key={vehicle._id} value={vehicle._id}>
                   {vehicle.registration || 'No registration'} ·{' '}
                   {[vehicle.make, vehicle.model].filter(Boolean).join(' ') || vehicle.vehicleCode}
+                  {endpoint === 'sales' ? ` · ID: ${vehicle._id}` : ''}
                 </option>
               ))}
             </select>
@@ -171,6 +180,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
               !(
                 (endpoint === 'inspections' && (key === 'vehicle' || key === 'assignedTo')) ||
                 (endpoint === 'work-orders' && key === 'vehicle') ||
+                (endpoint === 'sales' && key === 'vehicle') ||
                 (endpoint === 'parking/slots' &&
                   key === 'vehicle' &&
                   !['Reserved', 'Occupied'].includes(values.status))

@@ -208,9 +208,9 @@ export const recordEditing = {
     fields: [
       ['title', 'Title'],
       ['description', 'Description', 'textarea'],
-      ['priority', 'Priority'],
-      ['assignedTo', 'Assigned employee ID'],
-      ['status', 'Status'],
+      ['priority', 'Priority', 'select:Low|Medium|High|Critical'],
+      ['assignedTo', 'Assigned employee ID', 'employee-select'],
+      ['status', 'Status', 'select:Open|Assigned|In Progress|Waiting for Parts|Completed|Rework Required|Cancelled'],
       ['notes', 'Notes', 'textarea'],
     ],
   },

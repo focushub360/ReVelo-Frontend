@@ -13,7 +13,7 @@ export function RecordEditor({ config, row, close, saved }) {
   const employees = useQuery({
     queryKey: ['editor-employees'],
     queryFn: () => api.get('/users').then((response) => response.data),
-    enabled: config.resource === 'inspections',
+    enabled: ['inspections', 'work-orders'].includes(config.resource),
     retry: false,
   });
   const loadedVehicles = vehicles.data?.items || [];
@@ -44,6 +44,9 @@ export function RecordEditor({ config, row, close, saved }) {
       : {}),
   };
   const [form, setForm] = useState(initial);
+  const employeeOptions = (employees.data || []).filter(
+    (employee) => employee.active || employee._id === form.assignedTo
+  );
   const update = useMutation({
     mutationFn: () =>
       config.resource === 'parking-slots'
@@ -150,19 +153,18 @@ export function RecordEditor({ config, row, close, saved }) {
                   />{' '}
                   Enabled
                 </span>
-                ) : key === 'assignedTo' && config.resource === 'inspections' ? (
+                ) : type === 'employee-select' ||
+                  (key === 'assignedTo' && config.resource === 'inspections') ? (
                 <select
                   className="field mt-2"
                   value={form[key]}
                   onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                  disabled={employees.isLoading || employees.isError}
                 >
                   <option value="">Select an employee</option>
-                  {(employees.data || [])
-                    .filter((employee) => employee.active)
-                    .map((employee) => (
+                  {employeeOptions.map((employee) => (
                       <option key={employee._id} value={employee._id}>
-                        {employee.name} · {employee.operationalProfile || employee.role} (
-                        {employee._id.slice(-6)})
+                        {employee.name} · {employee.operationalProfile || employee.role} · ID: {employee._id}
                       </option>
                     ))}
                 </select>
@@ -195,6 +197,11 @@ export function RecordEditor({ config, row, close, saved }) {
         {vehicles.isError && ['enquiries', 'parking-slots'].includes(config.resource) && (
           <p className="mt-4 text-sm text-red-700">
             {vehicles.error?.response?.data?.error?.message || 'Unable to load vehicle registrations.'}
+          </p>
+        )}
+        {employees.isError && ['inspections', 'work-orders'].includes(config.resource) && (
+          <p className="mt-4 text-sm text-red-700">
+            {employees.error?.response?.data?.error?.message || 'Unable to load employees.'}
           </p>
         )}
         {update.isError && (

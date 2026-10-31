@@ -572,13 +572,14 @@ export function AcquisitionPage() {
                           className="grid gap-3 sm:grid-cols-2"
                           onSubmit={(event) => {
                             event.preventDefault();
+                            const formData = new FormData(event.currentTarget);
                             runAction.mutate({
                               kind: 'purchase',
                               payload: {
-                                paymentReference: event.currentTarget.paymentReference.value,
-                                paymentAmount: Number(event.currentTarget.paymentAmount.value),
-                                purchaseAgreementConfirmed: event.currentTarget.purchaseAgreementConfirmed.checked,
-                                financeClearanceConfirmed: event.currentTarget.financeClearanceConfirmed.checked,
+                                paymentReference: formData.get('paymentReference'),
+                                paymentAmount: Number(formData.get('paymentAmount')),
+                                purchaseAgreementConfirmed: formData.has('purchaseAgreementConfirmed'),
+                                financeClearanceConfirmed: formData.has('financeClearanceConfirmed'),
                                 idempotencyKey: crypto.randomUUID(),
                               },
                             });
