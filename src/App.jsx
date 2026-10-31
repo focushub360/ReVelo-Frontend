@@ -16,6 +16,7 @@ import {
   ClipboardCheck,
   Clock3,
   FileText,
+  Eye,
   LayoutDashboard,
   LogOut,
   Mail,
@@ -1852,7 +1853,14 @@ const quickAdd = {
       ['registration', 'Registration'],
       ['make', 'Make'],
       ['model', 'Model'],
+      ['variant', 'Variant'],
       ['year', 'Year', 'number'],
+      ['vin', 'VIN'],
+      ['chassis', 'Chassis number'],
+      ['engine', 'Engine number'],
+      ['fuelType', 'Fuel type'],
+      ['transmission', 'Transmission'],
+      ['odometer', 'Odometer (km)', 'number'],
     ],
   },
   'parking/slots': {
@@ -1915,6 +1923,7 @@ function QuickAdd({ endpoint, close, initialValues = {} }) {
   );
   const [error, setError] = useState('');
   const [selectedVehicle, setSelectedVehicle] = useState('');
+  const [vehicleImages, setVehicleImages] = useState([]);
   const needsVehicles = ['inspections', 'enquiries', 'work-orders', 'parking/slots'].includes(endpoint);
   const vehicles = useQuery({
     queryKey: ['quick-add-vehicles'],
@@ -1944,6 +1953,12 @@ function QuickAdd({ endpoint, close, initialValues = {} }) {
           },
           askingPrice: values.askingPrice || undefined,
         });
+      if (endpoint === 'vehicles') {
+        const data = new FormData();
+        Object.entries(body).forEach(([key, value]) => data.append(key, value));
+        vehicleImages.forEach((image) => data.append('images', image));
+        return api.post('/vehicles', data);
+      }
       return api.post(`/${endpoint}`, body);
     },
     onSuccess: () => {
@@ -2144,6 +2159,27 @@ function QuickAdd({ endpoint, close, initialValues = {} }) {
               )}
             </label>
           ))}
+        {endpoint === 'vehicles' && (
+          <label className="label md:col-span-2">
+            Vehicle images
+            <input
+              className="field mt-2"
+              type="file"
+              accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+              multiple
+              onChange={(event) => setVehicleImages(Array.from(event.target.files || []))}
+            />
+            <span className="mt-1 block text-xs font-normal text-slate-500">
+              Add multiple JPEG or PNG images, up to 20 per upload. You can add more from the vehicle details
+              view. Each image must be 10 MB or smaller.
+            </span>
+            {vehicleImages.length > 0 && (
+              <span className="mt-1 block text-xs text-slate-600">
+                {vehicleImages.length} image{vehicleImages.length === 1 ? '' : 's'} selected
+              </span>
+            )}
+          </label>
+        )}
         <div className="flex items-end gap-3">
           <button
             className="btn-primary"
@@ -2553,13 +2589,13 @@ function DocumentRegister({ canUploadDocuments }) {
     </>
   );
 }
-function RecordPage({ title, endpoint, canUploadDocuments = false }) {
+function RecordPage({ title, endpoint, canUploadDocuments = false, canManageVehicles = false }) {
   const [adding, setAdding] = useState(null);
   const add = quickAdd[endpoint];
   const isDocumentPage = endpoint === 'documents';
   return (
     <>
-      {add && (
+      {add && (endpoint !== 'vehicles' || canManageVehicles) && (
         <div className="mb-4 flex justify-end">
           <button className="btn-primary" onClick={() => setAdding({})}>
             <Plus size={16} />
@@ -2599,7 +2635,12 @@ function RecordPage({ title, endpoint, canUploadDocuments = false }) {
       {isDocumentPage ? (
         <DocumentRegister canUploadDocuments={canUploadDocuments} />
       ) : (
-        <Records title={title} endpoint={endpoint} onAddSpace={setAdding} />
+        <Records
+          title={title}
+          endpoint={endpoint}
+          onAddSpace={setAdding}
+          canManageVehicles={canManageVehicles}
+        />
       )}
     </>
   );
@@ -2638,6 +2679,7 @@ function AcquisitionPage() {
   });
   const refresh = () => {
     qc.invalidateQueries({ queryKey: ['acquisitions'] });
+    qc.invalidateQueries({ queryKey: ['acquisition-offers'] });
     qc.invalidateQueries({ queryKey: ['dashboard'] });
     if (selectedId) qc.invalidateQueries({ queryKey: ['acquisition', selectedId] });
   };
@@ -3488,10 +3530,176 @@ function RecordEditor({ config, row, close, saved }) {
     </div>
   );
 }
-function RecordActions({ endpoint, row }) {
+function VehicleDetailsModal({ row, close, canManageVehicles }) {
+  const qc = useQueryClient();
+  const [images, setImages] = useState([]);
+  const [imageInputKey, setImageInputKey] = useState(0);
+  const [uploadError, setUploadError] = useState('');
+  const details = useQuery({
+    queryKey: ['vehicle-details', row._id],
+    queryFn: () => api.get(`/vehicles/${row._id}`).then((response) => response.data),
+    retry: false,
+  });
+  const uploadImages = useMutation({
+    mutationFn: () => {
+      const data = new FormData();
+      images.forEach((image) => data.append('images', image));
+      return api.post(`/vehicles/${row._id}/images`, data);
+    },
+    onSuccess: () => {
+      setImages([]);
+      setUploadError('');
+      setImageInputKey((key) => key + 1);
+      qc.invalidateQueries({ queryKey: ['vehicle-details', row._id] });
+      qc.invalidateQueries({ queryKey: ['vehicles'] });
+    },
+    onError: (error) =>
+      setUploadError(error.response?.data?.error?.message || 'Unable to upload vehicle images.'),
+  });
+  const vehicle = details.data?.vehicle;
+  const vehicleFields = vehicle
+    ? [
+        ['Vehicle code', vehicle.vehicleCode],
+        ['Registration', vehicle.registration],
+        ['Make', vehicle.make],
+        ['Model', vehicle.model],
+        ['Variant', vehicle.variant],
+        ['Year', vehicle.year],
+        ['VIN', vehicle.vin],
+        ['Chassis number', vehicle.chassis],
+        ['Engine number', vehicle.engine],
+        ['Fuel type', vehicle.fuelType],
+        ['Transmission', vehicle.transmission],
+        ['Odometer', vehicle.odometer == null ? undefined : `${vehicle.odometer} km`],
+        ['Lifecycle', vehicle.lifecycle],
+        ['Current location', vehicle.currentLocation?.code || vehicle.currentLocation?.name],
+        ['Created', vehicle.createdAt ? new Date(vehicle.createdAt).toLocaleString() : undefined],
+        ['Last updated', vehicle.updatedAt ? new Date(vehicle.updatedAt).toLocaleString() : undefined],
+      ].filter(([, value]) => value !== undefined && value !== null && value !== '')
+    : [];
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-[#071d36]/55 p-4 backdrop-blur-sm"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) close();
+      }}
+    >
+      <section
+        className="card my-auto max-h-[90vh] w-full max-w-4xl overflow-y-auto p-6"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="vehicle-details-title"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Vehicle details</p>
+            <h2 id="vehicle-details-title" className="mt-1 text-2xl font-bold text-navy">
+              {row.registration || 'Vehicle'}
+            </h2>
+          </div>
+          <button type="button" className="icon-btn" onClick={close} aria-label="Close vehicle details">
+            <X size={17} />
+          </button>
+        </div>
+        {details.isLoading && <p className="mt-6 text-sm text-slate-500">Loading vehicle details…</p>}
+        {details.isError && (
+          <p role="alert" className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+            {details.error?.response?.data?.error?.message || 'Unable to load vehicle details.'}
+          </p>
+        )}
+        {vehicle && (
+          <>
+            <section className="mt-6">
+              <h3 className="text-sm font-bold text-navy">Vehicle information</h3>
+              <dl className="mt-3 grid gap-3 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
+                {vehicleFields.map(([label, value]) => (
+                  <div key={label}>
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</dt>
+                    <dd className="mt-1 break-words text-sm text-slate-800">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+            <section className="mt-6">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-sm font-bold text-navy">Vehicle images</h3>
+                <span className="text-xs text-slate-500">{vehicle.images?.length || 0} images</span>
+              </div>
+              {vehicle.images?.length ? (
+                <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {vehicle.images.map((image) => (
+                    <a
+                      className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+                      href={`/api/v1/vehicles/${vehicle._id}/images/${image._id}`}
+                      key={image._id}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
+                        src={`/api/v1/vehicles/${vehicle._id}/images/${image._id}`}
+                        alt={image.originalName || `${vehicle.registration} vehicle`}
+                      />
+                      <span className="block truncate px-3 py-2 text-xs text-slate-600">
+                        {image.originalName}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
+                  No images have been uploaded for this vehicle.
+                </p>
+              )}
+              {canManageVehicles && (
+                <form
+                  className="mt-4 rounded-xl border border-dashed border-slate-300 p-4"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    setUploadError('');
+                    uploadImages.mutate();
+                  }}
+                >
+                  <label className="label">
+                    Add more images
+                    <input
+                      key={imageInputKey}
+                      className="field mt-2"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                      multiple
+                      required
+                      onChange={(event) => setImages(Array.from(event.target.files || []))}
+                    />
+                    <span className="mt-1 block text-xs font-normal text-slate-500">
+                      Select up to 20 JPEG or PNG images per upload, 10 MB maximum each. Upload again to add
+                      more.
+                    </span>
+                  </label>
+                  {uploadError && (
+                    <p role="alert" className="mt-3 text-sm text-red-700">
+                      {uploadError}
+                    </p>
+                  )}
+                  <button className="btn-primary mt-3" disabled={!images.length || uploadImages.isPending}>
+                    {uploadImages.isPending ? 'Uploading images…' : 'Upload images'}
+                  </button>
+                </form>
+              )}
+            </section>
+          </>
+        )}
+      </section>
+    </div>,
+    document.body
+  );
+}
+function RecordActions({ endpoint, row, canManageVehicles = false }) {
   const qc = useQueryClient();
   const config = recordEditing[endpoint];
   const [editing, setEditing] = useState(false);
+  const [viewing, setViewing] = useState(false);
   const refresh = () => {
     qc.invalidateQueries({ queryKey: [endpoint] });
     qc.invalidateQueries({ queryKey: ['dashboard'] });
@@ -3507,6 +3715,17 @@ function RecordActions({ endpoint, row }) {
   return (
     <>
       <div className="flex items-center gap-2">
+        {endpoint === 'vehicles' && (
+          <button
+            type="button"
+            className="icon-btn"
+            title="View vehicle details and images"
+            aria-label={`View ${row.registration || 'vehicle'} details`}
+            onClick={() => setViewing(true)}
+          >
+            <Eye size={15} />
+          </button>
+        )}
         <button className="icon-btn" title="Edit" onClick={() => setEditing(true)}>
           <Pencil size={15} />
         </button>
@@ -3519,7 +3738,18 @@ function RecordActions({ endpoint, row }) {
           <Trash2 size={15} />
         </button>
       </div>
-      {editing && createPortal(<RecordEditor config={config} row={row} close={() => setEditing(false)} saved={refresh} />, document.body)}
+      {viewing && (
+        <VehicleDetailsModal
+          row={row}
+          close={() => setViewing(false)}
+          canManageVehicles={canManageVehicles}
+        />
+      )}
+      {editing &&
+        createPortal(
+          <RecordEditor config={config} row={row} close={() => setEditing(false)} saved={refresh} />,
+          document.body
+        )}
     </>
   );
 }
@@ -3712,7 +3942,78 @@ function ParkingYardBoard({ title, rows, loading, error, onAddSpace }) {
     </>
   );
 }
-function Records({ title, endpoint, onAddSpace }) {
+function AcquisitionSellerOffers() {
+  const offers = useQuery({
+    queryKey: ['acquisition-offers'],
+    queryFn: () =>
+      api.get('/acquisition-offers', { params: { limit: 100 } }).then((response) => response.data),
+    retry: false,
+  });
+  const rows = offers.data?.items || [];
+  return (
+    <section className="card mt-6 overflow-hidden">
+      <div className="border-b border-slate-100 px-5 py-4">
+        <h2 className="font-bold text-navy">Seller offers from acquisitions</h2>
+        <p className="mt-1 text-xs text-slate-500">
+          Offers created in Acquisition appear here automatically.
+        </p>
+      </div>
+      {offers.isLoading ? (
+        <p className="p-5 text-sm text-slate-500">Loading acquisition offers…</p>
+      ) : offers.isError ? (
+        <p className="p-5 text-sm text-red-700">
+          {offers.error?.response?.data?.error?.message || 'Unable to load acquisition offers.'}
+        </p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Vehicle</th>
+                <th>Offer amount</th>
+                <th>Status</th>
+                <th>Expires</th>
+                <th>Seller response</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.length ? (
+                rows.map((offer) => {
+                  const vehicle = offer.acquisition?.vehicle;
+                  return (
+                    <tr key={offer._id}>
+                      <td className="font-semibold text-navy">
+                        {vehicle?.registration || vehicle?.vehicleCode || 'Vehicle'}
+                      </td>
+                      <td>{offer.amount?.toLocaleString() ?? '—'}</td>
+                      <td>
+                        <span className="badge bg-slate-100 text-slate-700">{offer.status}</span>
+                      </td>
+                      <td>{offer.expiresAt ? new Date(offer.expiresAt).toLocaleDateString() : '—'}</td>
+                      <td>{offer.responseNote || '—'}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={5} className="py-10 text-center text-sm text-slate-500">
+                    No seller offers have been created from acquisitions yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          {offers.data?.pages > 1 && (
+            <p className="border-t px-5 py-3 text-sm text-slate-500">
+              Showing the latest {rows.length} of {offers.data.total} acquisition offers
+            </p>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+function Records({ title, endpoint, onAddSpace, canManageVehicles = false }) {
   const [selectedEnquiryId, setSelectedEnquiryId] = useState('');
   const q = useQuery({
     queryKey: [endpoint],
@@ -3770,6 +4071,7 @@ function Records({ title, endpoint, onAddSpace }) {
       )}
       {!q.isLoading && !q.isError && (
         <>
+          {endpoint === 'sales' && <AcquisitionSellerOffers />}
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <div className="card p-4">
               <p className="text-xs font-bold uppercase tracking-[.1em] text-slate-500">Total records</p>
@@ -3835,7 +4137,11 @@ function Records({ title, endpoint, onAddSpace }) {
                       )}
                       {recordEditing[endpoint] && (
                         <td>
-                          <RecordActions endpoint={endpoint} row={row} />
+                          <RecordActions
+                            endpoint={endpoint}
+                            row={row}
+                            canManageVehicles={canManageVehicles}
+                          />
                         </td>
                       )}
                     </tr>
@@ -4215,6 +4521,7 @@ function Shell() {
       title={t}
       endpoint={e}
       canUploadDocuments={user.role === 'Dealer Admin' || user.role === 'Super Admin'}
+      canManageVehicles={user.role === 'Dealer Admin' || user.role === 'Super Admin'}
     />
   );
   return (
