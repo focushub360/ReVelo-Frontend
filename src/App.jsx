@@ -2165,18 +2165,12 @@ function QuickAdd({ endpoint, close, initialValues = {} }) {
     </div>
   );
 }
-function DocumentUploadForm({ close }) {
+function DocumentUploadForm({ vehicle, close }) {
   const qc = useQueryClient();
-  const [vehicle, setVehicle] = useState('');
   const [category, setCategory] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
-  const vehicles = useQuery({
-    queryKey: ['document-upload-vehicles'],
-    queryFn: () => api.get('/vehicles', { params: { limit: 100 } }).then((response) => response.data),
-    retry: false,
-  });
   const requirements = useQuery({
     queryKey: ['document-requirements'],
     queryFn: () => api.get('/documents/requirements').then((response) => response.data),
@@ -2186,7 +2180,7 @@ function DocumentUploadForm({ close }) {
   const upload = useMutation({
     mutationFn: () => {
       const data = new FormData();
-      data.append('vehicle', vehicle);
+      data.append('vehicle', vehicle._id);
       data.append('category', category);
       if (expiryDate) data.append('expiryDate', expiryDate);
       data.append('file', file);
@@ -2200,141 +2194,129 @@ function DocumentUploadForm({ close }) {
     onError: (uploadError) =>
       setError(uploadError.response?.data?.error?.message || 'Unable to upload this document.'),
   });
-  return (
-    <div className="card mt-6 p-5">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Document management</p>
-          <h2 className="mt-1 text-xl font-bold text-navy">Upload vehicle document</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Upload a PDF, JPEG, or PNG file to the selected vehicle.
-          </p>
-        </div>
-        <button type="button" className="icon-btn" onClick={close} aria-label="Close upload form">
-          <X size={17} />
-        </button>
-      </div>
-      <form
-        className="mt-5 grid gap-4 md:grid-cols-2"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setError('');
-          upload.mutate();
-        }}
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-[#071d36]/55 p-4 backdrop-blur-sm"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) close();
+      }}
+    >
+      <section
+        className="card my-auto max-h-[90vh] w-full max-w-3xl overflow-y-auto p-5"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="document-upload-title"
       >
-        <label className="label">
-          Vehicle registration
-          <select
-            className="field mt-2"
-            required
-            value={vehicle}
-            onChange={(event) => setVehicle(event.target.value)}
-            disabled={vehicles.isLoading || !vehicles.data?.items?.length}
-          >
-            <option value="">
-              {vehicles.isLoading
-                ? 'Loading vehicles…'
-                : vehicles.data?.items?.length
-                  ? 'Select vehicle registration'
-                  : 'No vehicles available'}
-            </option>
-            {(vehicles.data?.items || []).map((item) => (
-              <option key={item._id} value={item._id}>
-                {item.registration || 'No registration'} ·{' '}
-                {[item.make, item.model].filter(Boolean).join(' ') || item.vehicleCode}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="label">
-          Document category
-          <select
-            className="field mt-2"
-            required
-            value={category}
-            onChange={(event) => setCategory(event.target.value)}
-            disabled={requirements.isLoading || !requirements.data?.length}
-          >
-            <option value="">
-              {requirements.isLoading
-                ? 'Loading document categories…'
-                : requirements.data?.length
-                  ? 'Select document category'
-                  : 'No document categories configured'}
-            </option>
-            {(requirements.data || []).map((item) => (
-              <option key={item._id} value={item.category}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="label">
-          Expiry date{' '}
-          <span className="font-normal text-slate-400">
-            {selectedRequirement?.requiresExpiry ? '(required)' : '(optional)'}
-          </span>
-          <input
-            className="field mt-2"
-            type="date"
-            required={Boolean(selectedRequirement?.requiresExpiry)}
-            value={expiryDate}
-            onChange={(event) => setExpiryDate(event.target.value)}
-          />
-        </label>
-        <label className="label">
-          Document file
-          <input
-            className="field mt-2"
-            type="file"
-            accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-            required
-            onChange={(event) => setFile(event.target.files?.[0] || null)}
-          />
-          <span className="mt-1 block text-xs font-normal text-slate-500">Maximum file size: 10 MB</span>
-        </label>
-        {(vehicles.isError || requirements.isError || upload.isError) && (
-          <p className="text-sm text-red-700 md:col-span-2">
-            {error ||
-              requirements.error?.response?.data?.error?.message ||
-              vehicles.error?.response?.data?.error?.message ||
-              'Unable to load document upload options.'}
-          </p>
-        )}
-        {error && !upload.isError && <p className="text-sm text-red-700 md:col-span-2">{error}</p>}
-        <div className="flex items-end gap-3 md:col-span-2">
-          <button
-            className="btn-primary"
-            disabled={
-              upload.isPending ||
-              vehicles.isLoading ||
-              requirements.isLoading ||
-              !vehicles.data?.items?.length ||
-              !requirements.data?.length
-            }
-          >
-            {upload.isPending ? 'Uploading…' : 'Upload document'}
-          </button>
-          <button type="button" className="btn-secondary" onClick={close}>
-            Cancel
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Document management</p>
+            <h2 id="document-upload-title" className="mt-1 text-xl font-bold text-navy">
+              Upload vehicle document
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">Upload a PDF, JPEG, or PNG file to this vehicle.</p>
+          </div>
+          <button type="button" className="icon-btn" onClick={close} aria-label="Close upload form">
+            <X size={17} />
           </button>
         </div>
-      </form>
-    </div>
+        <form
+          className="mt-5 grid gap-4 md:grid-cols-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            setError('');
+            upload.mutate();
+          }}
+        >
+          <label className="label">
+            Vehicle registration
+            <div className="field mt-2 flex items-center bg-slate-50 text-slate-600">
+              {vehicle.registration || 'No registration'} ·{' '}
+              {[vehicle.make, vehicle.model].filter(Boolean).join(' ') || vehicle.vehicleCode}
+            </div>
+          </label>
+          <label className="label">
+            Document category
+            <select
+              className="field mt-2"
+              required
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+              disabled={requirements.isLoading || !requirements.data?.length}
+            >
+              <option value="">
+                {requirements.isLoading
+                  ? 'Loading document categories…'
+                  : requirements.data?.length
+                    ? 'Select document category'
+                    : 'No document categories configured'}
+              </option>
+              {(requirements.data || []).map((item) => (
+                <option key={item._id} value={item.category}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="label">
+            Expiry date{' '}
+            <span className="font-normal text-slate-400">
+              {selectedRequirement?.requiresExpiry ? '(required)' : '(optional)'}
+            </span>
+            <input
+              className="field mt-2"
+              type="date"
+              required={Boolean(selectedRequirement?.requiresExpiry)}
+              value={expiryDate}
+              onChange={(event) => setExpiryDate(event.target.value)}
+            />
+          </label>
+          <label className="label">
+            Document file
+            <input
+              className="field mt-2"
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+              required
+              onChange={(event) => setFile(event.target.files?.[0] || null)}
+            />
+            <span className="mt-1 block text-xs font-normal text-slate-500">Maximum file size: 10 MB</span>
+          </label>
+          {(requirements.isError || upload.isError) && (
+            <p className="text-sm text-red-700 md:col-span-2">
+              {error ||
+                requirements.error?.response?.data?.error?.message ||
+                'Unable to load document upload options.'}
+            </p>
+          )}
+          <div className="flex items-end gap-3 md:col-span-2">
+            <button
+              className="btn-primary"
+              disabled={upload.isPending || requirements.isLoading || !requirements.data?.length}
+            >
+              {upload.isPending ? 'Uploading…' : 'Upload document'}
+            </button>
+            <button type="button" className="btn-secondary" onClick={close}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>,
+    document.body
   );
 }
-function DocumentRegister() {
+function DocumentRegister({ canUploadDocuments }) {
   const [selectedVehicleId, setSelectedVehicleId] = useState('');
+  const [uploadVehicleId, setUploadVehicleId] = useState('');
   const vehicles = useQuery({
     queryKey: ['document-register-vehicles'],
-    queryFn: () =>
-      api.get('/vehicles', { params: { limit: 100 } }).then((response) => response.data),
+    queryFn: () => api.get('/vehicles', { params: { limit: 100 } }).then((response) => response.data),
     retry: false,
   });
   const documents = useQuery({
     queryKey: ['documents'],
-    queryFn: () =>
-      api.get('/documents', { params: { limit: 100 } }).then((response) => response.data),
+    queryFn: () => api.get('/documents', { params: { limit: 100 } }).then((response) => response.data),
     retry: false,
   });
   const requirements = useQuery({
@@ -2351,14 +2333,14 @@ function DocumentRegister() {
     return all;
   }, {});
   const selectedVehicle = vehicleRows.find((vehicle) => vehicle._id === selectedVehicleId);
+  const uploadVehicle = vehicleRows.find((vehicle) => vehicle._id === uploadVehicleId);
   const selectedDocuments = docsByVehicle[selectedVehicleId] || [];
   const submittedCategories = new Set(selectedDocuments.map((document) => document.category));
   const pendingCategories = (requirements.data || []).filter(
     (requirement) => !submittedCategories.has(requirement.category)
   );
   const pageError = vehicles.error || documents.error || requirements.error;
-  const errorMessage =
-    pageError?.response?.data?.error?.message || 'Unable to load the document register.';
+  const errorMessage = pageError?.response?.data?.error?.message || 'Unable to load the document register.';
   const fileLink = (document) => `/api/v1/documents/${document._id}/file`;
   return (
     <>
@@ -2376,9 +2358,7 @@ function DocumentRegister() {
         <div className="card mt-6 p-6 text-slate-500">Loading vehicle documents…</div>
       )}
       {pageError && (
-        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-5 text-red-700">
-          {errorMessage}
-        </div>
+        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-5 text-red-700">{errorMessage}</div>
       )}
       {!vehicles.isLoading && !documents.isLoading && !requirements.isLoading && !pageError && (
         <section className="card mt-6 overflow-hidden">
@@ -2426,17 +2406,32 @@ function DocumentRegister() {
                         <td>{[vehicle.make, vehicle.model].filter(Boolean).join(' ') || '—'}</td>
                         <td>{vehicleDocuments.length}</td>
                         <td>{pendingCount}</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn-secondary px-3 py-1.5 text-xs"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setSelectedVehicleId(vehicle._id);
-                            }}
-                          >
-                            View documents
-                          </button>
+                        <td className="whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              className="btn-secondary px-3 py-1.5 text-xs"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setSelectedVehicleId(vehicle._id);
+                              }}
+                            >
+                              View documents
+                            </button>
+                            {canUploadDocuments && (
+                              <button
+                                type="button"
+                                className="btn-primary px-3 py-1.5 text-xs"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  setUploadVehicleId(vehicle._id);
+                                }}
+                              >
+                                <Plus size={14} />
+                                Upload document
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
@@ -2470,9 +2465,7 @@ function DocumentRegister() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[.12em] text-sky">
-                    Vehicle documents
-                  </p>
+                  <p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Vehicle documents</p>
                   <h2 id="vehicle-document-title" className="mt-1 text-2xl font-bold text-navy">
                     {selectedVehicle.registration || 'No registration'}
                   </h2>
@@ -2550,27 +2543,32 @@ function DocumentRegister() {
           </div>,
           document.body
         )}
+      {uploadVehicle && (
+        <DocumentUploadForm
+          key={uploadVehicle._id}
+          vehicle={uploadVehicle}
+          close={() => setUploadVehicleId('')}
+        />
+      )}
     </>
   );
 }
-function RecordPage({ title, endpoint }) {
+function RecordPage({ title, endpoint, canUploadDocuments = false }) {
   const [adding, setAdding] = useState(null);
   const add = quickAdd[endpoint];
-  const canUploadDocument = endpoint === 'documents';
+  const isDocumentPage = endpoint === 'documents';
   return (
     <>
-      {(add || canUploadDocument) && (
+      {add && (
         <div className="mb-4 flex justify-end">
           <button className="btn-primary" onClick={() => setAdding({})}>
             <Plus size={16} />
-            {canUploadDocument ? 'Upload document' : add.label}
+            {add.label}
           </button>
         </div>
       )}
-      {adding !== null && canUploadDocument && (
-        <DocumentUploadForm key="document-upload" close={() => setAdding(null)} />
-      )}
-      {adding !== null && !canUploadDocument &&
+      {adding !== null &&
+        !isDocumentPage &&
         (adding.zone ? (
           createPortal(
             <div
@@ -2598,8 +2596,8 @@ function RecordPage({ title, endpoint }) {
             close={() => setAdding(null)}
           />
         ))}
-      {canUploadDocument ? (
-        <DocumentRegister />
+      {isDocumentPage ? (
+        <DocumentRegister canUploadDocuments={canUploadDocuments} />
       ) : (
         <Records title={title} endpoint={endpoint} onAddSpace={setAdding} />
       )}
@@ -4212,7 +4210,13 @@ function Shell() {
     setCsrf('');
     go('/login');
   };
-  const record = (t, e) => <RecordPage title={t} endpoint={e} />;
+  const record = (t, e) => (
+    <RecordPage
+      title={t}
+      endpoint={e}
+      canUploadDocuments={user.role === 'Dealer Admin' || user.role === 'Super Admin'}
+    />
+  );
   return (
     <div className="app-shell min-h-screen md:flex">
       <aside className="relative w-64 overflow-hidden bg-navy p-4">
