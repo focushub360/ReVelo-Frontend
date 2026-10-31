@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       port: 5173,
-      proxy: { '/api': { target: env.VITE_DEV_API_TARGET || 'http://127.0.0.1:5000', changeOrigin: true } },
+      proxy: { '/api': { target: env.VITE_DEV_API_TARGET || 'http://localhost:5000', changeOrigin: true } },
     },
   };
 });

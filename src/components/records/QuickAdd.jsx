@@ -49,7 +49,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
   const save = useMutation({
     mutationFn: () => {
       const body = Object.fromEntries(Object.entries(values).filter(([, value]) => value !== ''));
-      if (endpoint === 'users') return api.post('/users', { ...body, role: 'Technician & Service Advisor' });
+      if (endpoint === 'users') return api.post('/users', body);
       if (endpoint === 'enquiries')
         return api.post('/enquiries', {
           seller: { name: values.sellerName },
