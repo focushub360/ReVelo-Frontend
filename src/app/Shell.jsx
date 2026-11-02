@@ -1,121 +1,29 @@
 import { NavLink, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { LayoutDashboard } from 'lucide-react';
 import { api, setCsrf } from '../lib/api.js';
 import reveloLogo from '../assets/revelo-logo.png';
-import PublicLeadSettings from '../components/PublicLeadSettings.jsx';
-import { ICONS, navFor } from './navigation.js';
-import { Dashboard } from '../pages/Dashboard.jsx';
-import { Dealers } from '../pages/admin/Dealers.jsx';
-import { RecordPage } from '../pages/RecordPage.jsx';
-import { AcquisitionPage } from '../pages/AcquisitionPage.jsx';
-import { Activity } from '../pages/Activity.jsx';
-import { Profile } from '../pages/Profile.jsx';
-import { DealerOversight } from '../pages/DealerOversight.jsx';
-import { SellerDiscussions } from '../pages/SellerDiscussions.jsx';
-import { PricingListing } from '../pages/PricingListing.jsx';
-import { RefurbishmentManagerWorkspace } from '../components/records/RefurbishmentManagerWorkspace.jsx';
-import { AppHeader } from '../components/layout/AppHeader.jsx';
+
+const sections = [['dashboard', 'Dashboard'], ['vehicles', 'Vehicles'], ['enquiries', 'Enquiries'], ['acquisitions', 'Acquisitions'], ['inspections', 'Inspections'], ['parking', 'Parking'], ['work-orders', 'Work orders'], ['documents', 'Documents'], ['activity', 'Activity'], ['profile', 'Profile']];
+
+function Dashboard() {
+  const query = useQuery({ queryKey: ['dashboard'], queryFn: () => api.get('/dashboard').then((response) => response.data) });
+  if (query.isLoading) return <p>Loading dashboard…</p>;
+  if (query.isError) return <p className="text-red-600">Dashboard data could not be loaded.</p>;
+  const cards = [['Vehicles', query.data.vehicles], ['Ready for sale', query.data.readyForSale], ['Open enquiries', query.data.activeBuyerEnquiries], ['Active employees', query.data.activeEmployees]];
+  return <div><h1 className="text-3xl font-bold text-navy">Dashboard</h1><div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{cards.map(([label, value]) => <article className="card p-5" key={label}><p className="text-sm text-slate-500">{label}</p><p className="mt-2 text-3xl font-bold text-navy">{value ?? 0}</p></article>)}</div></div>;
+}
+
+function Records({ label, endpoint }) {
+  const query = useQuery({ queryKey: ['records', endpoint], queryFn: () => api.get(`/${endpoint}`).then((response) => response.data) });
+  return <div><h1 className="text-3xl font-bold text-navy">{label}</h1>{query.isLoading ? <p className="mt-5">Loading…</p> : query.isError ? <p className="mt-5 text-red-600">This section could not be loaded.</p> : <pre className="mt-5 max-h-[65vh] overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-100">{JSON.stringify(query.data, null, 2)}</pre>}</div>;
+}
 
 export function Shell() {
-  const go = useNavigate();
-  const me = useQuery({
-    queryKey: ['me'],
-    queryFn: () =>
-      api.get('/auth/me').then((r) => {
-        setCsrf(r.data.csrfToken);
-        return r.data.user;
-      }),
-    retry: false,
-  });
+  const navigate = useNavigate();
+  const me = useQuery({ queryKey: ['me'], queryFn: () => api.get('/auth/me').then((response) => { setCsrf(response.data.csrfToken); return response.data.user; }), retry: false });
   if (me.isLoading) return <div className="p-8">Loading ReVelo…</div>;
-  if (me.isError) return <Navigate to="/login" />;
+  if (me.isError) return <Navigate to="/login" replace />;
+  const logout = async () => { await api.post('/auth/logout'); setCsrf(''); navigate('/login'); };
   const user = me.data;
-  const nav = navFor(user);
-  const logout = async () => {
-    await api.post('/auth/logout');
-    setCsrf('');
-    go('/login');
-  };
-  const record = (t, e) => (
-    <RecordPage
-      title={t}
-      endpoint={e}
-      operationalProfile={user.operationalProfile}
-      canConfigureParking={user.role === 'Dealer Admin' || user.role === 'Super Admin' || user.operationalProfile === 'Parking Manager'}
-      canUploadDocuments={user.role === 'Dealer Admin' || user.role === 'Super Admin'}
-      canManageVehicles={user.role === 'Dealer Admin' || user.role === 'Super Admin'}
-      canCreateWorkOrders={user.role === 'Dealer Admin' || user.role === 'Super Admin' || user.operationalProfile === 'Dealership Manager'}
-    />
-  );
-  return (
-    <div className="app-shell min-h-screen md:flex">
-      <aside className="relative w-64 overflow-hidden bg-navy p-4">
-        <div className="mb-8 px-3">
-          <img src={reveloLogo} alt="ReVelo" className="mx-auto h-20 w-20 object-contain" />
-          <p className="mt-2 text-center text-xs font-normal text-slate-300">
-            {user.operationalProfile || user.role}
-          </p>
-        </div>
-        <nav className="space-y-1">
-          {nav.map(([to, label]) => {
-            const Icon = ICONS[label.split(' ')[0]] || LayoutDashboard;
-            return (
-              <NavLink
-                key={to}
-                to={`/${to}`}
-                className={({ isActive }) => `nav ${isActive ? 'nav-active' : ''}`}
-              >
-                <Icon size={18} />
-                {label}
-              </NavLink>
-            );
-          })}
-        </nav>
-      </aside>
-      <section className="min-w-0 flex-1">
-        <AppHeader user={user} logout={logout} />
-        <main className="workspace p-6 md:p-8">
-          <Routes>
-            <Route path="/dashboard" element={user.operationalProfile === 'Dealership Manager' ? <DealerOversight managerMode /> : <Dashboard user={user} />} />
-            <Route
-              path="/dealers"
-              element={user.role === 'Super Admin' ? <Dealers /> : <Navigate to="/dashboard" />}
-            />
-            <Route path="/public-lead-settings" element={user.role === 'Super Admin' ? <PublicLeadSettings /> : <Navigate to="/dashboard" />} />
-            <Route
-              path="/employees"
-              element={
-                user.role === 'Dealer Admin' ? record('Employees', 'users') : <Navigate to="/dashboard" />
-              }
-            />
-            <Route path="/activity" element={<Activity user={user} />} />
-            <Route path="/profile" element={<Profile user={user} />} />
-            <Route path="/dealer-oversight" element={user.role === 'Dealer Admin' || user.operationalProfile === 'Dealership Manager' ? <DealerOversight managerMode={user.operationalProfile === 'Dealership Manager'} /> : <Navigate to="/dashboard" />} />
-            <Route path="/seller-discussions" element={user.operationalProfile === 'Dealership Manager' ? <SellerDiscussions /> : <Navigate to="/dashboard" />} />
-            <Route
-              path="/acquisitions"
-              element={
-                user.role === 'Dealer Admin' || user.operationalProfile === 'Dealership Manager' ? (
-                  <AcquisitionPage managerMode={user.operationalProfile === 'Dealership Manager'} />
-                ) : (
-                  <Navigate to="/dashboard" />
-                )
-              }
-            />
-            <Route path="/parking" element={record('Parking & Yard', 'parking/slots')} />
-            <Route path="/inspections" element={user.role === 'Dealer Admin' ? <Navigate to="/dealer-oversight" /> : record(user.operationalProfile === 'Service Advisor' ? 'Physical Intake' : 'Inspection Queue', 'inspections')} />
-            <Route path="/work-orders" element={record(user.operationalProfile === 'Dealership Manager' ? 'Refurbishment Progress' : 'Work orders', 'work-orders')} />
-            <Route path="/completed-handovers" element={user.operationalProfile === 'Dealership Manager' ? <RefurbishmentManagerWorkspace handoverOnly /> : <Navigate to="/dashboard" />} />
-            <Route path="/pricing-listing" element={user.operationalProfile === 'Dealership Manager' ? <PricingListing /> : <Navigate to="/dashboard" />} />
-            <Route path="/enquiries" element={record('Enquiries', 'enquiries')} />
-            <Route path="/vehicles" element={record('Vehicles', 'vehicles')} />
-            <Route path="/documents" element={record('Documents', 'documents')} />
-            <Route path="/offers" element={record('Offers', 'sales')} />
-            <Route path="*" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </main>
-      </section>
-    </div>
-  );
+  return <div className="app-shell min-h-screen md:flex"><aside className="w-64 bg-navy p-4 text-white"><img src={reveloLogo} alt="ReVelo" className="mx-auto h-20 w-20 object-contain"/><p className="my-4 text-center text-sm">{user.operationalProfile || user.role}</p><nav className="space-y-1">{sections.map(([path, label]) => <NavLink key={path} to={`/${path}`} className={({ isActive }) => `nav ${isActive ? 'nav-active' : ''}`}>{label}</NavLink>)}</nav><button className="mt-6 w-full rounded-lg border border-white/30 px-3 py-2 text-sm" onClick={logout}>Sign out</button></aside><main className="workspace min-w-0 flex-1 p-6 md:p-8"><Routes><Route path="/dashboard" element={<Dashboard />} /><Route path="/dealer/dashboard" element={<Dashboard />} /><Route path="/platform/dashboard" element={<Dashboard />} />{sections.slice(1).map(([path, label]) => <Route key={path} path={`/${path}`} element={<Records label={label} endpoint={path} />} />)}<Route path="*" element={<Navigate to="/dashboard" replace />} /></Routes></main></div>;
 }

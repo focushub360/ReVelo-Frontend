@@ -6,15 +6,22 @@ import { api, setCsrf } from '../lib/api.js';
 import reveloLogo from '../assets/revelo-logo.png';
 import showroomImage from '../assets/login-showroom.png';
 
-export function Login() {
-  const [form, setForm] = useState({ email: 'super.admin@revelo.test', password: 'ChangeMe123!' });
+export function Login({ portal = 'dealer', register = false }) {
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const go = useNavigate();
   const login = useMutation({
     mutationFn: () => api.post('/auth/login', form),
     onSuccess: ({ data }) => {
       setCsrf(data.csrfToken);
-      go('/dashboard');
+      // Portal URLs are distinct UI entry points, not a client-side authorization
+      // boundary. A valid account is always sent to its server-assigned workspace.
+      const destination = data.user.role === 'Buyer & Seller'
+        ? '/account/dashboard'
+        : data.user.role === 'Super Admin'
+          ? '/platform/dashboard'
+          : '/dealer/dashboard';
+      go(destination, { replace: true });
     },
     onError: (e) => setError(e.response?.data?.error?.message || 'Unable to sign in'),
   });
@@ -37,13 +44,13 @@ export function Login() {
           </div>
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur">
-              Dealer operating system
+              {portal === 'account' ? 'Buyer & seller account' : portal === 'platform' ? 'Platform administration' : 'Dealer operating system'}
             </span>
             <h1 className="mt-3 max-w-md text-3xl font-bold leading-tight xl:text-4xl">
               Every vehicle journey, connected.
             </h1>
             <p className="mt-2 max-w-md text-sm leading-6 text-slate-200">
-              Acquire, inspect, refurbish and sell with one secure multi-tenant workspace.
+              {portal === 'account' ? 'Follow your enquiries, appointments and authorised transaction progress.' : 'Acquire, inspect, refurbish and sell with one secure multi-tenant workspace.'}
             </p>
             <div className="mt-5 flex gap-7 text-xs">
               <span>
@@ -75,8 +82,8 @@ export function Login() {
             </div>
             <div className="mt-7">
               <p className="text-xs font-bold uppercase tracking-[.18em] text-sky">Secure access</p>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-navy">Welcome back</h2>
-              <p className="mt-2 text-sm text-slate-500">Sign in to your authorised ReVelo workspace.</p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-navy">{register ? 'Account registration' : 'Welcome back'}</h2>
+              <p className="mt-2 text-sm text-slate-500">{register ? 'External account registration is available through an authorised invitation or verified onboarding journey.' : `Sign in to your authorised ${portal === 'account' ? 'buyer or seller account' : portal === 'platform' ? 'platform workspace' : 'dealer workspace'}.`}</p>
             </div>
             <label className="label mt-6 block">
               Email address

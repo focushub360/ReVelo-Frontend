@@ -1,0 +1,2 @@
+/* Keep the complete hero within a typical desktop viewport below the header. */
+@media(min-width:851px){.rv-hero-grid{height:min(590px,calc(100svh - 76px));min-height:min(590px,calc(100svh - 76px))}.rv-hero-copy{padding-top:34px;padding-bottom:34px}.rv-hero h1{font-size:clamp(46px,4.2vw,64px);margin-top:10px;margin-bottom:13px}.rv-lead{font-size:16px;line-height:1.6}.rv-trust-line{margin-top:20px}.rv-hero-media{height:100%}}
