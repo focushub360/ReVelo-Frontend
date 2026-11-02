@@ -1,0 +1,23 @@
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '../lib/api';
+
+export default function ProfileSettings({ user }) {
+  const queryClient = useQueryClient();
+  const [profile, setProfile] = useState({ name: user.name || '', phone: user.phone || '' });
+  const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [profileNotice, setProfileNotice] = useState('');
+  const [passwordNotice, setPasswordNotice] = useState('');
+  const saveProfile = useMutation({
+    mutationFn: () => api.patch('/profile', profile),
+    onSuccess: () => { setProfileNotice('Profile details saved.'); queryClient.invalidateQueries({ queryKey: ['me'] }); },
+    onError: error => setProfileNotice(error.response?.data?.error?.message || 'Could not save profile details.'),
+  });
+  const changePassword = useMutation({
+    mutationFn: () => api.post('/profile/password', { currentPassword: passwords.currentPassword, newPassword: passwords.newPassword }),
+    onSuccess: () => { setPasswordNotice('Password updated. Other active sessions have been signed out.'); setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' }); },
+    onError: error => setPasswordNotice(error.response?.data?.error?.message || 'Could not update password.'),
+  });
+  const submitPassword = event => { event.preventDefault(); if (passwords.newPassword !== passwords.confirmPassword) return setPasswordNotice('New password and confirmation must match.'); setPasswordNotice(''); changePassword.mutate(); };
+  return <section className="mt-6 grid gap-6 xl:grid-cols-2"><form className="card p-6" onSubmit={event => { event.preventDefault(); setProfileNotice(''); saveProfile.mutate(); }}><div><p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Account details</p><h2 className="mt-1 text-xl font-bold text-navy">Update profile</h2><p className="mt-1 text-sm text-slate-500">Keep your personal details current across your authorised workspace.</p></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><label className="label">Full name<input className="field mt-2" value={profile.name} onChange={event => setProfile({ ...profile, name: event.target.value })} required/></label><label className="label">Phone number<input className="field mt-2" type="tel" value={profile.phone} onChange={event => setProfile({ ...profile, phone: event.target.value })}/></label><label className="label sm:col-span-2">Email address<input className="field mt-2 cursor-not-allowed bg-slate-50 text-slate-500" value={user.email} disabled/><span className="mt-1 block text-xs font-normal text-slate-400">Email and role are managed by your authorised administrator.</span></label></div>{profileNotice && <p className={`mt-4 rounded-lg px-3 py-2 text-sm ${saveProfile.isError ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'}`}>{profileNotice}</p>}<button className="btn-primary mt-5" disabled={saveProfile.isPending}>{saveProfile.isPending ? 'Saving…' : 'Save profile changes'}</button></form><form className="card p-6" onSubmit={submitPassword}><div><p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Security controls</p><h2 className="mt-1 text-xl font-bold text-navy">Update password</h2><p className="mt-1 text-sm text-slate-500">Use a unique password of at least 12 characters to protect your account.</p></div><div className="mt-5 grid gap-4"><label className="label">Current password<input className="field mt-2" type="password" autoComplete="current-password" value={passwords.currentPassword} onChange={event => setPasswords({ ...passwords, currentPassword: event.target.value })} required/></label><label className="label">New password<input className="field mt-2" type="password" autoComplete="new-password" minLength="12" value={passwords.newPassword} onChange={event => setPasswords({ ...passwords, newPassword: event.target.value })} required/></label><label className="label">Confirm new password<input className="field mt-2" type="password" autoComplete="new-password" minLength="12" value={passwords.confirmPassword} onChange={event => setPasswords({ ...passwords, confirmPassword: event.target.value })} required/></label></div>{passwordNotice && <p className={`mt-4 rounded-lg px-3 py-2 text-sm ${changePassword.isError || passwordNotice.includes('match') ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'}`}>{passwordNotice}</p>}<button className="btn-primary mt-5" disabled={changePassword.isPending}>{changePassword.isPending ? 'Updating…' : 'Update password'}</button></form></section>;
+}
