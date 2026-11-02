@@ -14,13 +14,14 @@ export function Login({ portal = 'dealer', register = false }) {
     mutationFn: () => api.post('/auth/login', form),
     onSuccess: ({ data }) => {
       setCsrf(data.csrfToken);
-      const allowed = portal === 'account' ? data.user.role === 'Buyer & Seller' : portal === 'platform' ? data.user.role === 'Super Admin' : data.user.role !== 'Buyer & Seller' && data.user.role !== 'Super Admin';
-      if (!allowed) {
-        setError(`This account is not authorised for the ${portal === 'account' ? 'external account' : portal === 'platform' ? 'platform' : 'dealer'} portal.`);
-        api.post('/auth/logout').finally(() => setCsrf(''));
-        return;
-      }
-      go(portal === 'account' ? '/account/dashboard' : portal === 'platform' ? '/platform/dashboard' : '/dealer/dashboard');
+      // Portal URLs are distinct UI entry points, not a client-side authorization
+      // boundary. A valid account is always sent to its server-assigned workspace.
+      const destination = data.user.role === 'Buyer & Seller'
+        ? '/account/dashboard'
+        : data.user.role === 'Super Admin'
+          ? '/platform/dashboard'
+          : '/dealer/dashboard';
+      go(destination, { replace: true });
     },
     onError: (e) => setError(e.response?.data?.error?.message || 'Unable to sign in'),
   });

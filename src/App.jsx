@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
@@ -33,6 +34,7 @@ import { api, setCsrf } from './lib/api';
 import reveloLogo from './assets/revelo-logo.png';
 import showroomImage from './assets/login-showroom.png';
 import ProfileSettingsPanel from './components/ProfileSettings';
+import AppRoutes from './app/Routes.jsx';
 
 const ICONS = {
   Dashboard: LayoutDashboard,
@@ -4220,13 +4222,7 @@ function Shell() {
   );
 }
 export default function App() {
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/admins" element={<AdminGate />} />
-      <Route path="/*" element={<Shell />} />
-    </Routes>
-  );
+  return <AppRoutes />;
 }
 
 function ProfileSettingsLegacy({ user }) {
