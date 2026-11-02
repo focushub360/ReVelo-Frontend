@@ -11,6 +11,10 @@ import { RecordPage } from '../pages/RecordPage.jsx';
 import { AcquisitionPage } from '../pages/AcquisitionPage.jsx';
 import { Activity } from '../pages/Activity.jsx';
 import { Profile } from '../pages/Profile.jsx';
+import { DealerOversight } from '../pages/DealerOversight.jsx';
+import { SellerDiscussions } from '../pages/SellerDiscussions.jsx';
+import { PricingListing } from '../pages/PricingListing.jsx';
+import { RefurbishmentManagerWorkspace } from '../components/records/RefurbishmentManagerWorkspace.jsx';
 import { AppHeader } from '../components/layout/AppHeader.jsx';
 
 export function Shell() {
@@ -37,8 +41,11 @@ export function Shell() {
     <RecordPage
       title={t}
       endpoint={e}
+      operationalProfile={user.operationalProfile}
+      canConfigureParking={user.role === 'Dealer Admin' || user.role === 'Super Admin' || user.operationalProfile === 'Parking Manager'}
       canUploadDocuments={user.role === 'Dealer Admin' || user.role === 'Super Admin'}
       canManageVehicles={user.role === 'Dealer Admin' || user.role === 'Super Admin'}
+      canCreateWorkOrders={user.role === 'Dealer Admin' || user.role === 'Super Admin' || user.operationalProfile === 'Dealership Manager'}
     />
   );
   return (
@@ -70,7 +77,7 @@ export function Shell() {
         <AppHeader user={user} logout={logout} />
         <main className="workspace p-6 md:p-8">
           <Routes>
-            <Route path="/dashboard" element={<Dashboard user={user} />} />
+            <Route path="/dashboard" element={user.operationalProfile === 'Dealership Manager' ? <DealerOversight managerMode /> : <Dashboard user={user} />} />
             <Route
               path="/dealers"
               element={user.role === 'Super Admin' ? <Dealers /> : <Navigate to="/dashboard" />}
@@ -82,21 +89,25 @@ export function Shell() {
                 user.role === 'Dealer Admin' ? record('Employees', 'users') : <Navigate to="/dashboard" />
               }
             />
-            <Route path="/activity" element={<Activity />} />
+            <Route path="/activity" element={<Activity user={user} />} />
             <Route path="/profile" element={<Profile user={user} />} />
+            <Route path="/dealer-oversight" element={user.role === 'Dealer Admin' || user.operationalProfile === 'Dealership Manager' ? <DealerOversight managerMode={user.operationalProfile === 'Dealership Manager'} /> : <Navigate to="/dashboard" />} />
+            <Route path="/seller-discussions" element={user.operationalProfile === 'Dealership Manager' ? <SellerDiscussions /> : <Navigate to="/dashboard" />} />
             <Route
               path="/acquisitions"
               element={
-                user.role === 'Dealer Admin' ? (
-                  <AcquisitionPage />
+                user.role === 'Dealer Admin' || user.operationalProfile === 'Dealership Manager' ? (
+                  <AcquisitionPage managerMode={user.operationalProfile === 'Dealership Manager'} />
                 ) : (
                   <Navigate to="/dashboard" />
                 )
               }
             />
             <Route path="/parking" element={record('Parking & Yard', 'parking/slots')} />
-            <Route path="/inspections" element={record('Inspection Queue', 'inspections')} />
-            <Route path="/work-orders" element={record('Work orders', 'work-orders')} />
+            <Route path="/inspections" element={user.role === 'Dealer Admin' ? <Navigate to="/dealer-oversight" /> : record(user.operationalProfile === 'Service Advisor' ? 'Physical Intake' : 'Inspection Queue', 'inspections')} />
+            <Route path="/work-orders" element={record(user.operationalProfile === 'Dealership Manager' ? 'Refurbishment Progress' : 'Work orders', 'work-orders')} />
+            <Route path="/completed-handovers" element={user.operationalProfile === 'Dealership Manager' ? <RefurbishmentManagerWorkspace handoverOnly /> : <Navigate to="/dashboard" />} />
+            <Route path="/pricing-listing" element={user.operationalProfile === 'Dealership Manager' ? <PricingListing /> : <Navigate to="/dashboard" />} />
             <Route path="/enquiries" element={record('Enquiries', 'enquiries')} />
             <Route path="/vehicles" element={record('Vehicles', 'vehicles')} />
             <Route path="/documents" element={record('Documents', 'documents')} />

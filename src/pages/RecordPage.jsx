@@ -5,14 +5,22 @@ import { quickAdd } from './records/recordConfig.js';
 import { QuickAdd } from '../components/records/QuickAdd.jsx';
 import { DocumentRegister } from './Documents.jsx';
 import { Records } from './Records.jsx';
+import { PhysicalIntakeCalendar } from '../components/records/PhysicalIntakeCalendar.jsx';
+import { SeniorTechnicianWorkspace } from '../components/records/SeniorTechnicianWorkspace.jsx';
+import { RefurbishmentTechnicianWorkspace } from '../components/records/RefurbishmentTechnicianWorkspace.jsx';
+import { RefurbishmentManagerWorkspace } from '../components/records/RefurbishmentManagerWorkspace.jsx';
 
-export function RecordPage({ title, endpoint, canUploadDocuments = false, canManageVehicles = false }) {
+export function RecordPage({ title, endpoint, canUploadDocuments = false, canManageVehicles = false, canCreateWorkOrders = false, operationalProfile, canConfigureParking = false }) {
   const [adding, setAdding] = useState(null);
   const add = quickAdd[endpoint];
   const isDocumentPage = endpoint === 'documents';
+  const isPhysicalIntake = endpoint === 'inspections' && operationalProfile === 'Service Advisor';
+  const isTechnicalInspection = endpoint === 'inspections' && operationalProfile === 'Senior Technician / Vehicle Inspector';
+  const isRefurbishmentTechnician = endpoint === 'work-orders' && operationalProfile === 'Refurbishment Technician';
+  const isRefurbishmentManager = endpoint === 'work-orders' && operationalProfile === 'Dealership Manager';
   return (
     <>
-      {add && (endpoint !== 'vehicles' || canManageVehicles) && (
+      {add && !isPhysicalIntake && !isTechnicalInspection && !isRefurbishmentTechnician && (endpoint !== 'vehicles' || canManageVehicles) && (endpoint !== 'parking/slots' || canConfigureParking) && (endpoint !== 'work-orders' || canCreateWorkOrders) && (
         <div className="mb-4 flex justify-end">
           <button className="btn-primary" onClick={() => setAdding({})}>
             <Plus size={16} />
@@ -51,12 +59,21 @@ export function RecordPage({ title, endpoint, canUploadDocuments = false, canMan
         ))}
       {isDocumentPage ? (
         <DocumentRegister canUploadDocuments={canUploadDocuments} />
+      ) : isPhysicalIntake ? (
+        <PhysicalIntakeCalendar />
+      ) : isTechnicalInspection ? (
+        <SeniorTechnicianWorkspace />
+      ) : isRefurbishmentTechnician ? (
+        <RefurbishmentTechnicianWorkspace />
+      ) : isRefurbishmentManager ? (
+        <RefurbishmentManagerWorkspace />
       ) : (
         <Records
           title={title}
           endpoint={endpoint}
           onAddSpace={setAdding}
           canManageVehicles={canManageVehicles}
+          canConfigureParking={canConfigureParking}
         />
       )}
     </>

@@ -1,6 +1,14 @@
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Bell, ChevronDown, LogOut } from 'lucide-react';
+import { api } from '../../lib/api.js';
 
 export function AppHeader({ user, logout }) {
+  const [openNotifications, setOpenNotifications] = useState(false);
+  const client = useQueryClient();
+  const notifications = useQuery({ queryKey: ['notifications'], queryFn: () => api.get('/notifications').then((r) => r.data), refetchInterval: 30000, retry: false });
+  const markRead = useMutation({ mutationFn: (id) => api.patch(`/notifications/${id}/read`), onSuccess: () => client.invalidateQueries({ queryKey: ['notifications'] }) });
+  const unread = (notifications.data || []).filter((notification) => !notification.read);
   const initials = user.name
     .split(' ')
     .map((part) => part[0])
@@ -28,10 +36,12 @@ export function AppHeader({ user, logout }) {
           className="relative grid h-10 w-10 place-items-center rounded-xl border border-white/15 bg-white/10 text-white transition hover:bg-white/20"
           aria-label="Notifications"
           title="Notifications"
+          onClick={() => setOpenNotifications((value) => !value)}
         >
           <Bell size={18} />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#d6ee55] ring-2 ring-[#071d36]" />
+          {unread.length > 0 && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#d6ee55] ring-2 ring-[#071d36]" />}
         </button>
+        {openNotifications && <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl"><div className="border-b px-4 py-3"><p className="font-bold text-navy">Notifications</p></div>{notifications.isLoading ? <p className="p-4 text-sm text-slate-500">Loading…</p> : notifications.data?.length ? <div className="max-h-80 overflow-y-auto">{notifications.data.map((notification) => <button key={notification._id} className={`block w-full border-b px-4 py-3 text-left text-sm hover:bg-slate-50 ${notification.read ? 'bg-white' : 'bg-sky/5'}`} onClick={() => { if (!notification.read) markRead.mutate(notification._id); if (notification.link) window.location.href = notification.link; }}><p className="font-semibold text-navy">{notification.title}</p><p className="mt-1 text-xs leading-5 text-slate-600">{notification.body}</p></button>)}</div> : <p className="p-4 text-sm text-slate-500">No notifications yet.</p>}</div>}
         <div className="hidden h-8 w-px bg-white/15 sm:block" />
         <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 py-1.5 pl-1.5 pr-2">
           <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#ffe785] to-[#c99317] text-[11px] font-extrabold text-[#071d36]">

@@ -32,11 +32,14 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
     retry: false,
   });
   const employees = useQuery({
-    queryKey: ['quick-add-employees'],
-    queryFn: () => api.get('/users').then((r) => r.data),
-    enabled: endpoint === 'inspections',
+    queryKey: ['quick-add-refurbishment-technicians'],
+    queryFn: () => api.get('/users', { params: { limit: 100 } }).then((r) => r.data),
+    enabled: endpoint === 'work-orders',
     retry: false,
   });
+  const technicianRows = (employees.data?.items || employees.data || []).filter((employee) =>
+    employee.active && employee.operationalProfile === 'Refurbishment Technician'
+  );
   const loadedVehicleRows =
     endpoint === 'work-orders'
       ? eligibleWorkOrderVehicles.data || []
@@ -45,7 +48,6 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
     endpoint === 'sales'
       ? loadedVehicleRows.filter((vehicle) => vehicle.lifecycle === 'Ready for Sale')
       : loadedVehicleRows;
-  const employeeRows = employees.data || [];
   const save = useMutation({
     mutationFn: () => {
       const body = Object.fromEntries(Object.entries(values).filter(([, value]) => value !== ''));
@@ -66,6 +68,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
         vehicleImages.forEach((image) => data.append('images', image));
         return api.post('/vehicles', data);
       }
+      if (endpoint === 'inspections') return api.post('/inspections', { ...body, kind: 'intake' });
       return api.post(`/${endpoint}`, body);
     },
     onSuccess: () => {
@@ -88,6 +91,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
           <p className="mt-1 text-sm text-slate-500">
             Choose existing dealership records where available, or enter new details.
           </p>
+          {endpoint === 'work-orders' && <p className="mt-3 rounded-lg bg-sky/5 px-3 py-2 text-xs font-semibold text-sky">Assign the purchased vehicle and repair scope only. The Refurbishment Technician will submit labour and parts estimates after inspection.</p>}
         </div>
         <button className="icon-btn" onClick={close} aria-label="Close">
           <X size={17} />
@@ -153,27 +157,6 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
             </select>
           </label>
         )}
-        {endpoint === 'inspections' && (
-          <label className="label">
-            Employee
-            <select
-              required
-              className="field mt-2"
-              value={values.assignedTo}
-              onChange={(e) => setValues({ ...values, assignedTo: e.target.value })}
-            >
-              <option value="">Select an employee</option>
-              {employeeRows
-                .filter((employee) => employee.active)
-                .map((employee) => (
-                  <option key={employee._id} value={employee._id}>
-                    {employee.name} · {employee.operationalProfile || employee.role} ({employee._id.slice(-6)}
-                    )
-                  </option>
-                ))}
-            </select>
-          </label>
-        )}
         {spec.fields
           .filter(
             ([key]) =>
@@ -216,6 +199,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
                   {[
                     'Service Advisor',
                     'Senior Technician / Vehicle Inspector',
+                    'Dealership Manager',
                     'Parking Manager',
                     'Refurbishment Technician',
                   ].map((profile) => (
@@ -234,6 +218,11 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
                     </button>
                   ))}
                 </div>
+              ) : type === 'employee-select' ? (
+                <select className="field mt-2" required value={values[key]} onChange={(e) => setValues({ ...values, [key]: e.target.value })} disabled={employees.isLoading || !technicianRows.length}>
+                  <option value="">{employees.isLoading ? 'Loading technicians…' : technicianRows.length ? 'Select refurbishment technician…' : 'No refurbishment technician available'}</option>
+                  {technicianRows.map((employee) => <option key={employee._id} value={employee._id}>{employee.name} · {employee.email}</option>)}
+                </select>
               ) : type.startsWith('select:') ? (
                 <select
                   className="field mt-2"
@@ -270,6 +259,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
                         'assignedTo',
                         'kind',
                         'sellerName',
+                        'phone',
                       ].includes(key)
                     }
                     minLength={key === 'password' ? 12 : undefined}
@@ -315,7 +305,10 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
               (endpoint === 'work-orders' &&
                 (eligibleWorkOrderVehicles.isLoading ||
                   eligibleWorkOrderVehicles.isError ||
-                  !vehicleRows.length))
+                  !vehicleRows.length ||
+                  employees.isLoading ||
+                  employees.isError ||
+                  !technicianRows.length))
             }
           >
             {save.isPending ? 'Saving…' : spec.label}
@@ -338,6 +331,7 @@ export function QuickAdd({ endpoint, close, initialValues = {} }) {
               'Unable to load purchased vehicle registrations.'}
           </p>
         )}
+        {employees.isError && endpoint === 'work-orders' && <p className="md:col-span-2 text-sm text-red-700">Unable to load refurbishment technicians. Please check the employee accounts.</p>}
       </form>
     </div>
   );

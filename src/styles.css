@@ -444,3 +444,65 @@
   color: #fff;
   background: rgba(255, 255, 255, 0.22);
 }
+
+/* Dealership manager: seller discussion workspace */
+.discussion-list-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(115deg, #fff 20%, #f4f9fd 100%);
+}
+.discussion-list-header h2 {
+  margin: 4px 0 0;
+  color: var(--navy);
+  font-size: 1.22rem;
+  font-weight: 800;
+}
+.discussion-list-header p:not(.section-kicker) {
+  margin: 7px 0 0;
+  color: #68788a;
+  font-size: .86rem;
+}
+.section-kicker {
+  margin: 0;
+  color: #2078cc;
+  font-size: .67rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.discussion-key { display: flex; flex-wrap: wrap; gap: 12px; color: #68788a; font-size: .72rem; font-weight: 700; }
+.discussion-key span { display: inline-flex; align-items: center; gap: 6px; }
+.discussion-key i { width: 8px; height: 8px; border-radius: 50%; }
+.discussion-key .done { background: #16a36a; }
+.discussion-key .planned { background: #2278d4; }
+.discussion-key .pending { background: #c7d2dc; }
+.seller-case-table td { vertical-align: middle; padding-top: 18px; padding-bottom: 18px; }
+.seller-case-table th { white-space: nowrap; }
+.seller-identity { display: flex; min-width: 240px; align-items: flex-start; gap: 10px; }
+.seller-avatar { display: inline-grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border-radius: 10px; color: #1766ae; background: #e8f4ff; font-size: .78rem; font-weight: 850; }
+.seller-identity p { margin: 0; }
+.seller-identity p:not(:first-child) { margin-top: 3px; color: #68788a; font-size: .72rem; line-height: 1.35; }
+.meeting-rail { display: flex; min-width: 340px; gap: 13px; }
+.meeting-stage { position: relative; display: grid; grid-template-columns: 25px minmax(70px, 1fr); gap: 6px; min-width: 104px; color: #7c8c9d; }
+.meeting-stage:not(:last-child)::after { position: absolute; top: 12px; left: 25px; width: calc(100% - 16px); height: 1px; background: #d9e2e9; content: ''; }
+.stage-dot { position: relative; z-index: 1; display: grid; width: 25px; height: 25px; place-items: center; border: 1px solid #d4dee7; border-radius: 50%; color: #8292a3; background: #fff; font-size: .66rem; font-weight: 800; }
+.meeting-stage strong { display: block; color: #435a70; font-size: .7rem; line-height: 1.2; }
+.meeting-stage small { display: block; margin-top: 4px; color: #8292a3; font-size: .62rem; line-height: 1.3; }
+.meeting-stage.is-complete .stage-dot { border-color: #24a878; color: #fff; background: #16a36a; }
+.meeting-stage.is-complete strong { color: #0f7652; }
+.meeting-stage.is-scheduled .stage-dot { border-color: #2278d4; color: #fff; background: #2278d4; box-shadow: 0 0 0 4px rgba(34,120,212,.1); }
+.meeting-stage.is-scheduled strong { color: #1766ae; }
+.next-action { min-width: 142px; }
+.next-action p { margin: 0; color: var(--navy); font-size: .78rem; font-weight: 800; }
+.next-action span { display: block; margin-top: 4px; color: #68788a; font-size: .69rem; line-height: 1.35; }
+.manager-discussions .field { display: block; width: 100%; min-height: 46px; border-radius: 11px; padding: 10px 12px; font-weight: 550; }
+.manager-discussions textarea.field { min-height: 98px; resize: vertical; line-height: 1.45; }
+.manager-discussions input.field::placeholder, .manager-discussions textarea.field::placeholder { color: #9ba9b8; font-weight: 500; }
+@media (max-width: 700px) {
+  .discussion-list-header { align-items: flex-start; flex-direction: column; padding: 20px; }
+  .discussion-key { gap: 9px; }
+}

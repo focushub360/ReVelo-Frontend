@@ -3,7 +3,7 @@ import { PageHero } from '../layout/PageHero.jsx';
 import { RecordActions } from './RecordActions.jsx';
 import { ParkingReleaseButton } from './ParkingReleaseButton.jsx';
 
-export function ParkingYardBoard({ title, rows, loading, error, onAddSpace }) {
+export function ParkingYardBoard({ title, rows, loading, error, onAddSpace, canConfigure = false }) {
   const groups = Object.values(
     rows.reduce((all, slot) => {
       const key = `${slot.zone || 'Unassigned'} · Row ${slot.row || '—'}`;
@@ -77,7 +77,7 @@ export function ParkingYardBoard({ title, rows, loading, error, onAddSpace }) {
                   <div key={group.name}>
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <h3 className="text-sm font-bold text-navy">{group.name}</h3>
-                      {group.zone && (
+                      {canConfigure && group.zone && (
                         <button
                           type="button"
                           className="btn-secondary px-3 py-1.5 text-xs"
@@ -118,7 +118,7 @@ export function ParkingYardBoard({ title, rows, loading, error, onAddSpace }) {
                                   Space {slot.number || '—'} · {slot.type}
                                 </p>
                               </div>
-                              <RecordActions endpoint="parking/slots" row={slot} />
+                              {canConfigure && <RecordActions endpoint="parking/slots" row={slot} />}
                             </div>
                             <p className="mt-3 text-xs font-bold uppercase tracking-wide">{slot.status}</p>
                             <p className="mt-1 break-all text-[11px] opacity-75">
@@ -126,7 +126,7 @@ export function ParkingYardBoard({ title, rows, loading, error, onAddSpace }) {
                                 slot.reservationVehicle?.registration ||
                                 'No vehicle assigned'}
                             </p>
-                            <ParkingReleaseButton row={slot} />
+                            {canConfigure && <ParkingReleaseButton row={slot} />}
                           </div>
                         ))}
                     </div>

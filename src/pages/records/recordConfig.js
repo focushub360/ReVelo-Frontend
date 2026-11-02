@@ -75,6 +75,7 @@ export const quickAdd = {
     fields: [
       ['name', 'Full name'],
       ['email', 'Work email', 'email'],
+      ['phone', 'Phone number', 'tel'],
       ['password', 'Login password', 'password'],
       ['operationalProfile', 'Employee type', 'employee-type'],
     ],
@@ -102,7 +103,7 @@ export const quickAdd = {
       ['zone', 'Zone'],
       ['row', 'Row'],
       ['number', 'Space number', 'number'],
-      ['type', 'Space type', 'select:parking|inspection|road-test|workshop|delivery'],
+      ['type', 'Space type', 'select:parking|inspection|workshop|selling'],
       ['status', 'Status', 'select:Available|Reserved|Occupied|Blocked|Maintenance'],
       ['vehicle', 'Vehicle registration', 'vehicle-select'],
     ],
@@ -112,15 +113,16 @@ export const quickAdd = {
     fields: [
       ['vehicle', 'Vehicle registration'],
       ['title', 'Repair title'],
+      ['description', 'Work description', 'textarea'],
       ['priority', 'Priority', 'select:Low|Medium|High|Critical'],
+      ['assignedTo', 'Assign refurbishment technician', 'employee-select'],
+      ['notes', 'Manager notes', 'textarea'],
     ],
   },
   inspections: {
-    label: 'Add inspection',
+    label: 'Start physical intake',
     fields: [
       ['vehicle', 'Vehicle ID'],
-      ['assignedTo', 'Employee ID'],
-      ['kind', 'Inspection type', 'select:mechanical|structural'],
       ['dueDate', 'Due date & time', 'datetime-local'],
     ],
   },
@@ -153,7 +155,7 @@ export const recordEditing = {
       [
         'operationalProfile',
         'Operational profile',
-        'select:Service Advisor|Senior Technician / Vehicle Inspector|Parking Manager|Refurbishment Technician',
+        'select:Service Advisor|Senior Technician / Vehicle Inspector|Dealership Manager|Parking Manager|Refurbishment Technician',
       ],
       ['active', 'Active', 'checkbox'],
     ],
@@ -206,12 +208,14 @@ export const recordEditing = {
   'work-orders': {
     resource: 'work-orders',
     fields: [
-      ['title', 'Title'],
-      ['description', 'Description', 'textarea'],
+      ['title', 'Repair title'],
+      ['description', 'Work description', 'textarea'],
       ['priority', 'Priority', 'select:Low|Medium|High|Critical'],
-      ['assignedTo', 'Assigned employee ID', 'employee-select'],
-      ['status', 'Status', 'select:Open|Assigned|In Progress|Waiting for Parts|Completed|Rework Required|Cancelled'],
-      ['notes', 'Notes', 'textarea'],
+      ['assignedTo', 'Assigned technician', 'employee-select'],
+      ['estimatedLabour', 'Estimated labour cost (₹)', 'number'],
+      ['estimatedParts', 'Estimated parts cost (₹)', 'number'],
+      ['status', 'Progress', 'select:Open|Assigned|In Progress|Waiting for Parts|Completed|Rework Required|Cancelled'],
+      ['notes', 'Manager notes', 'textarea'],
     ],
   },
   sales: {

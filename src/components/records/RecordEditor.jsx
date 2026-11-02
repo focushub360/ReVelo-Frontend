@@ -44,9 +44,11 @@ export function RecordEditor({ config, row, close, saved }) {
       : {}),
   };
   const [form, setForm] = useState(initial);
-  const employeeOptions = (employees.data || []).filter(
-    (employee) => employee.active || employee._id === form.assignedTo
-  );
+  const employeeOptions = (employees.data?.items || employees.data || []).filter((employee) => {
+    const activeOrAssigned = employee.active || employee._id === form.assignedTo;
+    // A refurbishment work order can only be owned by a refurbishment technician.
+    return activeOrAssigned && (config.resource !== 'work-orders' || employee.operationalProfile === 'Refurbishment Technician');
+  });
   const update = useMutation({
     mutationFn: () =>
       config.resource === 'parking-slots'
@@ -161,7 +163,7 @@ export function RecordEditor({ config, row, close, saved }) {
                   onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                   disabled={employees.isLoading || employees.isError}
                 >
-                  <option value="">Select an employee</option>
+                  <option value="">{config.resource === 'work-orders' ? 'Select a refurbishment technician' : 'Select an employee'}</option>
                   {employeeOptions.map((employee) => (
                       <option key={employee._id} value={employee._id}>
                         {employee.name} · {employee.operationalProfile || employee.role} · ID: {employee._id}

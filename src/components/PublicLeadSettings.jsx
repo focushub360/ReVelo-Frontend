@@ -5,6 +5,21 @@ import { api } from '../lib/api';
 
 const blankLocation = () => ({ label: '', dealership: '', active: true });
 const blankField = () => ({ key: `custom_${Date.now()}`, label: '', type: 'text', required: false, options: [], system: false });
+const normaliseLocation = (location = {}) => ({
+  ...location,
+  label: location.label || '',
+  dealership: location.dealership || '',
+  active: location.active !== false,
+});
+const normaliseField = (field = {}, index) => ({
+  ...field,
+  key: field.key || `custom_existing_${index + 1}`,
+  label: field.label || '',
+  type: field.type || 'text',
+  required: Boolean(field.required),
+  options: Array.isArray(field.options) ? field.options : [],
+  system: Boolean(field.system),
+});
 
 export default function PublicLeadSettings() {
   const queryClient = useQueryClient();
@@ -15,7 +30,12 @@ export default function PublicLeadSettings() {
   });
   const [locations, setLocations] = useState([]);
   const [fields, setFields] = useState([]);
-  useEffect(() => { if (settings.data) { setLocations(settings.data.locations || []); setFields(settings.data.fields || []); } }, [settings.data]);
+  useEffect(() => {
+    if (settings.data) {
+      setLocations((settings.data.locations || []).map(normaliseLocation));
+      setFields((settings.data.fields || []).map(normaliseField));
+    }
+  }, [settings.data]);
   const save = useMutation({
     mutationFn: () => api.put('/public-lead-settings', { locations, fields }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['public-lead-settings'] }),

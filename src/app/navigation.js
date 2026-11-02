@@ -30,16 +30,45 @@ export const navFor = (user) => {
   if (user.role === 'Dealer Admin')
     return [
       ['dashboard', 'Dealership Dashboard'],
+      ['dealer-oversight', 'Dealer Oversight'],
       ['enquiries', 'Enquiries'],
       ['vehicles', 'Vehicles'],
       ['documents', 'Documents'],
-      ['inspections', 'Inspections'],
       ['acquisitions', 'Acquisitions'],
       ['work-orders', 'Refurbishment'],
       ['parking', 'Parking & Yard'],
       ['offers', 'Offers'],
       ['employees', 'Employees'],
       ['activity', 'Activity Logs'],
+      ['profile', 'My Profile'],
+    ];
+  if (user.operationalProfile === 'Service Advisor')
+    return [
+      ['dashboard', 'My Dashboard'],
+      ['enquiries', 'Seller Enquiries'],
+      ['documents', 'Document Verification'],
+      ['inspections', 'Physical Intake'],
+      ['activity', 'My Activity'],
+      ['profile', 'My Profile'],
+    ];
+  if (user.operationalProfile === 'Dealership Manager')
+    return [
+      ['dashboard', 'Manager Dashboard'],
+      ['seller-discussions', 'Seller Discussions'],
+      ['acquisitions', 'Purchase Decisions'],
+      ['vehicles', 'Inventory'],
+      ['work-orders', 'Refurbishment Progress'],
+      ['completed-handovers', 'Completed Handovers'],
+      ['pricing-listing', 'Pricing & Listing'],
+      ['activity', 'Activity Logs'],
+      ['profile', 'My Profile'],
+    ];
+  if (user.operationalProfile === 'Senior Technician / Vehicle Inspector')
+    return [
+      ['dashboard', 'My Dashboard'],
+      ['inspections', 'Inspection Queue'],
+      ['work-orders', 'Refurbishment Work'],
+      ['activity', 'My Activity'],
       ['profile', 'My Profile'],
     ];
   if (user.operationalProfile === 'Parking Manager')

@@ -5,7 +5,7 @@ import { Plus, X } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { PageHero } from '../components/layout/PageHero.jsx';
 
-export function AcquisitionPage() {
+export function AcquisitionPage({ managerMode = false }) {
   const qc = useQueryClient();
   const [adding, setAdding] = useState(false);
   const [selectedId, setSelectedId] = useState('');
@@ -84,12 +84,6 @@ export function AcquisitionPage() {
     onError: (error) =>
       setEditError(error.response?.data?.error?.message || 'Unable to update valuation.'),
   });
-  const removeAcquisition = useMutation({
-    mutationFn: (id) => api.delete(`/acquisitions/${id}`),
-    onSuccess: refresh,
-    onError: (error) =>
-      setWorkflowError(error.response?.data?.error?.message || 'Unable to delete acquisition.'),
-  });
   const runAction = useMutation({
     mutationFn: ({ kind, payload }) => {
       const current = detail.data?.acquisition;
@@ -111,7 +105,18 @@ export function AcquisitionPage() {
     onError: (error) =>
       setWorkflowError(error.response?.data?.error?.message || 'Unable to update the acquisition.'),
   });
-  const rows = acquisitions.data?.items || [];
+  const uploadPaymentProof = useMutation({
+    mutationFn: ({ id, file }) => {
+      const data = new FormData();
+      data.append('file', file);
+      return api.post(`/acquisitions/${id}/payment-proof`, data);
+    },
+    onError: (error) => setWorkflowError(error.response?.data?.error?.message || 'Unable to upload the payment proof.'),
+  });
+  const allRows = acquisitions.data?.items || [];
+  // Purchase Decisions begins only after the manager records that the seller
+  // accepted the final offer in Seller Discussions.
+  const rows = managerMode ? allRows.filter((item) => ['Offer Accepted', 'Purchase Pending', 'Purchased'].includes(item.status)) : allRows;
   const acquiredVehicleIds = new Set(rows.map((item) => item.vehicle?._id || item.vehicle));
   const availableVehicles = (vehicles.data?.items || []).filter(
     (vehicle) => !acquiredVehicleIds.has(vehicle._id)
@@ -120,17 +125,18 @@ export function AcquisitionPage() {
   const pendingOffer = detail.data?.offers?.find((offer) => offer.status === 'Sent');
   const errorMessage = (error, fallback) =>
     error?.response?.data?.error?.message || error?.message || fallback;
+  const displayMoney = (value) => Number(value) > 0 ? `₹${Number(value).toLocaleString('en-IN')}` : 'Not set';
   return (
     <>
       <PageHero
-        eyebrow="Vehicle acquisition"
-        title="Acquisitions"
-        description="Create valuations, review seller offers, and record purchases before sending vehicles to refurbishment."
+        eyebrow={managerMode ? 'Manager decision workspace' : 'Vehicle acquisition'}
+        title={managerMode ? 'Purchase Decisions' : 'Acquisitions'}
+        description={managerMode ? 'Review the complete seller case, agree a buy price, record payment, then release purchased vehicles to refurbishment. Final selling price is set later in Pricing & Listing after final quality control.' : 'Create valuations, review seller offers, and record purchases before sending vehicles to refurbishment.'}
       >
-        <button className="btn-primary" onClick={() => setAdding((value) => !value)}>
+        {!managerMode && <button className="btn-primary" onClick={() => setAdding((value) => !value)}>
           <Plus size={16} />
           New acquisition
-        </button>
+        </button>}
       </PageHero>
       {adding && (
         <form
@@ -210,9 +216,9 @@ export function AcquisitionPage() {
       )}
       <section className="card mt-6 overflow-hidden">
         <div className="border-b border-slate-100 p-5">
-          <h2 className="text-lg font-bold text-navy">Acquisition register</h2>
+          <h2 className="text-lg font-bold text-navy">{managerMode ? 'Approved purchase register' : 'Acquisition register'}</h2>
           <p className="mt-1 text-sm text-slate-500">
-            {acquisitions.data?.total ?? rows.length} vehicle{(acquisitions.data?.total ?? rows.length) === 1 ? '' : 's'} in the acquisition workflow
+            {managerMode ? rows.length : acquisitions.data?.total ?? rows.length} vehicle{(managerMode ? rows.length : acquisitions.data?.total ?? rows.length) === 1 ? '' : 's'} {managerMode ? 'accepted by the seller and ready for purchase processing' : 'in the acquisition workflow'}
           </p>
         </div>
         {workflowError && (
@@ -232,8 +238,8 @@ export function AcquisitionPage() {
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                 <tr>
                   <th className="px-5 py-3">Vehicle</th>
-                  <th className="px-5 py-3">Proposed</th>
-                  <th className="px-5 py-3">Expected resale</th>
+                  <th className="px-5 py-3">{managerMode ? 'Agreed purchase price' : 'Proposed'}</th>
+                  {!managerMode && <th className="px-5 py-3">Expected resale</th>}
                   <th className="px-5 py-3">Status</th>
                   <th className="px-5 py-3">Action</th>
                 </tr>
@@ -244,8 +250,8 @@ export function AcquisitionPage() {
                     <td className="px-5 py-4 font-semibold text-navy">
                       {item.vehicle?.registration || item.vehicle?.vehicleCode || 'Vehicle'}
                     </td>
-                    <td className="px-5 py-4">{item.proposedPrice?.toLocaleString() ?? '—'}</td>
-                    <td className="px-5 py-4">{item.expectedResale?.toLocaleString() ?? '—'}</td>
+                    <td className="px-5 py-4 font-semibold text-navy">{displayMoney(managerMode ? item.agreedPrice : item.proposedPrice)}</td>
+                    {!managerMode && <td className="px-5 py-4">{displayMoney(item.expectedResale)}</td>}
                     <td className="px-5 py-4">
                       <span className="rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-800">
                         {item.status}
@@ -253,7 +259,7 @@ export function AcquisitionPage() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex flex-wrap gap-2">
-                        <button
+                        {!managerMode && <button
                           type="button"
                           className="btn-secondary px-3 py-1.5 text-xs"
                           onClick={() => {
@@ -264,8 +270,8 @@ export function AcquisitionPage() {
                           }}
                         >
                           Manage
-                        </button>
-                        <button
+                        </button>}
+                        {!managerMode && <button
                           type="button"
                           className="btn-secondary px-3 py-1.5 text-xs"
                           disabled={
@@ -302,31 +308,7 @@ export function AcquisitionPage() {
                           }}
                         >
                           Edit
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-secondary px-3 py-1.5 text-xs text-red-700"
-                          disabled={
-                            removeAcquisition.isPending ||
-                            ['Offer Accepted', 'Purchase Pending', 'Purchased'].includes(item.status)
-                          }
-                          title={
-                            ['Offer Accepted', 'Purchase Pending', 'Purchased'].includes(item.status)
-                              ? 'Accepted or completed purchases cannot be deleted'
-                              : 'Delete acquisition'
-                          }
-                          onClick={() => {
-                            setWorkflowError('');
-                            if (
-                              window.confirm(
-                                'Delete this acquisition? This cannot be undone.'
-                              )
-                            )
-                              removeAcquisition.mutate(item._id);
-                          }}
-                        >
-                          Delete
-                        </button>
+                        </button>}
                       </div>
                     </td>
                   </tr>
@@ -457,6 +439,7 @@ export function AcquisitionPage() {
               </p>
             ) : current ? (
               <>
+                <SellerCaseSummary detail={detail.data} />
                 <div className="mt-5 grid gap-3 rounded-xl bg-slate-50 p-4 text-sm sm:grid-cols-2">
                   <p>Proposed price: <strong>{current.proposedPrice?.toLocaleString()}</strong></p>
                   <p>Expected resale: <strong>{current.expectedResale?.toLocaleString()}</strong></p>
@@ -573,16 +556,25 @@ export function AcquisitionPage() {
                           onSubmit={(event) => {
                             event.preventDefault();
                             const formData = new FormData(event.currentTarget);
-                            runAction.mutate({
+                            const file = formData.get('paymentProof');
+                            if (!(file instanceof File) || !file.size) {
+                              setWorkflowError('Upload the payment receipt or proof before completing the purchase.');
+                              return;
+                            }
+                            setWorkflowError('');
+                            uploadPaymentProof.mutateAsync({ id: current._id, file }).then(({ data }) => runAction.mutate({
                               kind: 'purchase',
                               payload: {
                                 paymentReference: formData.get('paymentReference'),
                                 paymentAmount: Number(formData.get('paymentAmount')),
+                                paymentMethod: formData.get('paymentMethod'),
+                                paymentProofReference: formData.get('paymentProofReference') || undefined,
+                                paymentProof: data.proof,
                                 purchaseAgreementConfirmed: formData.has('purchaseAgreementConfirmed'),
                                 financeClearanceConfirmed: formData.has('financeClearanceConfirmed'),
                                 idempotencyKey: crypto.randomUUID(),
                               },
-                            });
+                            }));
                           }}
                         >
                           <label className="label">
@@ -601,6 +593,24 @@ export function AcquisitionPage() {
                               required
                             />
                           </label>
+                          <label className="label">
+                            Payment method
+                            <select className="field mt-2" name="paymentMethod" required defaultValue="">
+                              <option value="" disabled>Select payment method…</option>
+                              <option>Cash</option>
+                              <option>Online Transfer</option>
+                              <option>Bank Transfer</option>
+                            </select>
+                          </label>
+                          <label className="label">
+                            Payment proof / transaction ID <span className="font-normal text-slate-400">(optional for cash)</span>
+                            <input className="field mt-2" name="paymentProofReference" maxLength="200" placeholder="UTR, bank reference, receipt number" />
+                          </label>
+                          <label className="label sm:col-span-2">
+                            Upload payment proof <span className="text-red-600">*</span>
+                            <input className="field mt-2" name="paymentProof" type="file" accept="application/pdf,image/jpeg,image/png" required />
+                            <span className="mt-2 block text-xs font-normal text-slate-500">Upload the bank-transfer screenshot, cheque receipt, cash receipt, or payment PDF. JPEG, PNG, or PDF only; maximum 10 MB.</span>
+                          </label>
                           <label className="flex items-center gap-2 text-sm text-slate-700">
                             <input type="checkbox" name="purchaseAgreementConfirmed" required />
                             Purchase agreement confirmed
@@ -611,8 +621,8 @@ export function AcquisitionPage() {
                               Finance clearance confirmed
                             </label>
                           )}
-                          <button className="btn-primary sm:col-span-2" disabled={runAction.isPending}>
-                            Complete purchase
+                          <button className="btn-primary sm:col-span-2" disabled={runAction.isPending || uploadPaymentProof.isPending}>
+                            {uploadPaymentProof.isPending ? 'Uploading payment proof…' : runAction.isPending ? 'Completing purchase…' : 'Complete purchase'}
                           </button>
                         </form>
                       )}
@@ -622,6 +632,7 @@ export function AcquisitionPage() {
                     <p className="rounded-xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">
                       Purchase recorded{current.purchaseDate ? ` on ${new Date(current.purchaseDate).toLocaleDateString()}` : ''}.
                       This vehicle is now eligible for refurbishment work orders.
+                      {current.payments?.at(-1)?.proof?.storageKey && <a className="ml-2 underline" href={`/api/v1/acquisitions/${current._id}/payment-proof`} target="_blank" rel="noreferrer">View payment proof</a>}
                     </p>
                   )}
                   {runAction.isError && (
@@ -637,4 +648,11 @@ export function AcquisitionPage() {
       )}
     </>
   );
+}
+
+function SellerCaseSummary({ detail }) {
+  const seller = detail.acquisition?.enquiry?.person;
+  const intake = detail.physicalIntake;
+  const technical = detail.technicalReports?.[0];
+  return <section className="mt-5 rounded-xl border border-sky/20 bg-sky/5 p-4 text-sm"><p className="text-xs font-bold uppercase tracking-[.12em] text-sky">Complete seller case</p><div className="mt-3 grid gap-4 sm:grid-cols-2"><div><p className="font-bold text-navy">Seller contact</p><p className="mt-1 text-slate-700">{seller?.name || 'Seller details unavailable'}</p><p className="text-slate-500">{seller?.phone || 'No phone'} · {seller?.email || 'No email'}</p></div><div><p className="font-bold text-navy">Service Advisor intake</p><p className="mt-1 text-slate-700">{intake?.advisor?.name || 'Not completed'}{intake?.parkingSlot?.code ? ` · ${intake.parkingSlot.code}` : ''}</p><p className="text-slate-500">{intake?.roadTest ? `${intake.roadTest.durationMinutes || 0} min road test` : 'No road-test record'}</p></div><div><p className="font-bold text-navy">Senior Technician report</p><p className="mt-1 text-slate-700">{technical?.recommendation || 'Awaiting technical recommendation'}</p><p className="text-slate-500">{technical?.diagnostics?.notes || 'No technical summary yet'}</p></div><div><p className="font-bold text-navy">Verified seller documents</p><div className="mt-1 flex flex-wrap gap-2">{detail.sellerDocuments?.length ? detail.sellerDocuments.map((document) => <span className={`rounded-full px-2 py-1 text-xs font-semibold ${document.status === 'Verified' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}`} key={document._id}>{document.category} · {document.status}</span>) : <span className="text-slate-500">No documents recorded</span>}</div></div></div><p className="mt-4 text-xs text-slate-500">Manager can use this seller information for the scheduled call/email, offer proof, negotiation, and payment record. Senior Technicians remain restricted from these identity documents.</p></section>;
 }
