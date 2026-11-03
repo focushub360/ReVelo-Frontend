@@ -77,6 +77,9 @@ export function Shell() {
         <AppHeader user={user} logout={logout} />
         <main className="workspace p-6 md:p-8">
           <Routes>
+            <Route path="/account/dashboard" element={user.role === 'Buyer & Seller' ? <Dashboard user={user} /> : <Navigate to="/dashboard" />} />
+            <Route path="/dealer/dashboard" element={user.role !== 'Buyer & Seller' && user.role !== 'Super Admin' ? <Dashboard user={user} /> : <Navigate to="/dashboard" />} />
+            <Route path="/platform/dashboard" element={user.role === 'Super Admin' ? <Dashboard user={user} /> : <Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={user.operationalProfile === 'Dealership Manager' ? <DealerOversight managerMode /> : <Dashboard user={user} />} />
             <Route
               path="/dealers"
