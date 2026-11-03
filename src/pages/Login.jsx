@@ -14,7 +14,10 @@ export function Login() {
     mutationFn: () => api.post('/auth/login', form),
     onSuccess: ({ data }) => {
       setCsrf(data.csrfToken);
-      go('/dashboard');
+      const user = data.user;
+      // A valid user reaching a different public login entry is routed to the workspace
+      // authorised by their server-issued role instead of being signed out.
+      go(user.role === 'Buyer & Seller' ? '/account/dashboard' : user.role === 'Super Admin' ? '/platform/dashboard' : '/dealer/dashboard');
     },
     onError: (e) => setError(e.response?.data?.error?.message || 'Unable to sign in'),
   });

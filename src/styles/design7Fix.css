@@ -1,0 +1,85 @@
+@media (min-width: 851px) {
+  .rv-header .rv-nav {
+    width: min(1350px, calc(100% - 48px));
+  }
+
+  .rv-hero {
+    height: clamp(610px, calc(100svh - 84px), 684px);
+  }
+
+  .rv-hero-grid {
+    width: min(1615px, calc(100% - 48px));
+    height: clamp(610px, calc(100svh - 84px), 684px);
+    min-height: 610px;
+  }
+
+  .rv-hero-copy {
+    width: 54%;
+    padding: 92px 24px 156px 9.3%;
+    clip-path: polygon(0 0, 75% 0, 100% 100%, 0 100%);
+  }
+
+  .rv-hero h1 {
+    max-width: 460px;
+    font-size: clamp(46px, 4vw, 72px);
+    line-height: 0.91;
+    white-space: nowrap;
+  }
+
+  .rv-hero h1 br {
+    display: block;
+  }
+
+  .rv-lead {
+    max-width: 330px;
+    margin: 17px 0;
+  }
+
+  .rv-hero-actions {
+    margin-top: 22px;
+  }
+
+  .rv-hero-media {
+    width: 60%;
+    clip-path: polygon(23% 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .rv-hero-media::before {
+    left: 20%;
+    transform: rotate(28deg);
+  }
+
+  .rv-hero-journeys {
+    left: 9.3%;
+    right: 8.5%;
+    bottom: 20px;
+    gap: 12px;
+  }
+
+  .rv-hero-journey {
+    min-height: 88px;
+    padding: 12px 15px;
+    grid-template-columns: 38px 1fr 18px;
+  }
+
+  .rv-journey-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .rv-hero-journey b {
+    font-size: 14px;
+  }
+
+  .rv-hero-journey small {
+    overflow: visible;
+    font-size: 11px;
+    line-height: 1.4;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .rv-hero-copy .rv-eyebrow {
+    margin-top: 0;
+  }
+}

@@ -1,0 +1,847 @@
+.rv-marketplace-page {
+  min-height: 100vh;
+  background: #f3f6fb;
+  color: #0b1f38;
+}
+
+.rv-marketplace {
+  min-height: calc(100vh - 76px);
+  padding-bottom: 30px;
+}
+
+.rv-market-hero {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  background: #061b33;
+  isolation: isolate;
+}
+
+.rv-market-hero::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(100deg, #061b33 0%, #061b33 34%, rgba(6, 27, 51, 0.9) 43%, transparent 70%);
+  content: '';
+}
+
+.rv-market-hero-image {
+  position: absolute;
+  z-index: -2;
+  inset: 0 0 0 auto;
+  width: 66%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 57%;
+}
+
+.rv-market-hero-wedge {
+  position: absolute;
+  z-index: -1;
+  top: -25%;
+  left: 47%;
+  width: 7px;
+  height: 150%;
+  background: #e8b333;
+  transform: rotate(31deg);
+  transform-origin: center;
+}
+
+.rv-market-hero-copy {
+  width: min(1180px, calc(100% - 48px));
+  height: 100%;
+  margin: 0 auto;
+  padding-top: 21px;
+  color: #fff;
+}
+
+.rv-market-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 7px;
+  color: #efb630;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.rv-market-eyebrow span {
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+.rv-market-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(36px, 4vw, 48px);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.rv-market-hero h1 em {
+  color: #ecb333;
+  font-style: italic;
+}
+
+.rv-market-hero-copy > p:not(.rv-market-eyebrow) {
+  margin: 10px 0 13px;
+  color: #e4edf7;
+  font-size: 13px;
+}
+
+.rv-market-browse {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 17px;
+  border-radius: 999px;
+  background: #edb634;
+  color: #09213d;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.rv-market-browse:hover {
+  transform: translateY(-1px);
+  background: #ffd05c;
+}
+
+.rv-inventory-search {
+  position: relative;
+  z-index: 3;
+  width: min(1180px, calc(100% - 48px));
+  margin: -22px auto 0;
+  padding: 7px;
+  border: 1px solid #e1e8f2;
+  border-radius: 13px;
+  background: #f9fbff;
+  box-shadow: 0 7px 22px rgba(18, 43, 74, 0.12);
+}
+
+.rv-inventory-search-form {
+  display: grid;
+  grid-template-columns: minmax(155px, 1.5fr) repeat(5, minmax(100px, 1fr)) minmax(100px, 0.85fr);
+  gap: 7px;
+}
+
+.rv-market-search-input,
+.rv-market-select {
+  display: flex;
+  min-width: 0;
+  height: 32px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 9px;
+  border: 1px solid #d5dfed;
+  border-radius: 9px;
+  background: #f7f9fd;
+  color: #526780;
+}
+
+.rv-market-search-input svg,
+.rv-market-select > svg:first-child {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: #18395d;
+}
+
+.rv-market-search-input input,
+.rv-market-select select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #203a59;
+  font-size: 10px;
+}
+
+.rv-market-search-input input::placeholder {
+  color: #61758d;
+  opacity: 1;
+}
+
+.rv-market-select select {
+  appearance: none;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.rv-market-select > svg:last-child {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+}
+
+.rv-market-search-button {
+  min-width: 0;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: #0876e7;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  transition: background 160ms ease;
+}
+
+.rv-market-search-button:hover {
+  background: #075fba;
+}
+
+.rv-market-results {
+  display: grid;
+  width: min(1180px, calc(100% - 48px));
+  grid-template-columns: 190px minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+  margin: 18px auto 0;
+}
+
+.rv-filter-panel {
+  overflow: hidden;
+  border: 1px solid #e1e8f2;
+  border-radius: 10px;
+  background: #f9fbff;
+  box-shadow: 0 3px 12px rgba(18, 43, 74, 0.045);
+  color: #18304c;
+}
+
+.rv-filter-panel h2 {
+  display: flex;
+  min-height: 39px;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding: 0 12px;
+  border-bottom: 1px solid #e4eaf3;
+  font-size: 12px;
+}
+
+.rv-filter-group {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 11px 12px 0;
+  border: 0;
+  color: #243b57;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.rv-filter-group legend {
+  padding: 0;
+  font-weight: 800;
+}
+
+.rv-filter-group select {
+  width: 100%;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid #dce5ef;
+  border-radius: 7px;
+  background: #f7f9fd;
+  color: #4a6078;
+  font-size: 10px;
+}
+
+.rv-filter-group > label:not(:first-child) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #51667e;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.rv-filter-group input[type='checkbox'] {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  accent-color: #0876e7;
+}
+
+.rv-price-ranges {
+  display: grid;
+  gap: 5px;
+}
+
+.rv-price-ranges input {
+  width: 100%;
+  height: 12px;
+  margin: 2px 0;
+  accent-color: #0876e7;
+}
+
+.rv-price-ranges div {
+  display: flex;
+  justify-content: space-between;
+  color: #5d7087;
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.rv-clear-filters {
+  display: flex;
+  width: calc(100% - 24px);
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  margin: 12px;
+  border: 1px solid #d5e0ed;
+  border-radius: 999px;
+  background: transparent;
+  color: #0876e7;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.rv-clear-filters:hover {
+  background: #edf5ff;
+}
+
+.rv-inventory-listings {
+  min-width: 0;
+}
+
+.rv-listings-toolbar {
+  display: flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.rv-listings-toolbar > p {
+  margin: 0;
+  color: #223b59;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.rv-listings-toolbar > label {
+  display: flex;
+  min-width: 136px;
+  height: 24px;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  border: 1px solid #d6dfeb;
+  border-radius: 7px;
+  background: #f8faff;
+  color: #566a82;
+  font-size: 9px;
+}
+
+.rv-listings-toolbar > label > svg {
+  display: none;
+}
+
+.rv-listings-toolbar select {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  background: transparent;
+  color: #455d77;
+  font-size: 9px;
+}
+
+.rv-marketplace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+  margin: 0;
+}
+
+.rv-marketplace-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e1e7ef;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 3px 11px rgba(13, 39, 67, 0.09);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.rv-marketplace-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(13, 39, 67, 0.14);
+}
+
+.rv-marketplace-card .rv-vehicle-image {
+  position: relative;
+  height: clamp(90px, 10.8vw, 124px);
+  overflow: hidden;
+  background: #e7edf5;
+}
+
+.rv-marketplace-card .rv-vehicle-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 250ms ease;
+}
+
+.rv-marketplace-card:hover .rv-vehicle-image img {
+  transform: scale(1.035);
+}
+
+.rv-marketplace-card .rv-vehicle-image > svg {
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  color: #8ca0b8;
+}
+
+.rv-vehicle-badge {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #efbd3e;
+  color: #162d48;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.rv-vehicle-badge-popular {
+  background: #0876e7;
+  color: #fff;
+}
+
+.rv-vehicle-badge-certified {
+  background: #42d797;
+  color: #073d2a;
+}
+
+.rv-favorite {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  background: rgba(15, 34, 55, 0.48);
+  color: #fff;
+}
+
+.rv-favorite.is-favorite {
+  background: #fff;
+  color: #e34f65;
+}
+
+.rv-marketplace-card .rv-vehicle-info {
+  padding: 8px 9px 9px;
+}
+
+.rv-marketplace-card .rv-vehicle-info > p {
+  display: none;
+}
+
+.rv-marketplace-card .rv-vehicle-info h3 {
+  overflow: hidden;
+  margin: 0 0 2px;
+  color: #102742;
+  font-size: 12px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rv-marketplace-card .rv-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 5px;
+  margin: 7px 0;
+}
+
+.rv-marketplace-card .rv-specs span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  color: #5a6e84;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rv-marketplace-card .rv-specs svg {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 auto;
+  color: #365676;
+}
+
+.rv-marketplace-card-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.rv-marketplace-card-footer small {
+  display: flex;
+  min-width: 0;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  color: #526780;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rv-marketplace-card-footer small svg {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+}
+
+.rv-marketplace-card-footer > b {
+  color: #102742;
+  font-size: 14px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.rv-marketplace-card-footer > a {
+  display: inline-flex;
+  min-height: 23px;
+  align-items: center;
+  gap: 3px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #071d36;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.rv-market-status,
+.rv-market-empty {
+  display: grid;
+  min-height: 160px;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  color: #526780;
+  text-align: center;
+}
+
+.rv-market-empty > svg {
+  width: 28px;
+  height: 28px;
+  color: #7890aa;
+}
+
+.rv-market-empty h2,
+.rv-market-empty p {
+  margin: 0;
+}
+
+.rv-market-empty h2 {
+  color: #17314f;
+  font-size: 17px;
+}
+
+.rv-market-empty p {
+  font-size: 12px;
+}
+
+.rv-marketplace-page .rv-pagination {
+  margin: 14px 0;
+  color: #526780;
+  font-size: 10px;
+}
+
+.rv-marketplace-page .rv-pagination button {
+  min-height: 27px;
+  padding: 0 10px;
+  border: 1px solid #d6dfeb;
+  border-radius: 7px;
+  background: #fff;
+  color: #17314f;
+  font-size: 10px;
+}
+
+.rv-sell-banner {
+  position: relative;
+  display: flex;
+  min-height: 84px;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+  margin: 20px 8px 0;
+  padding: 12px 22px;
+  border-radius: 16px;
+  background: #071d36;
+  color: #fff;
+}
+
+.rv-sell-banner > img {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 0 auto;
+  width: 45%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 58%;
+  opacity: 0.24;
+}
+
+.rv-sell-banner::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(90deg, #071d36 44%, rgba(7, 29, 54, 0.4));
+  content: '';
+}
+
+.rv-sell-banner-icon,
+.rv-sell-banner > div,
+.rv-sell-banner > a {
+  position: relative;
+  z-index: 1;
+}
+
+.rv-sell-banner-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #16395d;
+  color: #efb632;
+}
+
+.rv-sell-banner-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.rv-sell-banner > div {
+  flex: 1;
+}
+
+.rv-sell-banner h2 {
+  margin: 0 0 3px;
+  color: #fff;
+  font-size: 18px;
+}
+
+.rv-sell-banner p {
+  margin: 0;
+  color: #dce6f0;
+  font-size: 10px;
+}
+
+.rv-sell-banner > a {
+  display: inline-flex;
+  min-height: 34px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #edb634;
+  color: #0b203b;
+  font-size: 10px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+@media (max-width: 1050px) {
+  .rv-inventory-search-form {
+    grid-template-columns: minmax(180px, 1.5fr) repeat(3, minmax(105px, 1fr)) minmax(100px, 0.8fr);
+  }
+
+  .rv-market-select-optional {
+    display: none;
+  }
+
+  .rv-marketplace-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .rv-marketplace-page .rv-nav {
+    width: calc(100% - 32px);
+    height: 58px;
+  }
+
+  .rv-marketplace-page .rv-brand img {
+    width: 37px;
+    height: 37px;
+  }
+
+  .rv-marketplace-page .rv-nav-actions .rv-account,
+  .rv-marketplace-page .rv-nav-actions .rv-dealer {
+    display: none;
+  }
+
+  .rv-marketplace-page .rv-menu {
+    color: #fff;
+  }
+
+  .rv-marketplace-page .rv-mobile-nav {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: #061b33;
+  }
+
+  .rv-marketplace-page .rv-mobile-nav a {
+    color: #fff;
+  }
+
+  .rv-market-hero {
+    height: 270px;
+  }
+
+  .rv-market-hero-image {
+    width: 82%;
+    object-position: 58% center;
+  }
+
+  .rv-market-hero::before {
+    background: linear-gradient(90deg, #061b33 0%, rgba(6, 27, 51, 0.96) 24%, rgba(6, 27, 51, 0.67) 70%, rgba(6, 27, 51, 0.35));
+  }
+
+  .rv-market-hero-wedge {
+    left: 62%;
+    opacity: 0.8;
+  }
+
+  .rv-market-hero-copy {
+    width: calc(100% - 40px);
+    padding-top: 30px;
+  }
+
+  .rv-market-hero h1 {
+    font-size: clamp(35px, 8vw, 46px);
+  }
+
+  .rv-inventory-search,
+  .rv-market-results {
+    width: calc(100% - 28px);
+  }
+
+  .rv-inventory-search {
+    margin-top: -18px;
+    padding: 8px;
+  }
+
+  .rv-inventory-search-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rv-market-search-input,
+  .rv-market-search-button {
+    grid-column: 1 / -1;
+  }
+
+  .rv-market-select-optional {
+    display: flex;
+  }
+
+  .rv-market-results {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .rv-filter-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 6px;
+  }
+
+  .rv-filter-panel h2,
+  .rv-clear-filters {
+    grid-column: 1 / -1;
+  }
+
+  .rv-marketplace-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .rv-marketplace-card .rv-vehicle-image {
+    height: clamp(105px, 33vw, 160px);
+  }
+
+  .rv-marketplace-card .rv-vehicle-info {
+    padding: 8px;
+  }
+
+  .rv-marketplace-card-footer > b {
+    font-size: 12px;
+  }
+
+  .rv-sell-banner {
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 12px;
+  }
+
+  .rv-sell-banner-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .rv-sell-banner h2 {
+    font-size: 14px;
+  }
+
+  .rv-sell-banner p {
+    max-width: 210px;
+    line-height: 1.4;
+  }
+
+  .rv-sell-banner > a {
+    min-height: 30px;
+    gap: 4px;
+    padding: 0 9px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 420px) {
+  .rv-listings-toolbar {
+    align-items: flex-start;
+  }
+
+  .rv-listings-toolbar > label {
+    min-width: 126px;
+  }
+
+  .rv-marketplace-card-footer > a {
+    padding: 0 6px;
+    font-size: 7px;
+  }
+
+  .rv-marketplace-card-footer > b {
+    font-size: 11px;
+  }
+}

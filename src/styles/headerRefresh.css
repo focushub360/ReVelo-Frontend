@@ -1,0 +1,149 @@
+/* Shared public header: quiet, premium and intentionally minimal. */
+.rv-header {
+    overflow: visible;
+    border-bottom: 1px solid #e5ebf0 !important;
+    background: rgba(255, 255, 255, .98) !important;
+    box-shadow: none !important
+}
+
+.rv-header-accent {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: #d9b45a
+}
+
+.rv-nav {
+    height: 92px !important
+}
+
+.rv-brand {
+    gap: 13px
+}
+
+.rv-brand img {
+    width: 100px;
+    height: 100px;
+    filter: none
+}
+
+.rv-brand-copy {
+    display: block !important;
+    color: #092744;
+    font-size: 29px !important;
+    font-weight: 850 !important;
+    letter-spacing: -.065em !important
+}
+
+.rv-desktop-nav {
+    gap: 31px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important
+}
+
+.rv-desktop-nav a {
+    position: relative;
+    padding: 36px 0 32px !important;
+    border-radius: 0 !important;
+    color: #506174 !important;
+    font-size: 16px !important;
+    font-weight: 750 !important;
+    letter-spacing: .01em;
+    transition: color .2s
+}
+
+.rv-desktop-nav a.active,
+.rv-desktop-nav a:hover {
+    background: transparent !important;
+    color: #0a2947 !important;
+    box-shadow: none !important
+}
+
+.rv-desktop-nav a.active::after {
+    position: absolute;
+    right: 0;
+    bottom: 23px;
+    left: 0;
+    height: 2px;
+    border-radius: 0;
+    background: #d3a946;
+    content: ''
+}
+
+.rv-nav-actions {
+    gap: 22px !important
+}
+
+.rv-account {
+    min-height: auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #344b62 !important;
+    font-size: 14px !important;
+    font-weight: 750 !important
+}
+
+.rv-account:hover {
+    color: #0b5f9f !important
+}
+
+.rv-account-dot {
+    display: none !important
+}
+
+.rv-dealer {
+    min-height: 46px !important;
+    padding: 0 18px !important;
+    border-radius: 4px !important;
+    background: #0a2947 !important;
+    box-shadow: none !important;
+    font-size: 14px !important
+}
+
+.rv-dealer:hover {
+    background: #174c78 !important;
+    transform: translateY(-1px)
+}
+
+@media(max-width:850px) {
+    .rv-header {
+        box-shadow: 0 4px 14px rgba(9, 31, 56, .06) !important
+    }
+
+    .rv-nav {
+        height: 78px !important
+    }
+
+    .rv-brand img {
+        width: 49px;
+        height: 49px
+    }
+
+    .rv-brand-copy {
+        font-size: 25px !important
+    }
+
+    .rv-menu {
+        border: 1px solid #dce6ef;
+        border-radius: 5px;
+        background: #fff
+    }
+
+    .rv-mobile-nav {
+        padding: 14px 24px 20px !important;
+        background: #fff !important
+    }
+
+    .rv-mobile-nav a {
+        padding: 13px 0 !important;
+        border-bottom: 1px solid #eef3f7;
+        font-size: 15px !important
+    }
+
+    .rv-mobile-nav a:last-child {
+        border: 0
+    }
+}
