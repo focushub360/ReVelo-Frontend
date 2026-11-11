@@ -1220,6 +1220,20 @@
     }
 }
 
+/* Search-led public marketplace additions. */
+.rv-hero-search { display:grid; grid-template-columns:1fr 1fr 1.15fr auto; gap:8px; max-width:670px; margin-top:28px; padding:8px; border:1px solid rgba(255,255,255,.22); border-radius:14px; background:rgba(16,28,44,.62); backdrop-filter:blur(8px); }
+.rv-hero-search select { min-width:0; height:42px; border:1px solid rgba(255,255,255,.18); border-radius:9px; padding:0 10px; background:rgba(255,255,255,.95); color:#172333; font-size:12px; }
+.rv-hero-search button { display:inline-flex; min-height:42px; align-items:center; justify-content:center; gap:7px; border:0; border-radius:9px; padding:0 14px; background:#c69a52; color:#101c2c; font-size:12px; font-weight:800; }
+.rv-discovery { padding:46px 0; background:#fff; border-bottom:1px solid #e2e8f0; }
+.rv-discovery h2 { margin:7px 0 0; color:#101c2c; font-size:29px; letter-spacing:-.045em; }
+.rv-discovery-row { display:flex; align-items:end; justify-content:space-between; gap:26px; }
+.rv-discovery-row>div { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.rv-discovery a { display:inline-flex; align-items:center; gap:6px; border:1px solid #e2e8f0; border-radius:999px; padding:10px 13px; color:#334155; background:#f8fafc; font-size:12px; font-weight:750; }
+.rv-discovery a:hover { border-color:#c69a52; color:#101c2c; background:#fffaf1; }
+.rv-design-process-five { grid-template-columns:repeat(5,1fr); }
+@media(max-width:850px) { .rv-hero-search { grid-template-columns:1fr 1fr; } .rv-hero-search button { grid-column:span 2; } .rv-design-process-five { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:600px) { .rv-hero-search { grid-template-columns:1fr; } .rv-hero-search button { grid-column:auto; } .rv-discovery { padding:38px 0; } .rv-discovery-row { align-items:flex-start; flex-direction:column; } .rv-discovery-row>div { justify-content:flex-start; } .rv-design-process-five { grid-template-columns:1fr; } .rv-mobile-quick { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:6px 0 12px; } .rv-mobile-quick a { display:flex; align-items:center; justify-content:center; border-radius:8px; padding:11px 8px!important; background:#101c2c; color:#fff!important; font-size:12px!important; } .rv-mobile-quick a:last-child { border:0; background:#c69a52; color:#101c2c!important; } }
+
 /* Keep the closing CTA a flex layout at every breakpoint. A prior generic
    selector could turn its container into a content-sized grid on mobile. */
 .rv-closing > .rv-container {
