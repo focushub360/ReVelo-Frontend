@@ -1,0 +1,1 @@
+export function Timeline({ items = [] }) { return <ol className="ui-timeline">{items.map((item, index) => <li key={item.id || index}><span>{index + 1}</span><div><b>{item.title}</b>{item.description && <p>{item.description}</p>}</div></li>)}</ol>; }

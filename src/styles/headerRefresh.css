@@ -10,7 +10,7 @@
     position: absolute;
     inset: 0 0 auto;
     height: 3px;
-    background: #c69a52
+    background: #d6aa29
 }
 
 .rv-nav {
@@ -29,7 +29,7 @@
 
 .rv-brand-copy {
     display: block !important;
-    color: #101c2c;
+    color: #071d36;
     font-size: 23px !important;
     font-weight: 850 !important;
     letter-spacing: -.065em !important
@@ -57,7 +57,7 @@
 .rv-desktop-nav a.active,
 .rv-desktop-nav a:hover {
     background: transparent !important;
-    color: #101c2c !important;
+    color: #071d36 !important;
     box-shadow: none !important
 }
 
@@ -68,7 +68,7 @@
     left: 0;
     height: 2px;
     border-radius: 0;
-    background: #c69a52;
+    background: #d6aa29;
     content: ''
 }
 
@@ -81,13 +81,13 @@
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
-    color: #475569 !important;
+    color: #506174 !important;
     font-size: 13px !important;
     font-weight: 750 !important
 }
 
 .rv-account:hover {
-    color: #101c2c !important
+    color: #071d36 !important
 }
 
 .rv-account-dot {
@@ -98,13 +98,13 @@
     min-height: 42px !important;
     padding: 0 16px !important;
     border-radius: 8px !important;
-    background: #101c2c !important;
+    background: #071d36 !important;
     box-shadow: none !important;
     font-size: 13px !important
 }
 
 .rv-dealer:hover {
-    background: #18283c !important;
+    background: #0a2948 !important;
     transform: translateY(-1px)
 }
 
