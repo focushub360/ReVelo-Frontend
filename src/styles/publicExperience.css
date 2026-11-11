@@ -334,12 +334,12 @@
 }
 
 .rv-page {
-    --navy: #091f38;
-    --blue: #2377d4;
-    --ink: #172c45;
-    --muted: #68798c;
-    --line: #e1e9f0;
-    --wash: #f5f8fb;
+    --navy: #101c2c;
+    --blue: #2878c8;
+    --ink: #172333;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --wash: #f4f6f8;
     min-height: 100vh;
     background: var(--wash);
     color: var(--ink)
@@ -973,7 +973,7 @@
     color: #abd6fd
 }
 
-.rv-closing>div:last-child {
+.rv-closing>.rv-container>div:last-child {
     display: flex;
     gap: 10px;
     white-space: nowrap
@@ -1139,7 +1139,7 @@
 
 @media(max-width:600px) {
     .rv-container {
-        width: min(100% - 32px, 1180px)
+        width: min(calc(100% - 32px), 1180px)
     }
 
     .rv-nav {
@@ -1206,7 +1206,7 @@
         border-bottom: 1px solid var(--line)
     }
 
-    .rv-closing>div:last-child {
+    .rv-closing>.rv-container>div:last-child {
         display: grid;
         width: 100%
     }
@@ -1217,5 +1217,28 @@
 
     .rv-footer-grid>div:first-child {
         grid-column: span 2
+    }
+}
+
+/* Keep the closing CTA a flex layout at every breakpoint. A prior generic
+   selector could turn its container into a content-sized grid on mobile. */
+.rv-closing > .rv-container {
+    display: flex;
+    min-width: 0;
+    white-space: normal;
+}
+
+.rv-closing > .rv-container,
+.rv-closing > .rv-container * {
+    white-space: normal !important;
+}
+
+.rv-closing > .rv-container > div {
+    min-width: 0;
+}
+
+@media(max-width:600px) {
+    .rv-closing > .rv-container {
+        flex-direction: column;
     }
 }

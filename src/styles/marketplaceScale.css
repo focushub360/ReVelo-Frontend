@@ -229,7 +229,7 @@
 
 @media(max-width:720px) {
     .rv-inventory-search {
-        width: min(100% - 32px, 1180px)
+    width: min(calc(100% - 32px), 1180px)
     }
 
     .rv-market-search-input,
@@ -239,7 +239,7 @@
 
     .rv-market-results {
         grid-template-columns: 1fr;
-        width: min(100% - 32px, 1180px)
+    width: min(calc(100% - 32px), 1180px)
     }
 
     .rv-filter-panel {

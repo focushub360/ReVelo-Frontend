@@ -3,13 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --ink: #10233b;
-  --muted: #68788a;
-  --canvas: #edf2f6;
-  --line: #dce5ec;
-  --blue: #2278d4;
-  --navy: #071d36;
-  --lime: #b6dd52;
+  --ink: #172333;
+  --muted: #64748b;
+  --canvas: #f4f6f8;
+  --line: #e2e8f0;
+  --blue: #2878c8;
+  --navy: #101c2c;
+  --navy-soft: #18283c;
+  --champagne: #c69a52;
 }
 @layer base {
   * {
@@ -18,8 +19,9 @@
   body {
     margin: 0;
     color: var(--ink);
-    background: radial-gradient(circle at 90% 0%, rgba(34, 120, 212, 0.1), transparent 26rem), var(--canvas);
+    background: var(--canvas);
     font-family:
+      Manrope,
       Inter,
       ui-sans-serif,
       system-ui,
@@ -46,11 +48,9 @@
     position: relative;
     overflow: hidden;
     border: 1px solid var(--line);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow:
-      0 1px 1px rgba(12, 35, 61, 0.03),
-      0 10px 28px rgba(24, 52, 79, 0.045);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(16, 28, 44, .04), 0 12px 32px rgba(16, 28, 44, .06);
   }
   .card:hover {
     border-color: #c8d8e5;
@@ -90,12 +90,12 @@
   }
   .btn-primary {
     color: #fff;
-    background: linear-gradient(135deg, var(--blue), #45a5ed);
-    box-shadow: 0 5px 12px rgba(34, 120, 212, 0.24);
+    background: var(--navy);
+    box-shadow: 0 5px 12px rgba(16, 28, 44, .18);
   }
   .btn-primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, #145bb5, var(--blue));
-    box-shadow: 0 7px 18px rgba(34, 120, 212, 0.3);
+    background: var(--navy-soft);
+    box-shadow: 0 7px 18px rgba(16, 28, 44, .24);
   }
   .btn-secondary,
   .btn-outline {
@@ -124,7 +124,7 @@
       background 0.16s ease;
   }
   .field:focus {
-    border-color: var(--blue);
+    border-color: var(--champagne);
     background: #fff;
     box-shadow: 0 0 0 3px rgba(34, 120, 212, 0.13);
   }
@@ -202,7 +202,7 @@
   overflow-x: hidden;
   /* The sidebar is a fixed navigation rail, not a second scroll container. */
   overflow-y: hidden;
-  background: linear-gradient(165deg, #071d36 0%, #0a2948 58%, #113c61 100%);
+  background: linear-gradient(165deg, #101c2c 0%, #18283c 100%);
   box-shadow: 12px 0 32px rgba(5, 25, 45, 0.12);
 }
 @media (min-width: 768px) {
@@ -233,7 +233,8 @@
   right: 0;
   left: 0;
   z-index: 50;
-  background: linear-gradient(105deg, #06182c 0%, #092947 55%, #0b3655 100%) !important;
+  background: #fff !important;
+  border-bottom: 1px solid var(--line) !important;
   backdrop-filter: none;
 }
 .app-shell > section {
@@ -257,7 +258,7 @@
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, var(--blue), var(--lime));
+  background: var(--champagne);
   content: '';
 }
 .dashboard-metrics .metric-card:nth-child(3n + 2)::before {
@@ -415,7 +416,7 @@
 .icon-btn:hover:not(:disabled) {
   transform: translateY(-1px);
   background: #f4f9fd;
-  color: #145bb5;
+    color: var(--navy);
 }
 .icon-btn:focus-visible,
 .btn-primary:focus-visible,

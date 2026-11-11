@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { NavLink, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, Menu, X } from 'lucide-react';
 import { api, setCsrf } from '../lib/api.js';
 import reveloLogo from '../assets/revelo-logo.png';
 import PublicLeadSettings from '../components/PublicLeadSettings.jsx';
@@ -19,6 +20,7 @@ import { AppHeader } from '../components/layout/AppHeader.jsx';
 
 export function Shell() {
   const go = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
   const me = useQuery({
     queryKey: ['me'],
     queryFn: () =>
@@ -50,10 +52,13 @@ export function Shell() {
   );
   return (
     <div className="app-shell min-h-screen md:flex">
-      <aside className="relative w-64 overflow-hidden bg-navy p-4">
-        <div className="mb-8 px-3">
-          <img src={reveloLogo} alt="ReVelo" className="mx-auto h-20 w-20 object-contain" />
-          <p className="mt-2 text-center text-xs font-normal text-slate-300">
+      <button className="fixed bottom-5 right-5 z-[60] grid h-12 w-12 place-items-center rounded-full bg-navy text-white shadow-float md:hidden" aria-label="Toggle workspace navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+        {menuOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+      <aside className={`relative w-full overflow-hidden bg-navy p-4 md:w-64 ${menuOpen ? 'block' : 'hidden'} md:block`}>
+        <div className="mb-6 flex items-center gap-3 border-b border-white/10 px-3 pb-5 md:mb-8 md:block md:border-0 md:pb-0">
+          <img src={reveloLogo} alt="ReVelo" className="h-12 w-12 object-contain md:mx-auto md:h-20 md:w-20" />
+          <p className="text-xs font-normal text-slate-300 md:mt-2 md:text-center">
             {user.operationalProfile || user.role}
           </p>
         </div>
@@ -64,6 +69,7 @@ export function Shell() {
               <NavLink
                 key={to}
                 to={`/${to}`}
+                onClick={() => setMenuOpen(false)}
                 className={({ isActive }) => `nav ${isActive ? 'nav-active' : ''}`}
               >
                 <Icon size={18} />
