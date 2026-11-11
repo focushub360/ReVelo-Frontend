@@ -229,7 +229,7 @@
 
 @media(max-width:720px) {
     .rv-inventory-search {
-        width: min(100% - 32px, 1180px)
+    width: min(calc(100% - 32px), 1180px)
     }
 
     .rv-market-search-input,
@@ -239,7 +239,7 @@
 
     .rv-market-results {
         grid-template-columns: 1fr;
-        width: min(100% - 32px, 1180px)
+    width: min(calc(100% - 32px), 1180px)
     }
 
     .rv-filter-panel {
@@ -292,6 +292,23 @@
     font-size: 13px !important;
     font-weight: 750;
     cursor: pointer
+}
+
+.rv-selected-filters { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:-2px 0 16px; }
+.rv-selected-filters>span { color:#64748b; font-size:12px; font-weight:750; }
+.rv-selected-filters button { display:inline-flex; align-items:center; gap:5px; min-height:30px; border:1px solid #d9e1ea; border-radius:999px; padding:0 10px; background:#fff; color:#334155; font-size:11px; font-weight:700; }
+.rv-selected-filters button:hover { border-color:#c69a52; background:#fffaf1; color:#101c2c; }
+.rv-selected-filters .rv-filter-clear { border:0; background:transparent; color:#2878c8; }
+.rv-back-link { display:inline-flex; margin-bottom:17px; color:#2878c8; font-size:13px; font-weight:750; }
+.rv-mobile-filter-trigger,.rv-filter-close { display:none; }
+@media(max-width:760px) {
+  .rv-mobile-filter-trigger { display:inline-flex; min-height:34px; align-items:center; gap:6px; border:1px solid #d6dfeb; border-radius:8px; padding:0 10px; background:#fff; color:#172333; font-size:12px; font-weight:750; }
+  .rv-filter-panel { display:none!important; }
+  .rv-filter-panel.is-open { position:fixed; z-index:120; inset:0 0 0 auto; display:block!important; width:min(360px,calc(100% - 28px)); overflow-y:auto; border-radius:16px 0 0 16px; box-shadow:-18px 0 45px rgba(16,28,44,.2); }
+  .rv-filter-panel.is-open::before { position:fixed; z-index:-1; inset:0; background:rgba(16,28,44,.38); content:''; }
+  .rv-filter-panel h2 { position:sticky; top:0; z-index:1; background:#fff; }
+  .rv-filter-close { display:grid; width:28px; height:28px; place-items:center; margin-left:auto; border:0; border-radius:7px; background:#f1f5f9; color:#475569; }
+  .rv-listings-toolbar { flex-wrap:wrap; }
 }
 
 .rv-love-cars {

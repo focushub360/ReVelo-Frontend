@@ -6,6 +6,7 @@ import { api } from '../lib/api.js';
 import { ParkingDashboard } from '../components/dashboard/ParkingDashboard.jsx';
 import { PlatformDashboard } from '../components/dashboard/PlatformDashboard.jsx';
 import { PageHero } from '../components/layout/PageHero.jsx';
+import { LifecycleTracker } from '../components/dashboard/LifecycleTracker.jsx';
 
 export function Dashboard({ user }) {
   const q = useQuery({
@@ -60,8 +61,8 @@ export function Dashboard({ user }) {
   return (
     <>
       <PageHero
-        eyebrow="Dealership command centre"
-        title="Dealership overview"
+        eyebrow="Today at your dealership"
+        title="Operations overview"
         description={`A real-time view of stock, teams and commercial activity at ${user.dealership?.name || 'your authorised dealership'}.`}
       >
         <div className="rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-right backdrop-blur">
@@ -90,7 +91,7 @@ export function Dashboard({ user }) {
                     <p className="text-xs font-bold uppercase tracking-[.1em] text-slate-500">{label}</p>
                     <p className="mt-2 text-3xl font-bold text-navy">{value}</p>
                   </div>
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-50 text-sky">
+                  <span className={`dashboard-metric-icon dashboard-metric-${tone}`}>
                     <Icon size={20} />
                   </span>
                 </div>
@@ -257,6 +258,7 @@ export function Dashboard({ user }) {
               </div>
             </div>
           </section>
+          <div className="mt-6"><LifecycleTracker breakdown={d.lifecycleBreakdown || []} /></div>
           <section className="mt-6 grid gap-6 lg:grid-cols-3">
             <div className="card p-5">
               <p className="text-xs font-bold uppercase tracking-[.1em] text-slate-500">Team online</p>

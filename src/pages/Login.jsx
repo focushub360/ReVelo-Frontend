@@ -7,7 +7,7 @@ import reveloLogo from '../assets/revelo-logo.png';
 import showroomImage from '../assets/login-showroom.png';
 
 export function Login() {
-  const [form, setForm] = useState({ email: 'super.admin@revelo.test', password: 'ChangeMe123!' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const go = useNavigate();
   const login = useMutation({

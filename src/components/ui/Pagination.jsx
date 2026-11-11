@@ -1,0 +1,1 @@
+export function Pagination({ page, pages, onPrevious, onNext }) { if (pages <= 1) return null; return <nav className="ui-pagination" aria-label="Pagination"><button onClick={onPrevious} disabled={page <= 1}>Previous</button><span>Page {page} of {pages}</span><button onClick={onNext} disabled={page >= pages}>Next</button></nav>; }

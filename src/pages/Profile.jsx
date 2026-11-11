@@ -60,7 +60,7 @@ export function ProfileOverview({ user }) {
             };
   return (
     <>
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#071d36] via-[#0a3155] to-[#135584] p-6 text-white shadow-xl">
+      <div className="profile-hero relative overflow-hidden rounded-2xl p-6 text-white shadow-xl">
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full border-[18px] border-white/10" />
         <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2 } from 'lucide-react';
 import { api } from '../lib/api';
+import { PageHero } from './layout/PageHero.jsx';
 
 const blankLocation = () => ({ label: '', dealership: '', active: true });
 const blankField = () => ({ key: `custom_${Date.now()}`, label: '', type: 'text', required: false, options: [], system: false });
@@ -44,11 +45,11 @@ export default function PublicLeadSettings() {
   const updateField = (index, key, value) => setFields((items) => items.map((item, i) => i === index ? { ...item, [key]: value } : item));
   const dealerships = settings.data?.dealerships || [];
   return <>
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#071d36] via-[#0a3155] to-[#135584] px-6 py-6 text-white shadow-xl md:px-7">
-      <p className="text-xs font-bold uppercase tracking-[.18em] text-[#cceb71]">Public lead controls</p>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight">Sell-your-car locations</h1>
-      <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-200">Choose which locations appear on the public form and privately route each one to the correct dealership. The public site never shows the dealership name.</p>
-    </div>
+    <PageHero
+      eyebrow="Public lead controls"
+      title="Sell-your-car locations"
+      description="Choose which locations appear on the public form and privately route each one to the correct dealership. The public site never shows the dealership name."
+    />
     {settings.isLoading && <div className="card mt-6 p-6 text-slate-500">Loading location settings…</div>}
     {settings.isError && <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-5 text-red-700">{settings.error?.response?.data?.error?.message || 'Unable to load public lead settings.'}</div>}
     {!settings.isLoading && !settings.isError && <section className="card mt-6 overflow-auto">

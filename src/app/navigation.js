@@ -3,6 +3,12 @@ import { Building2, CarFront, CircleDot, ClipboardCheck, FileText, LayoutDashboa
 export const ICONS = {
   Dashboard: LayoutDashboard,
   Dealers: Building2,
+  Dealer: Building2,
+  System: ShieldCheck,
+  Vehicle: CarFront,
+  Document: FileText,
+  Team: Users,
+  Yard: MapPin,
   Employees: Users,
   Vehicles: CarFront,
   Enquiries: FileText,
@@ -21,24 +27,24 @@ export const navFor = (user) => {
   if (user.role === 'Super Admin')
     return [
       ['dashboard', 'Platform Dashboard'],
-      ['dealers', 'Dealers'],
+      ['dealers', 'Dealer Management'],
       ['public-lead-settings', 'Public Lead Form'],
-      ['admins', 'Admin Management'],
-      ['activity', 'Platform Activity'],
+      ['admins', 'Dealer Admin Accounts'],
+      ['activity', 'System Analytics'],
       ['profile', 'My Profile'],
     ];
   if (user.role === 'Dealer Admin')
     return [
       ['dashboard', 'Dealership Dashboard'],
-      ['dealer-oversight', 'Dealer Oversight'],
+      ['dealer-oversight', 'Vehicle Lifecycle'],
       ['enquiries', 'Enquiries'],
-      ['vehicles', 'Vehicles'],
-      ['documents', 'Documents'],
+      ['vehicles', 'Vehicle Master'],
+      ['documents', 'Document Verification'],
       ['acquisitions', 'Acquisitions'],
       ['work-orders', 'Refurbishment'],
       ['parking', 'Parking & Yard'],
       ['offers', 'Offers'],
-      ['employees', 'Employees'],
+      ['employees', 'Team Management'],
       ['activity', 'Activity Logs'],
       ['profile', 'My Profile'],
     ];
@@ -74,8 +80,8 @@ export const navFor = (user) => {
   if (user.operationalProfile === 'Parking Manager')
     return [
       ['dashboard', 'Parking Dashboard'],
-      ['parking', 'Yard Map'],
-      ['vehicles', 'Vehicle Locations'],
+      ['parking', 'Yard Layout & Slots'],
+      ['vehicles', 'Vehicle Movement'],
       ['activity', 'My Activity'],
       ['profile', 'My Profile'],
     ];

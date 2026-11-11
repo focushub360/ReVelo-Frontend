@@ -6,6 +6,7 @@ import reveloLogo from '../../assets/revelo-logo.png';
 import { ICONS, navFor } from '../../app/navigation.js';
 import { AdminManagement } from './AdminManagement.jsx';
 import { AppHeader } from '../../components/layout/AppHeader.jsx';
+import { DashboardFooter } from '../../components/layout/DashboardFooter.jsx';
 
 export function AdminGate() {
   const go = useNavigate();
@@ -35,7 +36,7 @@ export function AdminGate() {
     <div className="app-shell min-h-screen md:flex">
       <aside className="relative w-64 overflow-hidden bg-navy p-4">
         <div className="mb-8 px-3">
-          <img src={reveloLogo} alt="ReVelo" className="mx-auto h-20 w-20 object-contain" />
+          <img src={reveloLogo} alt="ReVelo" className="mx-auto h-24 w-24 object-contain" />
           <p className="mt-2 text-center text-xs font-normal text-slate-300">Super Admin</p>
         </div>
         <nav className="space-y-1">
@@ -57,7 +58,11 @@ export function AdminGate() {
       <section className="min-w-0 flex-1">
         <AppHeader user={user} logout={logout} />
         <main className="workspace p-6 md:p-8">
+          <div className="mb-4 flex items-center gap-2 text-xs font-semibold text-slate-400">
+            <span>Workspace</span><span>/</span><span className="text-slate-600">Dealer Admin Accounts</span>
+          </div>
           <AdminManagement />
+          <DashboardFooter />
         </main>
       </section>
     </div>
