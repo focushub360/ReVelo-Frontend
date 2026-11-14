@@ -45,8 +45,8 @@ export function ParkingDashboard() {
       </div>
     );
   return (
-    <>
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#071d36] via-[#0a3155] to-[#135584] p-6 text-white shadow-xl">
+    <div className="operations-dashboard parking-dashboard">
+      <div className="parking-dashboard-hero relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#071d36] via-[#0a3155] to-[#135584] p-6 text-white shadow-xl">
         <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full border-[22px] border-[#b6dd52]/20" />
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#cceb71]">Live yard operations</p>
         <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
@@ -224,6 +224,6 @@ export function ParkingDashboard() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -17,7 +17,7 @@ export function PlatformDashboard() {
   const active = list.filter((d) => d.active).length;
   const pending = list.filter((d) => d.onboardingStatus !== 'Active').length;
   return (
-    <>
+    <div className="operations-dashboard platform-dashboard">
       <PageHero
         eyebrow="SaaS platform command centre"
         title="Platform Dashboard"
@@ -150,6 +150,6 @@ export function PlatformDashboard() {
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 }
