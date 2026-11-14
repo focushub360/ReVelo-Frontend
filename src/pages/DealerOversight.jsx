@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { X } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { PageHero } from '../components/layout/PageHero.jsx';
+import '../styles/Dashboard.css';
 const money = (v) => v == null ? '—' : `₹${Number(v).toLocaleString('en-IN')}`;
 const Badge = ({ children, green = false }) => <span className={`badge ${green ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-700'}`}>{children}</span>;
 
@@ -10,7 +11,106 @@ export function DealerOversight({ managerMode = false }) {
   const [id, setId] = useState('');
   const list = useQuery({ queryKey: ['dealer-oversight'], queryFn: () => api.get('/dealer-oversight').then((r) => r.data), retry: false });
   const detail = useQuery({ queryKey: ['dealer-case', id], queryFn: () => api.get(`/dealer-oversight/${id}`).then((r) => r.data), enabled: Boolean(id), retry: false });
-  return <><PageHero eyebrow={managerMode ? 'Dealership operations' : 'Dealership control'} title={managerMode ? 'Operations Overview' : 'Dealer Oversight'} description={managerMode ? 'Control seller cases, advisor intake, technical reports, purchase decisions, and refurbishment progress.' : 'Audit every seller vehicle from first enquiry through final pricing and ecommerce readiness.'}><div className="rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-right"><p className="text-xs text-slate-200">Seller cases</p><p className="text-2xl font-bold">{list.data?.length || 0}</p></div></PageHero><section className="card mt-6 overflow-hidden">{list.isLoading ? <p className="p-6 text-slate-500">Loading workflow…</p> : <div className="overflow-x-auto"><table className="table min-w-[1350px]"><thead><tr><th>Seller / Vehicle</th><th>Service Advisor</th><th>Senior Technician</th><th>Manager decision</th><th>Refurbishment</th><th>Final price</th><th className="text-right">Case</th></tr></thead><tbody>{list.data?.length ? list.data.map((item) => { const v = item.enquiry.vehicle || {}, p = item.enquiry.person || {}, price = item.acquisition?.pricing?.finalListingPrice; return <tr key={item.enquiry._id}><td><p className="font-bold text-navy">{v.registration || v.vehicleCode || 'Vehicle'}</p><p className="mt-1 text-xs text-slate-500">{p.name || 'Seller'} · {p.phone || 'No mobile'}<br/>{[v.make, v.model].filter(Boolean).join(' ')}</p></td><td><Badge green={Boolean(item.intake)}>{item.intake?.status || 'Pending'}</Badge></td><td><Badge green={item.technicalReport?.status === 'Submitted'}>{item.technicalReport?.recommendation || item.technicalReport?.status || 'Pending'}</Badge></td><td><Badge>{item.acquisition?.status || 'Awaiting'}</Badge></td><td><Badge green={item.workOrder?.status === 'Completed'}>{item.workOrder?.status || 'Not started'}</Badge></td><td>{price ? <><strong className="text-navy">{money(price)}</strong><p className="mt-1 text-xs text-emerald-700">Price ready</p></> : <span className="text-xs text-slate-500">Awaiting final QA / pricing</span>}</td><td className="text-right"><button className="btn-primary px-3 py-2 text-xs" onClick={() => setId(item.enquiry._id)}>View complete case</button></td></tr>; }) : <tr><td colSpan="7" className="p-10 text-center text-slate-500">No seller cases yet.</td></tr>}</tbody></table></div>}</section>{id && <Case query={detail} close={() => setId('')}/>}</>;
+  return (
+    <div className="operations-dashboard operations-dashboard-manager">
+      <PageHero
+        eyebrow={managerMode ? 'Dealership operations' : 'Dealership control'}
+        title={managerMode ? 'Operations Overview' : 'Dealer Oversight'}
+        description={
+          managerMode
+            ? 'Control seller cases, advisor intake, technical reports, purchase decisions, and refurbishment progress.'
+            : 'Audit every seller vehicle from first enquiry through final pricing and ecommerce readiness.'
+        }
+      >
+        <div className="dashboard-context">
+          <p>Seller cases</p>
+          <strong>{list.data?.length || 0}</strong>
+        </div>
+      </PageHero>
+      <section className="card oversight-table mt-5 overflow-hidden">
+        <div className="oversight-table-heading">
+          <div>
+            <p className="dashboard-section-eyebrow">Seller pipeline</p>
+            <h2>Vehicle cases</h2>
+          </div>
+          <span>{list.data?.length || 0} cases</span>
+        </div>
+        {list.isLoading ? (
+          <p className="p-6 text-slate-500">Loading workflow…</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table min-w-[1200px]">
+              <thead>
+                <tr>
+                  <th>Seller / Vehicle</th>
+                  <th>Service Advisor</th>
+                  <th>Senior Technician</th>
+                  <th>Manager decision</th>
+                  <th>Refurbishment</th>
+                  <th>Final price</th>
+                  <th className="text-right">Case</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.data?.length ? (
+                  list.data.map((item) => {
+                    const v = item.enquiry.vehicle || {};
+                    const p = item.enquiry.person || {};
+                    const price = item.acquisition?.pricing?.finalListingPrice;
+                    return (
+                      <tr key={item.enquiry._id}>
+                        <td>
+                          <p className="font-bold text-navy">{v.registration || v.vehicleCode || 'Vehicle'}</p>
+                          <p className="mt-1 text-xs text-slate-500">
+                            {p.name || 'Seller'} · {p.phone || 'No mobile'}
+                            <br />
+                            {[v.make, v.model].filter(Boolean).join(' ')}
+                          </p>
+                        </td>
+                        <td><Badge green={Boolean(item.intake)}>{item.intake?.status || 'Pending'}</Badge></td>
+                        <td>
+                          <Badge green={item.technicalReport?.status === 'Submitted'}>
+                            {item.technicalReport?.recommendation || item.technicalReport?.status || 'Pending'}
+                          </Badge>
+                        </td>
+                        <td><Badge>{item.acquisition?.status || 'Awaiting'}</Badge></td>
+                        <td>
+                          <Badge green={item.workOrder?.status === 'Completed'}>
+                            {item.workOrder?.status || 'Not started'}
+                          </Badge>
+                        </td>
+                        <td>
+                          {price ? (
+                            <>
+                              <strong className="text-navy">{money(price)}</strong>
+                              <p className="mt-1 text-xs text-emerald-700">Price ready</p>
+                            </>
+                          ) : (
+                            <span className="text-xs text-slate-500">Awaiting final QA / pricing</span>
+                          )}
+                        </td>
+                        <td className="text-right">
+                          <button
+                            className="btn-primary px-3 py-2 text-xs"
+                            onClick={() => setId(item.enquiry._id)}
+                          >
+                            View complete case
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr><td colSpan="7" className="p-10 text-center text-slate-500">No seller cases yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+      {id && <Case query={detail} close={() => setId('')} />}
+    </div>
+  );
 }
 
 function Case({ query, close }) {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { LayoutDashboard, Menu, X } from 'lucide-react';
+import { Activity as ActivityIcon, ArrowUpRight, ChevronLeft, ChevronRight, LayoutDashboard, Menu, ShieldCheck, X } from 'lucide-react';
 import { api, setCsrf } from '../lib/api.js';
 import reveloLogo from '../assets/revelo-logo.png';
 import PublicLeadSettings from '../components/PublicLeadSettings.jsx';
@@ -18,11 +18,13 @@ import { PricingListing } from '../pages/PricingListing.jsx';
 import { RefurbishmentManagerWorkspace } from '../components/records/RefurbishmentManagerWorkspace.jsx';
 import { AppHeader } from '../components/layout/AppHeader.jsx';
 import { DashboardFooter } from '../components/layout/DashboardFooter.jsx';
+import '../styles/sidebar.css';
 
 export function Shell() {
   const go = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const me = useQuery({
     queryKey: ['me'],
     queryFn: () =>
@@ -36,6 +38,14 @@ export function Shell() {
   if (me.isError) return <Navigate to="/login" />;
   const user = me.data;
   const nav = navFor(user);
+  const navGroups = [
+    { title: 'Overview', links: nav.filter(([to]) => to === 'dashboard') },
+    {
+      title: 'Workspace',
+      links: nav.filter(([to]) => !['dashboard', 'activity', 'profile'].includes(to)),
+    },
+    { title: 'Your space', links: nav.filter(([to]) => ['activity', 'profile'].includes(to)) },
+  ].filter((group) => group.links.length);
   const parkingWorkspace = location.pathname === '/parking';
   const logout = async () => {
     await api.post('/auth/logout');
@@ -54,35 +64,77 @@ export function Shell() {
     />
   );
   return (
-    <div className="app-shell min-h-screen md:flex">
+    <div className={`app-shell min-h-screen md:flex ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {!parkingWorkspace && (
         <button className="fixed bottom-5 right-5 z-[60] grid h-12 w-12 place-items-center rounded-full bg-navy text-white shadow-float md:hidden" aria-label="Toggle workspace navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       )}
-      <aside className={`relative w-full overflow-hidden bg-navy p-4 md:w-64 ${parkingWorkspace ? 'hidden' : `${menuOpen ? 'block' : 'hidden'} md:block`}`}>
-        <div className="mb-6 flex items-center gap-3 border-b border-white/10 px-3 pb-5 md:mb-8 md:block md:border-0 md:pb-0">
-          <img src={reveloLogo} alt="ReVelo" className="h-12 w-12 object-contain md:mx-auto md:h-24 md:w-24" />
-          <p className="text-xs font-normal text-slate-300 md:mt-2 md:text-center">
-            {user.operationalProfile || user.role}
-          </p>
+      <aside className={`app-sidebar relative w-full overflow-hidden bg-navy md:w-64 ${parkingWorkspace ? 'hidden' : `${menuOpen ? 'block' : 'hidden'} md:block`}`}>
+        <div className="sidebar-brand">
+          <div className="sidebar-brand-mark">
+            <img src={reveloLogo} alt="ReVelo" />
+          </div>
+          <div className="sidebar-brand-copy">
+            <p className="sidebar-brand-name">ReVelo</p>
+            <p className="sidebar-brand-caption">MOTOR OPERATIONS</p>
+          </div>
+          <span className="sidebar-brand-spark" aria-hidden="true">✦</span>
+          <button
+            type="button"
+            className="sidebar-collapse-toggle"
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-expanded={!sidebarCollapsed}
+            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            onClick={() => setSidebarCollapsed((collapsed) => !collapsed)}
+          >
+            {sidebarCollapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
+          </button>
         </div>
-        <nav className="space-y-1">
-          {nav.map(([to, label]) => {
-            const Icon = ICONS[label.split(' ')[0]] || LayoutDashboard;
-            return (
-              <NavLink
-                key={to}
-                to={`/${to}`}
-                onClick={() => setMenuOpen(false)}
-                className={({ isActive }) => `nav ${isActive ? 'nav-active' : ''}`}
-              >
-                <Icon size={18} />
-                {label}
-              </NavLink>
-            );
-          })}
+        <div className="sidebar-profile">
+          <span className="sidebar-profile-icon"><ShieldCheck size={16} /></span>
+          <span className="sidebar-profile-copy">
+            <span>Workspace</span>
+            <strong>{user.operationalProfile || user.role}</strong>
+          </span>
+          <span className="sidebar-profile-status" title="Secure workspace" />
+        </div>
+        <nav className="sidebar-nav" aria-label="Workspace navigation">
+          {navGroups.map((group, groupIndex) => (
+            <div className="sidebar-nav-group" key={group.title} style={{ '--group-index': groupIndex }}>
+              <p className="sidebar-nav-heading">{group.title}</p>
+              <div className="sidebar-nav-links">
+                {group.links.map(([to, label]) => {
+                  const Icon = ICONS[label.split(' ')[0]] || LayoutDashboard;
+                  return (
+                    <NavLink
+                      key={to}
+                      to={`/${to}`}
+                      title={label}
+                      onClick={() => setMenuOpen(false)}
+                      className={({ isActive }) => `nav sidebar-link ${isActive ? 'nav-active' : ''}`}
+                    >
+                      <span className="sidebar-link-icon"><Icon size={17} strokeWidth={1.8} /></span>
+                      <span className="sidebar-link-label">{label}</span>
+                      <ArrowUpRight className="sidebar-link-arrow" size={14} aria-hidden="true" />
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
+        <div className="sidebar-footer">
+          <div className="sidebar-footer-art" aria-hidden="true">
+            <ActivityIcon size={19} />
+            <span />
+          </div>
+          <div className="sidebar-footer-copy">
+            <p className="sidebar-footer-title">ReVelo network</p>
+            <p className="sidebar-footer-subtitle"><span /> Workspace connected</p>
+          </div>
+          <span className="sidebar-footer-spark" aria-hidden="true">✧</span>
+        </div>
       </aside>
       <section className={`min-w-0 flex-1 ${parkingWorkspace ? 'parking-fullscreen' : ''}`}>
         {!parkingWorkspace && <AppHeader user={user} logout={logout} />}

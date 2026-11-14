@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Bell, ChevronDown, LogOut } from 'lucide-react';
+import { Bell, BellRing, ChevronDown, Clock3, LogOut, X } from 'lucide-react';
 import { api } from '../../lib/api.js';
+import '../../styles/AppHeader.css';
 
 export function AppHeader({ user, logout }) {
   const [openNotifications, setOpenNotifications] = useState(false);
@@ -32,15 +33,97 @@ export function AppHeader({ user, logout }) {
       </div>
       <div className="relative flex items-center gap-2 sm:gap-3">
         <button
-          className="relative grid h-10 w-10 place-items-center rounded-xl border border-line bg-white text-navy transition hover:border-champagne hover:bg-amber-50"
+          className={`notification-trigger relative grid h-10 w-10 place-items-center rounded-xl border border-line bg-white text-navy transition hover:border-champagne hover:bg-amber-50 ${openNotifications ? 'is-open' : ''}`}
           aria-label="Notifications"
           title="Notifications"
+          aria-expanded={openNotifications}
+          aria-controls="header-notification-panel"
           onClick={() => setOpenNotifications((value) => !value)}
         >
           <Bell size={18} />
-          {unread.length > 0 && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-champagne ring-2 ring-white" />}
+          {unread.length > 0 && (
+            <span className="notification-count" aria-label={`${unread.length} unread notifications`}>
+              {unread.length > 9 ? '9+' : unread.length}
+            </span>
+          )}
         </button>
-        {openNotifications && <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl"><div className="border-b px-4 py-3"><p className="font-bold text-navy">Notifications</p></div>{notifications.isLoading ? <p className="p-4 text-sm text-slate-500">Loading…</p> : notifications.data?.length ? <div className="max-h-80 overflow-y-auto">{notifications.data.map((notification) => <button key={notification._id} className={`block w-full border-b px-4 py-3 text-left text-sm hover:bg-slate-50 ${notification.read ? 'bg-white' : 'bg-sky/5'}`} onClick={() => { if (!notification.read) markRead.mutate(notification._id); if (notification.link) window.location.href = notification.link; }}><p className="font-semibold text-navy">{notification.title}</p><p className="mt-1 text-xs leading-5 text-slate-600">{notification.body}</p></button>)}</div> : <p className="p-4 text-sm text-slate-500">No notifications yet.</p>}</div>}
+        {openNotifications && (
+          <section className="notification-popover" id="header-notification-panel" aria-label="Notifications">
+            <header className="notification-popover-header">
+              <div className="notification-heading-icon"><BellRing size={17} /></div>
+              <div className="notification-heading-copy">
+                <h2>Notifications</h2>
+                <p>
+                  {unread.length
+                    ? `${unread.length} unread update${unread.length === 1 ? '' : 's'}`
+                    : 'You’re all caught up'}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="notification-close"
+                aria-label="Close notifications"
+                onClick={() => setOpenNotifications(false)}
+              >
+                <X size={17} />
+              </button>
+            </header>
+            {notifications.isLoading ? (
+              <div className="notification-state">
+                <span className="notification-loader" />
+                <p>Loading your latest updates…</p>
+              </div>
+            ) : notifications.isError ? (
+              <div className="notification-state notification-state-error" role="alert">
+                <p>Notifications couldn’t be loaded.</p>
+                <span>{notifications.error?.response?.data?.error?.message || 'Check your connection and try again.'}</span>
+              </div>
+            ) : notifications.data?.length ? (
+              <div className="notification-list">
+                {notifications.data.map((notification) => (
+                  <button
+                    type="button"
+                    key={notification._id}
+                    className={`notification-item ${notification.read ? 'is-read' : 'is-unread'}`}
+                    onClick={() => {
+                      if (!notification.read) markRead.mutate(notification._id);
+                      setOpenNotifications(false);
+                      if (notification.link) window.location.href = notification.link;
+                    }}
+                  >
+                    <span className="notification-item-marker" aria-hidden="true" />
+                    <span className="notification-item-content">
+                      <span className="notification-item-title">{notification.title}</span>
+                      <span className="notification-item-body">{notification.body}</span>
+                      <span className="notification-item-time">
+                        <Clock3 size={12} />
+                        {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : 'Recently'}
+                      </span>
+                    </span>
+                    {notification.link && <span className="notification-item-arrow" aria-hidden="true">→</span>}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="notification-state notification-state-empty">
+                <span><Bell size={19} /></span>
+                <p>You’re all caught up</p>
+                <small>New updates will appear here.</small>
+              </div>
+            )}
+            {markRead.isError && (
+              <p className="notification-action-error" role="alert">
+                Could not mark this notification as read. Please try again.
+              </p>
+            )}
+            {!notifications.isLoading && !notifications.isError && notifications.data?.length > 0 && (
+              <footer className="notification-popover-footer">
+                <span><span /> ReVelo workspace updates</span>
+                <span>Refreshes automatically</span>
+              </footer>
+            )}
+          </section>
+        )}
         <div className="hidden h-8 w-px bg-line sm:block" />
         <div className="flex items-center gap-2 rounded-xl border border-line bg-slate-50 py-1.5 pl-1.5 pr-2">
           <div className="grid h-8 w-8 place-items-center rounded-lg bg-champagne text-[11px] font-extrabold text-navy">
