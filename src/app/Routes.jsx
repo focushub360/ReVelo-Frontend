@@ -3,8 +3,10 @@ import PublicSellerForm from '../components/PublicSellerForm.jsx';
 import AcceptInvitation from '../components/AcceptInvitation.jsx';
 import PublicSellerLanding from '../components/PublicSellerLanding.jsx';
 import PublicDocumentVerification from '../components/PublicDocumentVerification.jsx';
+import PublicHome from '../components/PublicHome.jsx';
 import { Login } from '../pages/Login.jsx';
 import { AdminGate } from '../pages/admin/AdminGate.jsx';
+import PublicVehicleCatalog from '../pages/PublicVehicleCatalog.jsx';
 import { Shell } from './Shell.jsx';
 import { Cars, CarDetail, DealerApplication, Landing, PortalHome, SellJourneyPage } from '../pages/PublicExperience.jsx';
 import { AccountPortal } from '../pages/AccountPortal.jsx';
@@ -15,8 +17,11 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/cars" element={<Cars />} />
       <Route path="/cars/:listingId" element={<CarDetail />} />
-      <Route path="/sell-your-car" element={<SellJourneyPage />} />
-      <Route path="/sell-your-car/start" element={<SellJourneyPage />} />
+      <Route path="/home" element={<PublicHome />} />
+      <Route path="/buy-cars" element={<PublicVehicleCatalog />} />
+      <Route path="/sell-your-car" element={<PublicSellerLanding />} />
+      <Route path="/sell-your-car/start" element={<PublicSellerForm />} />
+      <Route path="/sell" element={<SellJourneyPage />} />
       <Route path="/accept-invitation" element={<AcceptInvitation />} />
       <Route path="/verify-documents" element={<PublicDocumentVerification />} />
       <Route path="/become-a-dealer" element={<DealerApplication />} />

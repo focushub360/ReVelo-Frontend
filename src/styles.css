@@ -240,6 +240,9 @@
   .app-shell > section {
     margin-left: 16rem;
   }
+  .app-shell > section.parking-fullscreen {
+    margin-left: 0;
+  }
 }
 .app-shell > aside::after {
   position: absolute;
@@ -263,6 +266,73 @@
 }
 .app-shell > section {
   padding-top: 76px;
+}
+.app-shell > section.parking-fullscreen {
+  padding-top: 0;
+}
+.parking-fullscreen .workspace {
+  max-width: none;
+  margin: 0;
+}
+.parking-fullscreen .workspace {
+  min-height: 100vh;
+  padding: 0 !important;
+  background: #101827;
+}
+.parking-fullscreen .workspace > :first-child {
+  border-radius: 0;
+  box-shadow: none;
+  padding: 12px 20px;
+}
+.parking-fullscreen .workspace > :first-child h1 {
+  font-size: 1.25rem;
+}
+.parking-fullscreen .workspace > :first-child p {
+  display: none;
+}
+.parking-fullscreen .workspace > .card {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.parking-fullscreen .workspace > section.card {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.parking-fullscreen .workspace > section.card > header {
+  min-height: 54px;
+  padding: 8px 16px;
+  background: #101827;
+  border-color: #263449;
+}
+.parking-fullscreen .workspace > section.card > header > div:first-child {
+  display: none;
+}
+.parking-fullscreen .workspace > section.card > header .btn-secondary {
+  background: #223149;
+  border-color: #3a4c66;
+  color: #e5edf8;
+}
+.parking-fullscreen .workspace > section.card > div:nth-child(2) {
+  min-height: 58px;
+  background: #172235;
+  border-color: #263449;
+  padding: 9px 16px;
+}
+.parking-fullscreen .workspace > section.card > div:nth-child(2) button {
+  background: #223149;
+  border-color: #3a4c66;
+  color: #e5edf8;
+}
+.parking-fullscreen .workspace > section.card > div:nth-child(2) button.ring-1 {
+  background: #245c91;
+  border-color: #4aa3ff;
+}
+.parking-fullscreen .workspace > section.card > div:nth-child(3) {
+  min-height: calc(100vh - 150px);
 }
 @media (min-width: 768px) {
   .topbar {

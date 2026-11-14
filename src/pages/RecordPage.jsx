@@ -20,7 +20,7 @@ export function RecordPage({ title, endpoint, canUploadDocuments = false, canMan
   const isRefurbishmentManager = endpoint === 'work-orders' && operationalProfile === 'Dealership Manager';
   return (
     <>
-      {add && !isPhysicalIntake && !isTechnicalInspection && !isRefurbishmentTechnician && (endpoint !== 'vehicles' || canManageVehicles) && (endpoint !== 'parking/slots' || canConfigureParking) && (endpoint !== 'work-orders' || canCreateWorkOrders) && (
+      {add && !isPhysicalIntake && !isTechnicalInspection && !isRefurbishmentTechnician && endpoint !== 'parking/slots' && (endpoint !== 'vehicles' || canManageVehicles) && (endpoint !== 'work-orders' || canCreateWorkOrders) && (
         <div className="mb-4 flex justify-end">
           <button className="btn-primary" onClick={() => setAdding({})}>
             <Plus size={16} />

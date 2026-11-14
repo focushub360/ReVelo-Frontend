@@ -36,6 +36,7 @@ export function Shell() {
   if (me.isError) return <Navigate to="/login" />;
   const user = me.data;
   const nav = navFor(user);
+  const parkingWorkspace = location.pathname === '/parking';
   const logout = async () => {
     await api.post('/auth/logout');
     setCsrf('');
@@ -54,10 +55,12 @@ export function Shell() {
   );
   return (
     <div className="app-shell min-h-screen md:flex">
-      <button className="fixed bottom-5 right-5 z-[60] grid h-12 w-12 place-items-center rounded-full bg-navy text-white shadow-float md:hidden" aria-label="Toggle workspace navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
-        {menuOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-      <aside className={`relative w-full overflow-hidden bg-navy p-4 md:w-64 ${menuOpen ? 'block' : 'hidden'} md:block`}>
+      {!parkingWorkspace && (
+        <button className="fixed bottom-5 right-5 z-[60] grid h-12 w-12 place-items-center rounded-full bg-navy text-white shadow-float md:hidden" aria-label="Toggle workspace navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      )}
+      <aside className={`relative w-full overflow-hidden bg-navy p-4 md:w-64 ${parkingWorkspace ? 'hidden' : `${menuOpen ? 'block' : 'hidden'} md:block`}`}>
         <div className="mb-6 flex items-center gap-3 border-b border-white/10 px-3 pb-5 md:mb-8 md:block md:border-0 md:pb-0">
           <img src={reveloLogo} alt="ReVelo" className="h-12 w-12 object-contain md:mx-auto md:h-24 md:w-24" />
           <p className="text-xs font-normal text-slate-300 md:mt-2 md:text-center">
@@ -81,10 +84,12 @@ export function Shell() {
           })}
         </nav>
       </aside>
-      <section className="min-w-0 flex-1">
-        <AppHeader user={user} logout={logout} />
-        <main className="workspace p-6 md:p-8">
+      <section className={`min-w-0 flex-1 ${parkingWorkspace ? 'parking-fullscreen' : ''}`}>
+        {!parkingWorkspace && <AppHeader user={user} logout={logout} />}
+        <main className={`workspace ${parkingWorkspace ? 'min-h-screen p-3 md:p-4' : 'p-6 md:p-8'}`}>
+          {!parkingWorkspace && (
           <div className="mb-4 flex items-center gap-2 text-xs font-semibold text-slate-400"><span>Workspace</span><span>/</span><span className="capitalize text-slate-600">{location.pathname.split('/').filter(Boolean).at(-1)?.replaceAll('-', ' ') || 'dashboard'}</span></div>
+          )}
           <Routes>
             <Route path="/account/dashboard" element={user.role === 'Buyer & Seller' ? <Dashboard user={user} /> : <Navigate to="/dashboard" />} />
             <Route path="/dealer/dashboard" element={user.role !== 'Buyer & Seller' && user.role !== 'Super Admin' ? <Dashboard user={user} /> : <Navigate to="/dashboard" />} />
