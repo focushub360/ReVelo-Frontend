@@ -130,7 +130,7 @@ export function Dashboard({ user }) {
                   <BarChart data={lifecycle} margin={{ top: 8, right: 4, left: -20, bottom: 8 }}>
                     <XAxis
                       dataKey="name"
-                      tick={{ fontSize: 10, fill: '#68788a' }}
+                      tick={{ fontSize: 10, fill: 'var(--chart-label)' }}
                       tickLine={false}
                       axisLine={false}
                       interval={0}
@@ -140,12 +140,12 @@ export function Dashboard({ user }) {
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fontSize: 11, fill: '#68788a' }}
+                      tick={{ fontSize: 11, fill: 'var(--chart-label)' }}
                       tickLine={false}
                       axisLine={false}
                     />
-                    <Tooltip cursor={{ fill: '#f1f7fc' }} />
-                    <Bar dataKey="value" fill="#2278d4" radius={[6, 6, 0, 0]} maxBarSize={42} />
+                    <Tooltip cursor={{ fill: 'var(--chart-hover)' }} />
+                    <Bar dataKey="value" fill="var(--chart-primary)" radius={[6, 6, 0, 0]} maxBarSize={42} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -171,8 +171,8 @@ export function Dashboard({ user }) {
                         endAngle={-270}
                         stroke="none"
                       >
-                        <Cell fill="#2278d4" />
-                        <Cell fill="#dcecf9" />
+                        <Cell fill="var(--chart-accent)" />
+                        <Cell fill="var(--chart-muted)" />
                       </Pie>
                     </PieChart>
                   </ResponsiveContainer>

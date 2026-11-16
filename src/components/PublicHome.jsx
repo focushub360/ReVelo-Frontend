@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { ArrowRight, CarFront, HandCoins } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import reveloLogo from '../assets/revelo-logo.png';
 import showroomImage from '../assets/login-showroom.png';
+import { PublicHeader } from '../pages/PublicExperience.jsx';
 
 const cards = [
   {
@@ -31,17 +31,7 @@ export default function PublicHome() {
 
   return (
     <main className="min-h-screen bg-[#f7f7f2] font-sans text-[#10253b]">
-      <header className="absolute inset-x-0 top-0 z-10 px-5 py-5 sm:px-10">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5 text-white">
-            <img src={reveloLogo} alt="ReVelo" className="h-10 w-10 object-contain" />
-            <span className="text-xl font-bold tracking-tight">ReVelo</span>
-          </Link>
-          <Link to="/login" className="text-sm font-semibold text-white hover:text-[#d6f15d]">
-            Dealer sign in
-          </Link>
-        </div>
-      </header>
+      <PublicHeader />
 
       <section className="relative isolate overflow-hidden bg-[#0a1d31] px-5 pb-20 pt-36 sm:px-10">
         <img

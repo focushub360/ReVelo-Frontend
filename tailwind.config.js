@@ -8,9 +8,9 @@ export default {
   content: [join(root, 'index.html'), join(root, 'src/**/*.{js,jsx}')],
   theme: {
     extend: {
-      colors: { navy: '#101C2C', 'navy-soft': '#18283C', canvas: '#F4F6F8', surface: '#FFFFFF', ink: '#172333', muted: '#64748B', line: '#E2E8F0', champagne: '#C69A52', success: '#16865B', warning: '#D69A35', danger: '#D94B4B', sky: '#2878C8' },
+      colors: { navy: '#0B3B60', 'navy-soft': '#15567F', canvas: '#F6F9FC', surface: '#FFFFFF', ink: '#0B3B60', muted: '#6E8EA5', line: '#D9E8F2', champagne: '#2D9CDB', success: '#2D9CDB', warning: '#7CC4EC', danger: '#15567F', sky: '#2D9CDB', steel: '#15567F', teal: '#2D9CDB' },
       fontFamily: { sans: ['Manrope', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
-      boxShadow: { panel: '0 1px 2px rgba(16, 28, 44, .04), 0 12px 32px rgba(16, 28, 44, .06)', float: '0 18px 45px rgba(16, 28, 44, .14)' },
+      boxShadow: { panel: '0 1px 2px rgba(23, 43, 77, .04), 0 12px 32px rgba(23, 43, 77, .06)', float: '0 18px 45px rgba(23, 43, 77, .14)' },
     },
   },
   plugins: [],

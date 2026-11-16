@@ -8,6 +8,7 @@ import PublicLeadSettings from '../components/PublicLeadSettings.jsx';
 import { ICONS, navFor } from './navigation.js';
 import { Dashboard } from '../pages/Dashboard.jsx';
 import { Dealers } from '../pages/admin/Dealers.jsx';
+import { AdminManagement } from '../pages/admin/AdminManagement.jsx';
 import { RecordPage } from '../pages/RecordPage.jsx';
 import { AcquisitionPage } from '../pages/AcquisitionPage.jsx';
 import { Activity } from '../pages/Activity.jsx';
@@ -151,6 +152,7 @@ export function Shell() {
               path="/dealers"
               element={user.role === 'Super Admin' ? <Dealers /> : <Navigate to="/dashboard" />}
             />
+            <Route path="/admins" element={user.role === 'Super Admin' ? <AdminManagement /> : <Navigate to="/dashboard" />} />
             <Route path="/public-lead-settings" element={user.role === 'Super Admin' ? <PublicLeadSettings /> : <Navigate to="/dashboard" />} />
             <Route
               path="/employees"
