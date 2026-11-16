@@ -1,0 +1,1198 @@
+/* ReVelo Titanium Blue design system.
+   This file is deliberately loaded last so legacy page modules inherit a single
+   visual language without changing their routes, data fetching, or behaviour. */
+:root {
+  --midnight-blue: #20242B;
+  --steel-blue: #414852;
+  --teal: #F07836;
+  --cool-grey: #F5F5F3;
+  --titanium-silver: #D6D9DE;
+  --dark-navy: #171A20;
+  --light-steel-blue: #F1F2F4;
+  --soft-teal: #FFF3EB;
+  --secondary-text: #6B7280;
+  --muted-text: #9AA1AA;
+  --success: #218653;
+  --warning: #D99019;
+  --danger: #DC4545;
+  --information: #3979C6;
+
+  --ink: var(--midnight-blue);
+  --muted: var(--secondary-text);
+  --canvas: var(--cool-grey);
+  --line: var(--titanium-silver);
+  --blue: var(--steel-blue);
+  --navy: var(--midnight-blue);
+  --navy-soft: #414852;
+  --champagne: var(--teal);
+}
+
+body { background: var(--cool-grey); color: var(--midnight-blue); }
+
+/* Shared operational building blocks */
+.card {
+  border-color: var(--titanium-silver);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(23, 43, 77, .04), 0 10px 28px rgba(23, 43, 77, .06);
+}
+.card:hover { border-color: #A9BFD1; }
+.btn-primary { background: var(--midnight-blue); box-shadow: 0 5px 12px rgba(23, 43, 77, .18); }
+.btn-primary:hover:not(:disabled) { background: var(--steel-blue); }
+.btn-secondary, .btn-outline { border-color: var(--titanium-silver); color: var(--steel-blue); background: #fff; }
+.btn-secondary:hover:not(:disabled), .btn-outline:hover:not(:disabled) { border-color: var(--steel-blue); color: var(--midnight-blue); background: var(--light-steel-blue); }
+.field { border-color: var(--titanium-silver); background: #fff; }
+.field:focus { border-color: var(--steel-blue); box-shadow: 0 0 0 3px rgba(49, 91, 131, .16); }
+.label { color: var(--steel-blue); }
+
+/* Internal workspace */
+.workspace { background: var(--cool-grey); }
+.app-shell > .app-sidebar {
+  border-color: rgba(203, 213, 225, .16);
+  background: linear-gradient(160deg, var(--dark-navy) 0%, var(--midnight-blue) 58%, #234B70 100%);
+  box-shadow: 10px 0 30px rgba(13, 23, 41, .12);
+}
+.app-sidebar::before { background: linear-gradient(180deg, var(--teal), rgba(66, 165, 160, .12) 42%, transparent 76%); }
+.sidebar-brand-mark { border-color: rgba(66, 165, 160, .45); background: #fff; }
+.sidebar-brand-mark::after { background: linear-gradient(90deg, var(--steel-blue), var(--teal), var(--steel-blue)); }
+.sidebar-brand-spark, .sidebar-profile-icon, .sidebar-collapse-toggle { color: #83D5D1; }
+.sidebar-profile-icon { border-color: rgba(66, 165, 160, .3); background: rgba(66, 165, 160, .12); }
+.app-shell .sidebar-link::before { background: var(--teal); }
+.app-shell .sidebar-link:hover .sidebar-link-icon { border-color: rgba(66, 165, 160, .35); color: #9DE1DD; background: rgba(66, 165, 160, .13); }
+.app-shell .sidebar-link.nav-active, .app-shell .sidebar-link.nav-active:hover { border-color: rgba(66, 165, 160, .36); background: linear-gradient(100deg, rgba(66, 165, 160, .24), rgba(49, 91, 131, .18)); }
+.app-shell .sidebar-link.nav-active .sidebar-link-icon { border-color: rgba(66, 165, 160, .5); background: rgba(66, 165, 160, .2); }
+.sidebar-collapse-toggle { border-color: rgba(66, 165, 160, .46); background: var(--midnight-blue); }
+.sidebar-collapse-toggle:hover { color: var(--dark-navy); background: var(--teal); }
+.topbar { border-bottom: 1px solid var(--titanium-silver); background: rgba(255,255,255,.92); box-shadow: 0 1px 0 rgba(23,43,77,.03); }
+.text-champagne { color: var(--teal) !important; }
+.bg-champagne { background-color: var(--teal) !important; }
+
+/* Dashboard and data-visualisation accents */
+.operations-dashboard { --dashboard-ink: var(--midnight-blue); --dashboard-muted: var(--secondary-text); --dashboard-line: var(--titanium-silver); }
+.dealer-dashboard-hero {
+  border-color: rgba(203,213,225,.18);
+  background: linear-gradient(112deg, var(--dark-navy), var(--midnight-blue) 53%, var(--steel-blue));
+  box-shadow: 0 18px 38px rgba(23,43,77,.16);
+}
+.dealer-dashboard-hero::after { border-color: rgba(66,165,160,.42); box-shadow: 0 0 0 22px rgba(66,165,160,.06), 0 0 0 54px rgba(66,165,160,.035); }
+.dealer-hero-eyebrow > span { background: var(--teal); box-shadow: 0 0 0 4px rgba(66,165,160,.16); }
+.dealer-hero-eyebrow > i, .dealer-hero-copy h1 span, .dealer-hero-meta svg { color: #8FD9D5; background-color: #8FD9D5; }
+
+/* Public marketplace: blue, white and restrained teal replace legacy gold. */
+.rv-page { --navy: var(--midnight-blue); --blue: var(--steel-blue); --ink: var(--midnight-blue); --muted: var(--secondary-text); --line: var(--titanium-silver); --wash: var(--cool-grey); --champagne: var(--teal); --lime: var(--teal); }
+.rv-page .rv-dealer, .rv-page .rv-primary, .rv-page .rv-detail-panel form button, .rv-page .rv-mobile-enquiry { background: var(--midnight-blue); }
+.rv-page .rv-dealer:hover, .rv-page .rv-primary:hover { background: var(--steel-blue); }
+.rv-page .rv-eyebrow { color: var(--steel-blue) !important; }
+.rv-page .rv-hero-search button { background: var(--teal); color: var(--dark-navy); }
+.rv-page .rv-discovery a:hover { border-color: var(--teal); background: var(--soft-teal); color: var(--midnight-blue); }
+.rv-page .rv-header { border-color: var(--titanium-silver); }
+.rv-page .rv-desktop-nav a.active, .rv-page .rv-desktop-nav a:hover { color: var(--steel-blue); }
+.rv-page .rv-gallery-thumbs button.is-active { border-color: var(--teal); }
+.rv-page .account-side nav a.is-active { background: var(--soft-teal); box-shadow: inset 3px 0 var(--teal); }
+
+/* Accessible focus treatment across both products. */
+:where(button, a, input, select, textarea):focus-visible { outline: 3px solid rgba(66, 165, 160, .48); outline-offset: 2px; }
+
+/* Theme control shared by marketplace and operations headers. */
+.theme-toggle {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 11px;
+  color: var(--text-primary);
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+.theme-toggle:hover { border-color: var(--teal); color: var(--steel-blue); background: var(--soft-teal); transform: translateY(-1px); }
+.theme-toggle-compact { min-height: 34px; min-width: 34px; padding: 0 8px; }
+
+/* Semantic aliases keep the theme portable to modules that use raw CSS. */
+:root {
+  --page-bg: #F5F5F3;
+  --surface: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --text-primary: #20242B;
+  --text-secondary: #6B7280;
+  --border: #D6D9DE;
+  --chart-primary: #414852;
+  --chart-accent: #F07836;
+  --chart-muted: #F1F2F4;
+  --chart-label: #6B7280;
+  --chart-hover: #FFF3EB;
+}
+
+html[data-theme='dark'] {
+  --ink: #F5F5F3;
+  --muted: #A5ACB6;
+  --canvas: #171A20;
+  --line: #383F49;
+  --navy: #F5F5F3;
+  --navy-soft: #E4E6E9;
+  --blue: #C5CBD3;
+  --champagne: #F07836;
+  --page-bg: #171A20;
+  --surface: #20242B;
+  --surface-elevated: #2A303A;
+  --text-primary: #F5F5F3;
+  --text-secondary: #A5ACB6;
+  --border: #383F49;
+  --cool-grey: #171A20;
+  --titanium-silver: #383F49;
+  --light-steel-blue: #2A303A;
+  --soft-teal: #482A20;
+  --secondary-text: #A5ACB6;
+  --muted-text: #818995;
+  --chart-primary: #C5CBD3;
+  --chart-accent: #F07836;
+  --chart-muted: #383F49;
+  --chart-label: #A5ACB6;
+  --chart-hover: #2A303A;
+}
+
+html[data-theme='dark'] body,
+html[data-theme='dark'] .workspace,
+html[data-theme='dark'] .rv-page,
+html[data-theme='dark'] .account-page,
+html[data-theme='dark'] .sell-page { background: var(--page-bg); color: var(--text-primary); }
+html[data-theme='dark'] .card,
+html[data-theme='dark'] .table-wrap,
+html[data-theme='dark'] .modal-content,
+html[data-theme='dark'] .notification-popover,
+html[data-theme='dark'] .rv-detail-panel,
+html[data-theme='dark'] .rv-overview-card,
+html[data-theme='dark'] .account-side,
+html[data-theme='dark'] .account-journey,
+html[data-theme='dark'] .sell-card,
+html[data-theme='dark'] .sell-review > div,
+html[data-theme='dark'] .account-records article { border-color: var(--border) !important; background: var(--surface) !important; color: var(--text-primary); box-shadow: 0 10px 28px rgba(0,0,0,.18); }
+html[data-theme='dark'] .topbar { border-color: var(--border); background: rgba(30,41,59,.96); }
+html[data-theme='dark'] .app-shell > .app-sidebar { background: var(--dark-navy); }
+html[data-theme='dark'] .btn-secondary,
+html[data-theme='dark'] .btn-outline,
+html[data-theme='dark'] .field,
+html[data-theme='dark'] .theme-toggle,
+html[data-theme='dark'] .notification-close { border-color: var(--border); background: var(--surface-elevated); color: var(--text-primary); }
+html[data-theme='dark'] .field::placeholder { color: var(--muted-text); }
+html[data-theme='dark'] .theme-toggle:hover { background: var(--soft-teal); color: #A8E0DD; }
+
+/* Tailwind utilities used by existing modules map into the same dark tokens. */
+html[data-theme='dark'] .bg-white,
+html[data-theme='dark'] .bg-slate-50,
+html[data-theme='dark'] .bg-slate-100,
+html[data-theme='dark'] .bg-slate-50\/80 { background-color: var(--surface) !important; }
+html[data-theme='dark'] .bg-slate-200 { background-color: var(--surface-elevated) !important; }
+html[data-theme='dark'] .border-slate-100,
+html[data-theme='dark'] .border-slate-200,
+html[data-theme='dark'] .border-slate-300,
+html[data-theme='dark'] .border-line { border-color: var(--border) !important; }
+html[data-theme='dark'] .text-navy,
+html[data-theme='dark'] .text-ink,
+html[data-theme='dark'] .text-slate-900,
+html[data-theme='dark'] .text-slate-800,
+html[data-theme='dark'] .text-slate-700 { color: var(--text-primary) !important; }
+html[data-theme='dark'] .text-muted,
+html[data-theme='dark'] .text-slate-600,
+html[data-theme='dark'] .text-slate-500,
+html[data-theme='dark'] .text-slate-400 { color: var(--text-secondary) !important; }
+html[data-theme='dark'] .hover\:bg-slate-50:hover,
+html[data-theme='dark'] .hover\:bg-slate-100:hover { background-color: var(--surface-elevated) !important; }
+
+/* Legacy page modules use direct declarations; these ensure their key content
+   surfaces, dropdowns, tables and overlays participate in dark mode too. */
+html[data-theme='dark'] .rv-header,
+html[data-theme='dark'] .rv-mobile-nav,
+html[data-theme='dark'] .rv-account,
+html[data-theme='dark'] .rv-discovery,
+html[data-theme='dark'] .rv-works,
+html[data-theme='dark'] .rv-featured { border-color: var(--border) !important; background-color: var(--surface) !important; }
+html[data-theme='dark'] .rv-page :is(h1,h2,h3,h4,.rv-brand,.rv-desktop-nav a,.rv-detail-summary h1,.account-content h2,.sell-card h2) { color: var(--text-primary) !important; }
+html[data-theme='dark'] .rv-page :is(p,.rv-lead,.rv-detail-variant,.account-lead,.sell-card h2 + p) { color: var(--text-secondary); }
+html[data-theme='dark'] .notification-popover-header,
+html[data-theme='dark'] .notification-item,
+html[data-theme='dark'] .notification-popover-footer,
+html[data-theme='dark'] .notification-state { border-color: var(--border); background: var(--surface) !important; }
+html[data-theme='dark'] .notification-item.is-unread { background: var(--surface-elevated) !important; }
+html[data-theme='dark'] .notification-heading-copy h2,
+html[data-theme='dark'] .notification-item-title,
+html[data-theme='dark'] .notification-item-body,
+html[data-theme='dark'] .notification-item-time { color: var(--text-primary) !important; }
+
+@media (max-width: 640px) { .theme-toggle:not(.theme-toggle-compact) span { display: none; } .theme-toggle:not(.theme-toggle-compact) { min-width: 40px; padding: 0; } }
+
+/* Titanium Blue public landing page ------------------------------------------------
+   The page keeps its existing conversion flow; this layer gives every section a
+   consistent, calm automotive SaaS treatment. */
+.rv-landing-page {
+  --landing-ink: #172B4D;
+  --landing-muted: #64748B;
+  --landing-surface: #FFFFFF;
+  --landing-wash: #F1F5F9;
+  --landing-border: #CBD5E1;
+  background: var(--landing-wash) !important;
+}
+.rv-landing-page .rv-header {
+  border-bottom-color: var(--landing-border) !important;
+  background: rgba(255,255,255,.96) !important;
+  box-shadow: 0 1px 0 rgba(23,43,77,.04) !important;
+}
+.rv-landing-page .rv-header-accent { background: var(--teal) !important; }
+.rv-landing-page .rv-brand-copy,
+.rv-landing-page .rv-desktop-nav a.active,
+.rv-landing-page .rv-desktop-nav a:hover { color: var(--landing-ink) !important; }
+.rv-landing-page .rv-desktop-nav a { color: var(--landing-muted) !important; }
+.rv-landing-page .rv-desktop-nav a.active::after { background: var(--teal) !important; }
+.rv-landing-page .rv-account { color: var(--steel-blue) !important; }
+.rv-landing-page .rv-dealer { border-radius: 8px !important; background: var(--midnight-blue) !important; box-shadow: 0 6px 14px rgba(23,43,77,.12) !important; }
+.rv-landing-page .rv-dealer:hover { background: var(--steel-blue) !important; }
+
+.rv-home-hero.rv-hero-full {
+  min-height: 540px;
+  background: var(--dark-navy) !important;
+}
+.rv-home-hero::before {
+  background: linear-gradient(90deg, rgba(13,23,41,.96), rgba(23,43,77,.87) 42%, rgba(23,43,77,.28) 73%, rgba(23,43,77,.08)) !important;
+}
+.rv-home-hero::after { display: block; z-index: 0; background: linear-gradient(0deg, rgba(13,23,41,.42), transparent 43%); }
+.rv-home-3d-banner { opacity: .9; filter: drop-shadow(0 22px 28px rgba(0,0,0,.26)); }
+.rv-home-eyebrow { color: #8FD9D5 !important; }
+.rv-home-eyebrow > span { background: var(--teal) !important; box-shadow: 0 0 0 4px rgba(66,165,160,.17) !important; }
+.rv-home-eyebrow > i { background: rgba(143,217,213,.65) !important; }
+.rv-home-hero-copy h1 { font-family: Manrope, Inter, sans-serif; font-weight: 800; }
+.rv-home-hero-copy h1 em { color: #9DCEEB !important; }
+.rv-home-hero-copy .rv-lead { color: #D9E3ED !important; }
+.rv-home-hero-copy .rv-primary,
+.rv-landing-page .rv-closing .rv-primary { border-color: var(--teal) !important; color: var(--dark-navy) !important; background: var(--teal) !important; }
+.rv-home-hero-copy .rv-primary:hover,
+.rv-landing-page .rv-closing .rv-primary:hover { background: #68BBB6 !important; }
+.rv-home-hero-copy .rv-secondary { border-color: rgba(203,213,225,.52) !important; background: rgba(255,255,255,.08) !important; }
+.rv-home-search.rv-hero-search { border-color: rgba(203,213,225,.42) !important; border-radius: 12px; box-shadow: 0 18px 42px rgba(3,12,24,.28) !important; }
+.rv-home-search-query,
+.rv-home-search.rv-hero-search select { border-color: var(--landing-border) !important; background: var(--landing-wash) !important; color: var(--landing-ink) !important; }
+.rv-home-search-query input { color: var(--landing-ink) !important; }
+.rv-home-search.rv-hero-search button { border-radius: 8px !important; background: var(--midnight-blue) !important; }
+.rv-home-search.rv-hero-search button:hover { background: var(--steel-blue) !important; }
+
+.rv-landing-page .rv-discovery,
+.rv-landing-page .rv-showcase { background: var(--landing-wash) !important; }
+.rv-landing-page .rv-featured,
+.rv-landing-page .rv-works { background: var(--landing-surface) !important; }
+.rv-landing-page .rv-discovery .rv-eyebrow,
+.rv-landing-page .rv-works .rv-eyebrow { color: var(--steel-blue) !important; }
+.rv-landing-page .rv-discovery h2,
+.rv-landing-page .rv-featured .rv-heading h2,
+.rv-landing-page .rv-works .rv-heading h2 { color: var(--landing-ink) !important; font-family: Manrope, Inter, sans-serif; }
+.rv-landing-page .rv-discovery-row > div a { border-color: var(--landing-border) !important; border-radius: 8px; color: var(--steel-blue) !important; background: var(--landing-surface) !important; }
+.rv-landing-page .rv-discovery-row > div a:hover { border-color: var(--teal) !important; background: var(--soft-teal) !important; }
+.rv-landing-page .rv-featured .rv-text-link { border-color: var(--landing-border) !important; border-radius: 8px; color: var(--steel-blue) !important; background: var(--landing-surface) !important; }
+.rv-landing-page .rv-featured .rv-vehicle-card { border-color: var(--landing-border) !important; border-radius: 12px; box-shadow: 0 7px 20px rgba(23,43,77,.06) !important; }
+.rv-landing-page .rv-featured .rv-vehicle-card:hover { border-color: #A9BFD1 !important; box-shadow: 0 14px 26px rgba(23,43,77,.11) !important; }
+
+.rv-landing-page .rv-value { background: var(--midnight-blue) !important; }
+.rv-landing-page .rv-value::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 88% 18%, rgba(66,165,160,.2), transparent 29%); }
+.rv-landing-page .rv-value .rv-eyebrow,
+.rv-landing-page .rv-benefit-grid article > span { color: #8FD9D5 !important; }
+.rv-landing-page .rv-benefit-grid article { border-color: rgba(203,213,225,.18) !important; border-radius: 12px; background: rgba(255,255,255,.055) !important; }
+.rv-landing-page .rv-benefit-grid article:hover { border-color: rgba(66,165,160,.62) !important; background: rgba(66,165,160,.1) !important; }
+.rv-landing-page .rv-showcase-card { border-radius: 16px; }
+.rv-landing-page .rv-showcase-card::after { background: linear-gradient(90deg, rgba(13,23,41,.94), rgba(23,43,77,.61) 54%, rgba(13,23,41,.08)) !important; }
+.rv-landing-page .rv-showcase-card.rv-sell-card::after { background: linear-gradient(90deg, rgba(23,43,77,.94), rgba(49,91,131,.55) 58%, rgba(13,23,41,.08)) !important; }
+.rv-landing-page .rv-process-icon { border-color: var(--landing-border) !important; color: var(--teal) !important; background: var(--soft-teal) !important; }
+.rv-landing-page .rv-process-arrow { color: var(--steel-blue) !important; }
+.rv-landing-page .rv-closing { background: var(--dark-navy) !important; }
+.rv-landing-page .rv-closing .rv-eyebrow { color: #8FD9D5 !important; }
+.rv-landing-page .rv-footer { background: var(--dark-navy) !important; }
+
+html[data-theme='dark'] .rv-landing-page { --landing-ink: #F8FAFC; --landing-muted: #A5B4C5; --landing-surface: #1E293B; --landing-wash: #111827; --landing-border: #334155; }
+html[data-theme='dark'] .rv-landing-page .rv-header { background: rgba(30,41,59,.97) !important; }
+html[data-theme='dark'] .rv-landing-page .rv-brand-copy { color: #F8FAFC !important; }
+html[data-theme='dark'] .rv-home-search.rv-hero-search { background: #1E293B !important; }
+html[data-theme='dark'] .rv-home-search-query,
+html[data-theme='dark'] .rv-home-search.rv-hero-search select { background: #263449 !important; color: #F8FAFC !important; }
+html[data-theme='dark'] .rv-home-search-query input { color: #F8FAFC !important; }
+html[data-theme='dark'] .rv-landing-page .rv-featured .rv-vehicle-card { background: #1E293B !important; }
+
+/* Racing Orange brand pass. The legacy filename remains to avoid changing the
+   application's import graph; all public design tokens now resolve to Racing Orange. */
+:root { --accent-rgb: 240, 120, 54; }
+.card { box-shadow: 0 1px 2px rgba(32,36,43,.05), 0 10px 26px rgba(32,36,43,.06); }
+.card:hover { border-color: #BABFC7; }
+.btn-primary { color: #20242B; background: #F07836; box-shadow: 0 5px 12px rgba(240,120,54,.22); }
+.btn-primary:hover:not(:disabled) { background: #FF9259; }
+.btn-secondary { color: #fff; background: #20242B; border-color: #20242B; }
+.btn-secondary:hover:not(:disabled) { color: #fff; background: #414852; border-color: #414852; }
+.btn-outline { color: #20242B; border-color: #D6D9DE; }
+.field:focus { border-color: #F07836; box-shadow: 0 0 0 3px rgba(var(--accent-rgb),.18); }
+.label { color: #414852; }
+.app-shell > .app-sidebar { background: #20242B; box-shadow: 10px 0 30px rgba(32,36,43,.13); }
+.app-sidebar::before { background: linear-gradient(180deg, #F07836, rgba(var(--accent-rgb),.14) 42%, transparent 76%); }
+.sidebar-brand-mark { border-color: rgba(var(--accent-rgb),.58); }
+.sidebar-brand-mark::after { background: #F07836; }
+.sidebar-brand-spark, .sidebar-profile-icon, .sidebar-collapse-toggle { color: #FFB083; }
+.sidebar-profile-icon { border-color: rgba(var(--accent-rgb),.38); background: rgba(var(--accent-rgb),.13); }
+.app-shell .sidebar-link::before { background: #F07836; }
+.app-shell .sidebar-link:hover .sidebar-link-icon { border-color: rgba(var(--accent-rgb),.44); color: #FFB083; background: rgba(var(--accent-rgb),.14); }
+.app-shell .sidebar-link.nav-active, .app-shell .sidebar-link.nav-active:hover { color: #20242B; border-color: #F07836; background: #F07836; box-shadow: none; }
+.app-shell .sidebar-link.nav-active .sidebar-link-icon { color: #20242B; border-color: rgba(32,36,43,.15); background: rgba(255,255,255,.3); }
+.app-shell .sidebar-link.nav-active .sidebar-link-icon svg, .app-shell .sidebar-link.nav-active .sidebar-link-arrow { color: #20242B; }
+.sidebar-collapse-toggle { border-color: rgba(var(--accent-rgb),.6); background: #20242B; }
+.sidebar-collapse-toggle:hover { color: #20242B; background: #F07836; }
+.text-champagne { color: #F07836 !important; }
+.bg-champagne { background-color: #F07836 !important; }
+.dealer-dashboard-hero { background: #20242B; box-shadow: 0 18px 38px rgba(32,36,43,.15); }
+.dealer-dashboard-hero::after { border-color: rgba(var(--accent-rgb),.48); box-shadow: 0 0 0 22px rgba(var(--accent-rgb),.055), 0 0 0 54px rgba(var(--accent-rgb),.03); }
+.dealer-hero-eyebrow > span { background: #F07836; box-shadow: 0 0 0 4px rgba(var(--accent-rgb),.16); }
+.dealer-hero-eyebrow > i { background: #FFB083; }
+.dealer-hero-copy h1 span, .dealer-hero-meta svg { color: #FFB083; }
+.theme-toggle:hover { border-color: #F07836; color: #20242B; background: #FFF3EB; }
+:where(button, a, input, select, textarea):focus-visible { outline-color: rgba(var(--accent-rgb),.52); }
+
+/* Marketplace and landing accents */
+.rv-page { --navy: #20242B; --blue: #414852; --ink: #20242B; --muted: #6B7280; --line: #D6D9DE; --wash: #F5F5F3; --champagne: #F07836; --lime: #F07836; }
+.rv-page .rv-dealer, .rv-page .rv-primary, .rv-page .rv-detail-panel form button, .rv-page .rv-mobile-enquiry { color: #20242B; background: #F07836; }
+.rv-page .rv-dealer:hover, .rv-page .rv-primary:hover { background: #FF9259; }
+.rv-page .rv-eyebrow { color: #D96125 !important; }
+.rv-page .rv-hero-search button { background: #F07836; color: #20242B; }
+.rv-page .rv-discovery a:hover { border-color: #F07836; background: #FFF3EB; color: #20242B; }
+.rv-landing-page { --landing-ink: #20242B; --landing-muted: #6B7280; --landing-surface: #FFFFFF; --landing-wash: #F5F5F3; --landing-border: #D6D9DE; }
+.rv-landing-page .rv-header-accent { background: #F07836 !important; }
+.rv-landing-page .rv-dealer { color: #20242B !important; background: #F07836 !important; box-shadow: 0 6px 14px rgba(var(--accent-rgb),.19) !important; }
+.rv-landing-page .rv-dealer:hover { background: #FF9259 !important; }
+.rv-home-hero.rv-hero-full {
+  width: 100%;
+  background-color: #20242B !important;
+  background-image: var(--landing-hero-image) !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
+
+@media (max-width: 850px) {
+  .rv-home-hero.rv-hero-full { background-position: 62% center !important; }
+}
+.rv-home-hero::before { background: linear-gradient(90deg, rgba(32,36,43,.97), rgba(32,36,43,.9) 42%, rgba(32,36,43,.34) 73%, rgba(32,36,43,.08)) !important; }
+.rv-home-eyebrow { color: #FFB083 !important; }
+.rv-home-eyebrow > span { background: #F07836 !important; box-shadow: 0 0 0 4px rgba(var(--accent-rgb),.16) !important; }
+.rv-home-eyebrow > i { background: rgba(255,176,131,.65) !important; }
+.rv-home-hero-copy h1 em { color: #FFB083 !important; }
+.rv-home-hero-copy .rv-primary, .rv-landing-page .rv-closing .rv-primary { border-color: #F07836 !important; color: #20242B !important; background: #F07836 !important; }
+.rv-home-hero-copy .rv-primary:hover, .rv-landing-page .rv-closing .rv-primary:hover { background: #FF9259 !important; }
+.rv-home-search.rv-hero-search button { color: #20242B !important; background: #F07836 !important; }
+.rv-home-search.rv-hero-search button:hover { background: #FF9259 !important; }
+.rv-landing-page .rv-discovery .rv-eyebrow, .rv-landing-page .rv-works .rv-eyebrow { color: #D96125 !important; }
+.rv-landing-page .rv-discovery-row > div a:hover { border-color: #F07836 !important; background: #FFF3EB !important; }
+.rv-landing-page .rv-value { background: #20242B !important; }
+.rv-landing-page .rv-value::before { background: radial-gradient(circle at 88% 18%, rgba(var(--accent-rgb),.22), transparent 29%); }
+.rv-landing-page .rv-value .rv-eyebrow, .rv-landing-page .rv-benefit-grid article > span, .rv-landing-page .rv-closing .rv-eyebrow { color: #FFB083 !important; }
+.rv-landing-page .rv-benefit-grid article:hover { border-color: rgba(var(--accent-rgb),.65) !important; background: rgba(var(--accent-rgb),.1) !important; }
+.rv-landing-page .rv-process-icon { color: #D96125 !important; background: #FFF3EB !important; }
+.rv-landing-page .rv-process-arrow { color: #F07836 !important; }
+.rv-landing-page .rv-closing, .rv-landing-page .rv-footer { background: #20242B !important; }
+
+html[data-theme='dark'] .btn-primary { color: #20242B; background: #F07836; }
+html[data-theme='dark'] .btn-secondary { color: #F5F5F3; background: #414852; border-color: #414852; }
+html[data-theme='dark'] .theme-toggle:hover { background: #482A20; color: #FFB083; }
+html[data-theme='dark'] .rv-landing-page { --landing-ink: #F5F5F3; --landing-muted: #A5ACB6; --landing-surface: #20242B; --landing-wash: #171A20; --landing-border: #383F49; }
+html[data-theme='dark'] .rv-home-search.rv-hero-search { background: #20242B !important; }
+html[data-theme='dark'] .rv-home-search-query, html[data-theme='dark'] .rv-home-search.rv-hero-search select { background: #2A303A !important; color: #F5F5F3 !important; }
+
+/* Operational module consistency: records, tables, dialogs and workflow states. */
+.table-wrap, .table-container { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: 0 4px 14px rgba(32,36,43,.04); }
+.table th { border-bottom-color: var(--border); background: var(--light-steel-blue); color: var(--steel-blue); }
+.table td { border-bottom-color: var(--border); color: var(--text-primary); }
+.table tbody tr:hover { background: #FFF3EB; }
+.badge, .status-badge { border-color: var(--border); }
+.icon-btn { border-color: var(--border); color: var(--text-primary); background: var(--surface); }
+.icon-btn:hover:not(:disabled) { border-color: #F07836; color: #20242B; background: #FFF3EB; }
+.icon-btn-dark { color: #fff; background: #20242B; }
+.form-progress .is-current span, .ui-timeline .is-current span { border-color: #F07836; color: #20242B; background: #F07836; }
+.ui-empty, .ui-loading { border-color: var(--border); background: var(--surface); color: var(--text-secondary); }
+.ui-empty h3, .ui-timeline b { color: var(--text-primary); }
+.ui-pagination button { border-color: var(--border); border-radius: 8px; color: var(--text-primary); background: var(--surface); }
+.ui-pagination button:hover:not(:disabled) { border-color: #F07836; background: #FFF3EB; }
+.modal-backdrop, .dialog-backdrop { background: rgba(23,26,32,.6); }
+
+/* Marketplace catalogue and vehicle detail surfaces. */
+.rv-marketplace-page, .rv-detail-page { background: #F5F5F3; color: #20242B; }
+.rv-market-hero { background: #20242B; }
+.rv-market-hero::before { background: linear-gradient(100deg, #20242B 0%, #20242B 34%, rgba(32,36,43,.9) 43%, transparent 70%); }
+.rv-market-hero-wedge { background: #F07836; }
+.rv-market-eyebrow { color: #F07836; }
+.rv-marketplace .rv-filter-panel, .rv-marketplace .rv-sort-bar, .rv-marketplace .rv-vehicle-card, .rv-detail-panel, .rv-overview-card { border-color: #D6D9DE; background: #fff; }
+.rv-marketplace .rv-vehicle-card:hover { border-color: #F07836; }
+.rv-vehicle-badge, .rv-verified-badge { color: #20242B; background: #FFF3EB; }
+.rv-favorite.is-favorite { color: #D96125; }
+
+html[data-theme='dark'] .table-wrap, html[data-theme='dark'] .table-container, html[data-theme='dark'] .ui-empty, html[data-theme='dark'] .ui-loading { border-color: #383F49; background: #20242B; }
+html[data-theme='dark'] .table th { background: #2A303A; color: #C5CBD3; }
+html[data-theme='dark'] .table td { border-color: #383F49; color: #F5F5F3; }
+html[data-theme='dark'] .table tbody tr:hover { background: #482A20; }
+html[data-theme='dark'] .icon-btn, html[data-theme='dark'] .ui-pagination button { border-color: #383F49; color: #F5F5F3; background: #2A303A; }
+html[data-theme='dark'] .icon-btn:hover:not(:disabled), html[data-theme='dark'] .ui-pagination button:hover:not(:disabled) { border-color: #F07836; color: #FFB083; background: #482A20; }
+html[data-theme='dark'] .rv-marketplace-page, html[data-theme='dark'] .rv-detail-page { background: #171A20; color: #F5F5F3; }
+html[data-theme='dark'] .rv-marketplace .rv-filter-panel, html[data-theme='dark'] .rv-marketplace .rv-sort-bar, html[data-theme='dark'] .rv-marketplace .rv-vehicle-card { border-color: #383F49; background: #20242B; }
+
+/* Higher-specificity legacy workspace rules, normalized to the brand system. */
+.app-shell .topbar { border-bottom: 1px solid #D6D9DE !important; background: #fff !important; color: #20242B; }
+.app-shell .topbar .text-champagne { color: #F07836 !important; }
+.app-shell .topbar .notification-trigger { border-color: #D6D9DE !important; color: #20242B !important; background: #fff !important; }
+.app-shell .topbar .notification-trigger:hover, .app-shell .topbar .notification-trigger.is-open { border-color: #F07836 !important; color: #20242B !important; background: #FFF3EB !important; }
+.notification-count { border-color: #20242B; background: #F07836; }
+.lifecycle-stages .is-active span { border-color: #F07836; color: #20242B; background: #F07836; }
+.lifecycle-stages .is-active b { color: #20242B; }
+.workspace-hero, .app-shell .profile-hero { border-bottom-color: #F07836; background: #20242B; }
+.workspace-hero::after, .dashboard-metrics .metric-card::before { background: #F07836; }
+.dashboard-metrics .metric-card, .chart-card, .dashboard-metrics + .grid .card { border-color: #D6D9DE; }
+.dashboard-metric-blue { color: #D96125; background: #FFF3EB; }
+.dashboard-metric-amber { color: #D99019; background: #FFF7E7; }
+.dashboard-metric-violet { color: #414852; background: #F1F2F4; }
+.chart-total { border-color: #FFE2D1; color: #B94B1D; background: #FFF3EB; }
+
+html[data-theme='dark'] .app-shell .topbar { border-color: #383F49 !important; background: #20242B !important; color: #F5F5F3; }
+html[data-theme='dark'] .app-shell .topbar .notification-trigger { border-color: #383F49 !important; color: #F5F5F3 !important; background: #2A303A !important; }
+html[data-theme='dark'] .app-shell .topbar .notification-trigger:hover, html[data-theme='dark'] .app-shell .topbar .notification-trigger.is-open { border-color: #F07836 !important; color: #FFB083 !important; background: #482A20 !important; }
+html[data-theme='dark'] .workspace-hero, html[data-theme='dark'] .app-shell .profile-hero { background: #20242B; }
+html[data-theme='dark'] .dashboard-metrics .metric-card, html[data-theme='dark'] .chart-card, html[data-theme='dark'] .dashboard-metrics + .grid .card { border-color: #383F49; }
+
+/* Light Blue + White only palette -------------------------------------------------
+   This final layer intentionally supersedes the previous automotive palettes. */
+:root {
+  --midnight-blue: #5B9FCB;
+  --steel-blue: #79B8DE;
+  --teal: #91D0F0;
+  --cool-grey: #EFF9FF;
+  --titanium-silver: #C9E8F8;
+  --dark-navy: #5B9FCB;
+  --light-steel-blue: #E3F5FF;
+  --soft-teal: #EAF7FF;
+  --secondary-text: #79AFCF;
+  --muted-text: #9CCAE3;
+  --success: #91D0F0;
+  --warning: #A9DCF6;
+  --danger: #79B8DE;
+  --information: #79B8DE;
+  --ink: #5B9FCB;
+  --muted: #79AFCF;
+  --canvas: #EFF9FF;
+  --line: #C9E8F8;
+  --blue: #79B8DE;
+  --navy: #5B9FCB;
+  --navy-soft: #79B8DE;
+  --champagne: #91D0F0;
+  --page-bg: #EFF9FF;
+  --surface: #FFFFFF;
+  --surface-elevated: #E3F5FF;
+  --text-primary: #5B9FCB;
+  --text-secondary: #79AFCF;
+  --border: #C9E8F8;
+  --chart-primary: #79B8DE;
+  --chart-accent: #91D0F0;
+  --chart-muted: #E3F5FF;
+  --chart-label: #79AFCF;
+  --chart-hover: #EAF7FF;
+  --accent-rgb: 145, 208, 240;
+}
+
+html[data-theme='dark'] {
+  --ink: #FFFFFF;
+  --muted: #C9E8F8;
+  --canvas: #79B8DE;
+  --line: #C9E8F8;
+  --navy: #FFFFFF;
+  --navy-soft: #E3F5FF;
+  --blue: #E3F5FF;
+  --champagne: #91D0F0;
+  --page-bg: #79B8DE;
+  --surface: #5B9FCB;
+  --surface-elevated: #79B8DE;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E3F5FF;
+  --border: #C9E8F8;
+  --cool-grey: #79B8DE;
+  --titanium-silver: #C9E8F8;
+  --light-steel-blue: #79B8DE;
+  --soft-teal: #E3F5FF;
+  --secondary-text: #E3F5FF;
+  --muted-text: #C9E8F8;
+  --chart-primary: #FFFFFF;
+  --chart-accent: #91D0F0;
+  --chart-muted: #79B8DE;
+  --chart-label: #E3F5FF;
+  --chart-hover: #79B8DE;
+}
+
+body { color: var(--text-primary); background: var(--page-bg); }
+.app-shell > .app-sidebar, .rv-landing-page .rv-closing, .rv-landing-page .rv-footer, .rv-landing-page .rv-value, .dealer-dashboard-hero, .workspace-hero, .app-shell .profile-hero { background: #79B8DE !important; }
+.app-sidebar::before, .sidebar-brand-mark::after { background: #91D0F0 !important; }
+.app-shell .sidebar-link.nav-active, .app-shell .sidebar-link.nav-active:hover, .btn-primary, .rv-page .rv-dealer, .rv-page .rv-primary, .rv-home-hero-copy .rv-primary, .rv-landing-page .rv-closing .rv-primary { color: #FFFFFF !important; border-color: #91D0F0 !important; background: #91D0F0 !important; }
+.btn-secondary, .icon-btn-dark { color: #FFFFFF !important; border-color: #79B8DE !important; background: #79B8DE !important; }
+.btn-outline, .btn-secondary:hover:not(:disabled), .icon-btn:hover:not(:disabled) { color: #5B9FCB !important; border-color: #91D0F0 !important; background: #EAF7FF !important; }
+.rv-home-hero.rv-hero-full { background: linear-gradient(120deg, #79B8DE, #91D0F0 58%, #E3F5FF) !important; }
+.rv-home-hero::before, .rv-home-hero::after { background: linear-gradient(90deg, rgba(121,184,222,.92), rgba(145,208,240,.5), rgba(255,255,255,.12)) !important; }
+.rv-home-hero-copy h1, .rv-home-hero-copy h1 em, .rv-home-hero-copy .rv-lead, .rv-home-eyebrow, .rv-landing-page .rv-value .rv-eyebrow, .rv-landing-page .rv-closing .rv-eyebrow { color: #FFFFFF !important; }
+.rv-home-eyebrow > span, .rv-home-search.rv-hero-search button, .rv-landing-page .rv-header-accent, .app-shell .sidebar-link::before { background: #91D0F0 !important; }
+.rv-home-search.rv-hero-search button { color: #FFFFFF !important; }
+.rv-home-search.rv-hero-search, .rv-home-search-query, .rv-home-search.rv-hero-search select { border-color: #C9E8F8 !important; background: #FFFFFF !important; }
+.rv-landing-page, .rv-landing-page .rv-discovery, .rv-landing-page .rv-showcase, .rv-marketplace-page, .rv-detail-page { background: #EFF9FF !important; }
+.rv-landing-page .rv-featured, .rv-landing-page .rv-works, .card, .table-wrap, .table-container { border-color: #C9E8F8 !important; background: #FFFFFF !important; }
+.rv-page .rv-eyebrow, .rv-landing-page .rv-discovery .rv-eyebrow, .rv-landing-page .rv-works .rv-eyebrow, .text-champagne, .dealer-hero-copy h1 span, .dealer-hero-meta svg { color: #79B8DE !important; }
+.rv-landing-page .rv-discovery-row > div a:hover, .rv-landing-page .rv-benefit-grid article:hover, .table tbody tr:hover, .ui-pagination button:hover:not(:disabled) { border-color: #91D0F0 !important; background: #EAF7FF !important; }
+.rv-landing-page .rv-benefit-grid article { border-color: #C9E8F8 !important; background: rgba(255,255,255,.18) !important; }
+.rv-landing-page .rv-process-icon { color: #79B8DE !important; background: #EAF7FF !important; }
+.rv-vehicle-badge, .rv-verified-badge, .chart-total { color: #5B9FCB !important; border-color: #C9E8F8 !important; background: #EAF7FF !important; }
+html[data-theme='dark'] .app-shell > .app-sidebar, html[data-theme='dark'] .rv-landing-page .rv-closing, html[data-theme='dark'] .rv-landing-page .rv-footer, html[data-theme='dark'] .rv-landing-page .rv-value, html[data-theme='dark'] .dealer-dashboard-hero { background: #5B9FCB !important; }
+html[data-theme='dark'] .rv-home-hero.rv-hero-full { background: linear-gradient(120deg, #5B9FCB, #79B8DE 60%, #91D0F0) !important; }
+
+/* Blue distribution: 60% cloud/white, 20% ice blue, 15% ocean, 5% sky. */
+:root {
+  --ink-blue: #102A43;
+  --cloud-grey: #F6F9FC;
+  --ice-blue: #EAF6FD;
+  --light-blue: #DCEFFC;
+  --deep-ocean: #0B3B60;
+  --deep-ocean-hover: #15567F;
+  --sky-blue: #2D9CDB;
+  --midnight-blue: var(--deep-ocean);
+  --steel-blue: var(--deep-ocean-hover);
+  --teal: var(--sky-blue);
+  --cool-grey: var(--cloud-grey);
+  --titanium-silver: #D9E8F2;
+  --dark-navy: var(--deep-ocean);
+  --light-steel-blue: var(--ice-blue);
+  --soft-teal: var(--ice-blue);
+  --secondary-text: #6E8EA5;
+  --muted-text: #9CB5C6;
+  --ink: var(--deep-ocean);
+  --muted: var(--secondary-text);
+  --canvas: var(--cloud-grey);
+  --line: var(--titanium-silver);
+  --blue: var(--deep-ocean-hover);
+  --navy: var(--deep-ocean);
+  --navy-soft: var(--deep-ocean-hover);
+  --champagne: var(--sky-blue);
+  --page-bg: var(--cloud-grey);
+  --surface: #FFFFFF;
+  --surface-elevated: var(--ice-blue);
+  --text-primary: var(--deep-ocean);
+  --text-secondary: var(--secondary-text);
+  --border: var(--titanium-silver);
+  --chart-primary: var(--deep-ocean-hover);
+  --chart-accent: var(--sky-blue);
+  --chart-muted: var(--light-blue);
+  --chart-label: var(--secondary-text);
+  --chart-hover: var(--ice-blue);
+  --accent-rgb: 45, 156, 219;
+}
+
+.app-shell > .app-sidebar, .rv-landing-page .rv-closing, .rv-landing-page .rv-footer, .rv-landing-page .rv-value, .dealer-dashboard-hero, .workspace-hero, .app-shell .profile-hero { background: var(--deep-ocean) !important; }
+.app-sidebar::before, .sidebar-brand-mark::after, .rv-home-eyebrow > span, .rv-landing-page .rv-header-accent, .app-shell .sidebar-link::before { background: var(--sky-blue) !important; }
+.app-shell .sidebar-link.nav-active, .app-shell .sidebar-link.nav-active:hover { color: #FFFFFF !important; border-color: var(--sky-blue) !important; background: var(--sky-blue) !important; }
+.btn-primary, .rv-page .rv-dealer, .rv-page .rv-primary, .rv-home-hero-copy .rv-primary, .rv-landing-page .rv-closing .rv-primary, .rv-home-search.rv-hero-search button { color: #FFFFFF !important; border-color: var(--deep-ocean) !important; background: var(--deep-ocean) !important; }
+.btn-primary:hover:not(:disabled), .rv-page .rv-dealer:hover, .rv-page .rv-primary:hover, .rv-home-hero-copy .rv-primary:hover, .rv-home-search.rv-hero-search button:hover { background: var(--deep-ocean-hover) !important; }
+.btn-secondary, .icon-btn-dark { color: #FFFFFF !important; border-color: var(--deep-ocean-hover) !important; background: var(--deep-ocean-hover) !important; }
+.rv-home-hero.rv-hero-full { background: linear-gradient(120deg, var(--deep-ocean), var(--deep-ocean-hover) 58%, var(--sky-blue)) !important; }
+.rv-home-hero::before, .rv-home-hero::after { background: linear-gradient(90deg, rgba(11,59,96,.93), rgba(21,86,127,.56), rgba(234,246,253,.12)) !important; }
+.rv-landing-page, .rv-landing-page .rv-discovery, .rv-landing-page .rv-showcase, .rv-marketplace-page, .rv-detail-page { background: var(--cloud-grey) !important; }
+.rv-landing-page .rv-featured, .rv-landing-page .rv-works, .card, .table-wrap, .table-container { border-color: var(--titanium-silver) !important; background: #FFFFFF !important; }
+.rv-page .rv-eyebrow, .rv-landing-page .rv-discovery .rv-eyebrow, .rv-landing-page .rv-works .rv-eyebrow, .text-champagne, .dealer-hero-copy h1 span, .dealer-hero-meta svg { color: var(--sky-blue) !important; }
+.rv-landing-page .rv-discovery-row > div a:hover, .rv-landing-page .rv-benefit-grid article:hover, .table tbody tr:hover, .ui-pagination button:hover:not(:disabled) { border-color: var(--sky-blue) !important; background: var(--ice-blue) !important; }
+
+html[data-theme='dark'] {
+  --page-bg: #082E4B;
+  --surface: #0B3B60;
+  --surface-elevated: #15567F;
+  --text-primary: #FFFFFF;
+  --text-secondary: #DCEFFC;
+  --border: #4D84A6;
+  --canvas: var(--page-bg);
+  --line: var(--border);
+  --navy: #FFFFFF;
+  --navy-soft: #DCEFFC;
+  --chart-primary: #DCEFFC;
+  --chart-accent: #2D9CDB;
+  --chart-muted: #15567F;
+  --chart-label: #DCEFFC;
+  --chart-hover: #15567F;
+}
+html[data-theme='dark'] .app-shell > .app-sidebar, html[data-theme='dark'] .rv-landing-page .rv-closing, html[data-theme='dark'] .rv-landing-page .rv-footer, html[data-theme='dark'] .rv-landing-page .rv-value, html[data-theme='dark'] .dealer-dashboard-hero { background: #082E4B !important; }
+html[data-theme='dark'] .rv-home-hero.rv-hero-full { background: linear-gradient(120deg, #082E4B, #0B3B60 60%, #15567F) !important; }
+
+/* Buy Cars catalogue: the same cloud, ice, ocean and sky system. */
+.rv-marketplace-page { background: var(--cloud-grey) !important; color: var(--deep-ocean); }
+.rv-market-hero { background: var(--deep-ocean) !important; }
+.rv-market-hero::before { background: linear-gradient(100deg, rgba(11,59,96,.98) 0%, rgba(11,59,96,.94) 37%, rgba(21,86,127,.67) 58%, rgba(234,246,253,.08) 100%) !important; }
+.rv-market-hero-wedge { background: var(--sky-blue) !important; }
+.rv-market-eyebrow, .rv-market-hero h1 em { color: var(--sky-blue) !important; }
+.rv-market-browse { color: #FFFFFF !important; border-color: var(--deep-ocean) !important; background: var(--deep-ocean) !important; }
+.rv-market-browse:hover { background: var(--deep-ocean-hover) !important; }
+.rv-market-search-input, .rv-market-select, .rv-filter-panel, .rv-sort-control { border-color: var(--titanium-silver) !important; background: #FFFFFF !important; }
+.rv-market-search-input:focus-within, .rv-market-select:focus-within, .rv-filter-group select:focus, .rv-sort-control:focus-within { border-color: var(--sky-blue) !important; box-shadow: 0 0 0 3px rgba(45,156,219,.15) !important; }
+.rv-market-search-input input, .rv-market-select select, .rv-filter-group select, .rv-sort-control select { color: var(--deep-ocean) !important; background: #FFFFFF !important; }
+.rv-market-search-input svg, .rv-market-select > svg:first-child, .rv-sort-control > svg:first-child { color: var(--sky-blue) !important; }
+.rv-market-search-button { color: #FFFFFF !important; border-color: var(--deep-ocean) !important; background: var(--deep-ocean) !important; }
+.rv-market-search-button:hover { background: var(--deep-ocean-hover) !important; }
+.rv-filter-panel h2, .rv-filter-group legend, .rv-market-results, .rv-sort-label { color: var(--deep-ocean) !important; }
+.rv-filter-group { border-color: var(--titanium-silver) !important; }
+.rv-filter-group input[type='checkbox'] { accent-color: var(--sky-blue); }
+.rv-marketplace-card { border-color: var(--titanium-silver) !important; background: #FFFFFF !important; box-shadow: 0 6px 18px rgba(11,59,96,.06) !important; }
+.rv-marketplace-card:hover { border-color: var(--sky-blue) !important; box-shadow: 0 12px 24px rgba(11,59,96,.12) !important; }
+.rv-marketplace-card .rv-vehicle-info h3, .rv-marketplace-card-footer > b { color: var(--deep-ocean) !important; }
+.rv-marketplace-card .rv-vehicle-info > p, .rv-marketplace-card .rv-specs span, .rv-marketplace-card-footer small { color: var(--secondary-text) !important; }
+.rv-marketplace-card .rv-specs svg, .rv-marketplace-card-footer small svg { color: var(--sky-blue) !important; }
+.rv-vehicle-badge, .rv-vehicle-badge-popular, .rv-vehicle-badge-certified { color: var(--deep-ocean) !important; border-color: var(--light-blue) !important; background: var(--ice-blue) !important; }
+.rv-marketplace-card-footer > a { color: var(--deep-ocean) !important; }
+.rv-marketplace-card-footer > a:hover { color: var(--sky-blue) !important; }
+.rv-selected-filters > span { color: var(--secondary-text) !important; }
+.rv-selected-filters button { color: var(--deep-ocean) !important; border-color: var(--titanium-silver) !important; background: #FFFFFF !important; }
+.rv-selected-filters button:hover { color: var(--deep-ocean) !important; border-color: var(--sky-blue) !important; background: var(--ice-blue) !important; }
+.rv-selected-filters .rv-filter-clear { color: var(--sky-blue) !important; }
+.rv-marketplace-page .rv-pagination button { color: var(--deep-ocean) !important; border-color: var(--titanium-silver) !important; background: #FFFFFF !important; }
+.rv-marketplace-page .rv-pagination button:hover:not(:disabled), .rv-marketplace-page .rv-pagination button.is-active { color: #FFFFFF !important; border-color: var(--deep-ocean) !important; background: var(--deep-ocean) !important; }
+.rv-market-empty, .rv-market-status { border-color: var(--titanium-silver) !important; background: #FFFFFF !important; color: var(--secondary-text) !important; }
+.rv-market-empty h2 { color: var(--deep-ocean) !important; }
+
+html[data-theme='dark'] .rv-marketplace-page { background: #082E4B !important; color: #FFFFFF; }
+html[data-theme='dark'] .rv-market-hero { background: #082E4B !important; }
+html[data-theme='dark'] .rv-market-search-input, html[data-theme='dark'] .rv-market-select, html[data-theme='dark'] .rv-filter-panel, html[data-theme='dark'] .rv-sort-control, html[data-theme='dark'] .rv-marketplace-card, html[data-theme='dark'] .rv-market-empty, html[data-theme='dark'] .rv-market-status { border-color: #4D84A6 !important; background: #0B3B60 !important; }
+html[data-theme='dark'] .rv-market-search-input input, html[data-theme='dark'] .rv-market-select select, html[data-theme='dark'] .rv-filter-group select, html[data-theme='dark'] .rv-sort-control select { color: #FFFFFF !important; background: #15567F !important; }
+html[data-theme='dark'] .rv-filter-panel h2, html[data-theme='dark'] .rv-filter-group legend, html[data-theme='dark'] .rv-market-results, html[data-theme='dark'] .rv-sort-label, html[data-theme='dark'] .rv-marketplace-card .rv-vehicle-info h3, html[data-theme='dark'] .rv-marketplace-card-footer > b, html[data-theme='dark'] .rv-market-empty h2 { color: #FFFFFF !important; }
+html[data-theme='dark'] .rv-marketplace-card .rv-vehicle-info > p, html[data-theme='dark'] .rv-marketplace-card .rv-specs span, html[data-theme='dark'] .rv-marketplace-card-footer small { color: #DCEFFC !important; }
+
+/* Seller landing and seller onboarding use the same Blue enterprise system. */
+.seller-page, .seller-form-page, .sell-page { color: var(--deep-ocean); background: var(--cloud-grey) !important; }
+.seller-page [class*='bg-[#f7f7f2]'], .seller-form-page [class*='bg-[#f7f7f2]'] { background: var(--cloud-grey) !important; }
+.seller-page [class*='bg-[#e9eddf]'], .seller-form-page [class*='bg-[#f4f7ec]'] { background: var(--ice-blue) !important; }
+.seller-page [class*='bg-[#0a1d31]'], .seller-page [class*='bg-[#10253b]'], .seller-page [class*='bg-[#081725]'], .seller-form-page [class*='bg-[#0a1d31]'] { background: var(--deep-ocean) !important; }
+.seller-page [class*='bg-[#d6f15d]'] { color: #FFFFFF !important; background: var(--sky-blue) !important; }
+.seller-page [class*='text-[#10253b]'], .seller-page [class*='text-[#0a1d31]'], .seller-form-page [class*='text-[#10253b]'] { color: var(--deep-ocean) !important; }
+.seller-page [class*='text-[#547437]'], .seller-page [class*='text-[#769755]'], .seller-page [class*='text-[#d6f15d]'], .seller-form-page [class*='text-[#547437]'] { color: var(--sky-blue) !important; }
+.seller-page [class*='border-[#dce0d4]'], .seller-page [class*='border-[#ced5c6]'] { border-color: var(--titanium-silver) !important; }
+.seller-page [class*='decoration-[#d6f15d]'], .seller-page [class*='decoration-[#8cad65]'] { text-decoration-color: var(--sky-blue) !important; }
+.seller-page .text-slate-600, .seller-page .text-slate-700, .seller-form-page .text-slate-600 { color: var(--secondary-text) !important; }
+.seller-page .text-slate-200, .seller-page .text-slate-300, .seller-page .text-slate-400, .seller-page .text-slate-500, .seller-form-page .text-slate-300 { color: #DCEFFC !important; }
+.seller-page a[class*='bg-[#d6f15d]'] { color: #FFFFFF !important; background: var(--deep-ocean) !important; border-radius: 8px; }
+.seller-page a[class*='bg-[#d6f15d]']:hover { background: var(--deep-ocean-hover) !important; }
+.seller-page section[class*='bg-[#10253b]'], .seller-page section[class*='bg-[#0a1d31]'], .seller-page footer { color: #FFFFFF; }
+.seller-page section[class*='bg-[#10253b]'] .text-slate-300, .seller-page section[class*='bg-[#0a1d31]'] .text-slate-300 { color: #DCEFFC !important; }
+.seller-form-page header { background: var(--deep-ocean) !important; }
+.seller-form-page .bg-white { border: 1px solid var(--titanium-silver); background: #FFFFFF !important; }
+.seller-form-page .bg-slate-50 { background: var(--ice-blue) !important; }
+.seller-form-page .text-emerald-600, .seller-form-page .text-emerald-700, .seller-form-page .text-amber-700 { color: var(--sky-blue) !important; }
+.sell-page { background: var(--ice-blue) !important; }
+.sell-card { border-color: var(--titanium-silver) !important; background: #FFFFFF !important; }
+.sell-steps li.is-current, .sell-steps li.is-complete { color: var(--deep-ocean) !important; }
+.sell-steps li.is-current span { border-color: var(--sky-blue) !important; background: var(--sky-blue) !important; }
+.sell-steps li.is-complete span { border-color: var(--deep-ocean) !important; background: var(--deep-ocean) !important; }
+
+html[data-theme='dark'] .seller-page, html[data-theme='dark'] .seller-form-page, html[data-theme='dark'] .sell-page { color: #FFFFFF; background: #082E4B !important; }
+html[data-theme='dark'] .seller-page [class*='bg-[#f7f7f2]'], html[data-theme='dark'] .seller-form-page [class*='bg-[#f7f7f2]'], html[data-theme='dark'] .seller-page [class*='bg-[#e9eddf]'], html[data-theme='dark'] .seller-form-page [class*='bg-[#f4f7ec]'] { background: #0B3B60 !important; }
+html[data-theme='dark'] .seller-form-page .bg-white, html[data-theme='dark'] .sell-card { border-color: #4D84A6 !important; background: #0B3B60 !important; }
+
+/* Enterprise surface hierarchy: solid Ocean navigation, white surfaces, Ice sections. */
+.app-shell > .app-sidebar { background: var(--deep-ocean) !important; }
+.app-shell .topbar,
+.rv-header,
+.rv-landing-page .rv-header { border-color: rgba(255,255,255,.16) !important; background: var(--deep-ocean) !important; box-shadow: 0 1px 0 rgba(255,255,255,.08) !important; }
+.app-shell .topbar :is(.text-navy, .text-muted),
+.rv-header .rv-brand-copy,
+.rv-header .rv-desktop-nav a,
+.rv-header .rv-account { color: #FFFFFF !important; }
+.rv-header .rv-desktop-nav a.active,
+.rv-header .rv-desktop-nav a:hover,
+.rv-header .rv-account:hover { color: #DCEFFC !important; }
+.rv-header .rv-desktop-nav a.active::after { background: var(--sky-blue) !important; }
+.rv-header .rv-dealer { color: #FFFFFF !important; border-color: var(--sky-blue) !important; background: var(--sky-blue) !important; }
+.rv-header .theme-toggle,
+.app-shell .topbar .theme-toggle,
+.app-shell .topbar .notification-trigger { color: #FFFFFF !important; border-color: rgba(255,255,255,.28) !important; background: rgba(255,255,255,.08) !important; }
+.app-shell .topbar .bg-slate-50,
+.app-shell .topbar .bg-white { color: #FFFFFF !important; border-color: rgba(255,255,255,.28) !important; background: rgba(255,255,255,.08) !important; }
+.app-shell .topbar .bg-champagne { color: #FFFFFF !important; background: var(--sky-blue) !important; }
+.rv-header .theme-toggle:hover,
+.app-shell .topbar .theme-toggle:hover,
+.app-shell .topbar .notification-trigger:hover { color: #FFFFFF !important; border-color: var(--sky-blue) !important; background: var(--deep-ocean-hover) !important; }
+.workspace,
+.rv-landing-page .rv-discovery,
+.rv-landing-page .rv-showcase,
+.rv-marketplace-page,
+.rv-detail-page { background: var(--ice-blue) !important; }
+.card,
+.table-wrap,
+.table-container,
+.rv-marketplace-card,
+.rv-filter-panel,
+.rv-sort-control,
+.rv-detail-panel,
+.rv-overview-card { background: #FFFFFF !important; }
+.btn-primary,
+.rv-page .rv-primary,
+.rv-page .rv-dealer,
+.rv-market-search-button,
+.rv-market-browse,
+.rv-home-hero-copy .rv-primary { color: #FFFFFF !important; background: var(--deep-ocean) !important; border-color: var(--deep-ocean) !important; }
+.btn-primary:hover:not(:disabled),
+.rv-page .rv-primary:hover,
+.rv-page .rv-dealer:hover,
+.rv-market-search-button:hover,
+.rv-market-browse:hover,
+.rv-home-hero-copy .rv-primary:hover { background: var(--deep-ocean-hover) !important; }
+.rv-home-hero.rv-hero-full {
+  background-color: var(--deep-ocean) !important;
+  background-image: none !important;
+}
+.rv-home-hero-video {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+.rv-home-hero::before { background: linear-gradient(90deg, rgba(11,59,96,.78), rgba(11,59,96,.35), transparent) !important; }
+.rv-home-hero::after { background: none !important; }
+
+/* Ink Blue chrome for a unified product frame. */
+.app-shell .topbar,
+.rv-header,
+.rv-landing-page .rv-header,
+.rv-footer,
+.rv-landing-page .rv-footer,
+.seller-page footer { background: var(--ink-blue) !important; }
+html[data-theme='dark'] .app-shell .topbar,
+html[data-theme='dark'] .rv-header,
+html[data-theme='dark'] .rv-landing-page .rv-header,
+html[data-theme='dark'] .rv-footer,
+html[data-theme='dark'] .rv-landing-page .rv-footer,
+html[data-theme='dark'] .seller-page footer { background: #08233B !important; }
+
+html[data-theme='dark'] .app-shell .topbar,
+html[data-theme='dark'] .rv-header,
+html[data-theme='dark'] .rv-landing-page .rv-header { background: #082E4B !important; }
+html[data-theme='dark'] .workspace,
+html[data-theme='dark'] .rv-landing-page .rv-discovery,
+html[data-theme='dark'] .rv-landing-page .rv-showcase,
+html[data-theme='dark'] .rv-marketplace-page,
+html[data-theme='dark'] .rv-detail-page { background: #082E4B !important; }
+
+/* Elegant finish: restrained depth, precise type, and quieter interaction. */
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; }
+:is(h1, h2, h3, .rv-heading h2, .dealer-hero-copy h1, .page-header h1) { font-family: Manrope, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.035em; }
+.card,
+.table-wrap,
+.table-container,
+.rv-marketplace-card,
+.rv-filter-panel,
+.rv-sort-control,
+.rv-detail-panel,
+.rv-overview-card,
+.sell-card {
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(11,59,96,.035), 0 8px 22px rgba(11,59,96,.045) !important;
+}
+.card:hover,
+.rv-marketplace-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(11,59,96,.09) !important; }
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-outline,
+.rv-primary,
+.rv-secondary,
+.rv-dealer,
+.rv-market-search-button,
+.rv-market-browse { border-radius: 8px !important; transition: background .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.btn-primary,
+.rv-page .rv-primary,
+.rv-page .rv-dealer,
+.rv-market-search-button,
+.rv-market-browse,
+.rv-home-hero-copy .rv-primary { box-shadow: 0 5px 12px rgba(11,59,96,.16); }
+.btn-primary:hover:not(:disabled),
+.rv-page .rv-primary:hover,
+.rv-page .rv-dealer:hover,
+.rv-market-search-button:hover,
+.rv-market-browse:hover,
+.rv-home-hero-copy .rv-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 17px rgba(11,59,96,.2); }
+.field,
+.rv-market-search-input,
+.rv-market-select,
+.rv-filter-group select,
+.rv-sort-control { border-radius: 8px !important; }
+.workspace { padding-top: 28px; }
+.app-shell .topbar { min-height: 68px; }
+.rv-header .rv-nav { height: 72px !important; }
+.rv-header .rv-desktop-nav a { font-size: 12px !important; font-weight: 650 !important; }
+.rv-home-hero::before { background: linear-gradient(90deg, rgba(11,59,96,.82), rgba(11,59,96,.42) 52%, rgba(11,59,96,.08)) !important; }
+.rv-home-search.rv-hero-search { border-radius: 12px; box-shadow: 0 12px 30px rgba(11,59,96,.14) !important; }
+.rv-landing-page .rv-showcase-card { border-radius: 14px; box-shadow: 0 10px 24px rgba(11,59,96,.12); }
+.rv-landing-page .rv-benefit-grid article { border-radius: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .rv-marketplace-card, .btn, .rv-primary, .rv-secondary, .rv-dealer, .rv-market-search-button, .rv-market-browse { transition: none !important; }
+}
+
+/* One fixed public header frame on every marketplace and seller route. */
+.rv-header {
+  width: 100%;
+  height: 72px;
+  min-height: 72px;
+  border-top: 3px solid var(--sky-blue) !important;
+  border-bottom: 1px solid rgba(255,255,255,.16) !important;
+  background: var(--ink-blue) !important;
+}
+.rv-header-accent { display: none !important; }
+.rv-header .rv-nav,
+.rv-landing-page .rv-nav {
+  width: min(1280px, calc(100% - 48px)) !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  margin: 0 auto !important;
+}
+@media (max-width: 600px) {
+  .rv-header { height: 68px; min-height: 68px; }
+  .rv-header .rv-nav,
+  .rv-landing-page .rv-nav { width: calc(100% - 32px) !important; height: 64px !important; min-height: 64px !important; }
+}
+
+/* Landing navigation dock: a calm, image-led interpretation of the reference. */
+.rv-landing-page .rv-header .rv-desktop-nav { display: none; }
+.rv-home-hero.rv-hero-full { z-index: 3; overflow: visible; min-height: 510px; }
+.rv-home-hero-inner { min-height: 440px; padding-bottom: 76px; }
+.rv-landing-nav {
+  position: absolute;
+  z-index: 4;
+  bottom: -48px;
+  left: 50%;
+  display: grid;
+  width: min(960px, calc(100% - 48px));
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--titanium-silver);
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 0 16px 36px rgba(11,59,96,.15);
+  transform: translateX(-50%);
+}
+.rv-landing-nav-link {
+  display: grid;
+  min-height: 92px;
+  place-content: center;
+  justify-items: center;
+  gap: 7px;
+  border-right: 1px solid var(--titanium-silver);
+  color: var(--deep-ocean);
+  font-size: 13px;
+  font-weight: 700;
+  transition: color .18s ease, background .18s ease;
+}
+.rv-landing-nav-link:last-child { border-right: 0; }
+.rv-landing-nav-icon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid #C9E8F8;
+  border-radius: 10px;
+  color: var(--sky-blue);
+  background: linear-gradient(145deg, #FFFFFF, var(--ice-blue));
+  box-shadow: 0 3px 0 #B8DFF3, 0 7px 12px rgba(11,59,96,.12), inset 0 1px rgba(255,255,255,.9);
+  transform: translateY(-2px);
+}
+.rv-landing-nav-title {
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+.rv-landing-nav-link:hover,
+.rv-landing-nav-link.active { color: var(--deep-ocean); background: var(--ice-blue); }
+.rv-landing-nav-link:hover .rv-landing-nav-icon,
+.rv-landing-nav-link.active .rv-landing-nav-icon { border-color: var(--sky-blue); background: linear-gradient(145deg, #FFFFFF, #DCEFFC); box-shadow: 0 3px 0 var(--sky-blue), 0 8px 14px rgba(11,59,96,.16), inset 0 1px rgba(255,255,255,.9); transform: translateY(-3px); }
+.rv-landing-nav-link.active { box-shadow: inset 0 -3px 0 var(--sky-blue); }
+.rv-landing-page .rv-discovery { z-index: 1; padding-top: 92px !important; }
+
+@media (max-width: 700px) {
+  .rv-home-hero.rv-hero-full { min-height: 560px; }
+  .rv-home-hero-inner { min-height: 490px; padding-bottom: 54px; }
+  .rv-landing-nav { bottom: -76px; width: calc(100% - 32px); grid-template-columns: repeat(2, 1fr); }
+  .rv-landing-nav-link { min-height: 68px; grid-template-columns: 30px 1fr; place-content: center start; justify-items: start; padding: 0 16px; }
+  .rv-landing-nav-link:nth-child(2) { border-right: 0; }
+  .rv-landing-nav-link:nth-child(-n + 2) { border-bottom: 1px solid var(--titanium-silver); }
+  .rv-landing-page .rv-discovery { padding-top: 112px !important; }
+}
+
+/* Global public-header contract: no page may restyle this frame or its CTA. */
+body .rv-header {
+  box-sizing: border-box;
+  width: 100%;
+  height: 72px !important;
+  min-height: 72px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-top: 3px solid var(--sky-blue) !important;
+  border-bottom: 1px solid rgba(255,255,255,.16) !important;
+  background: var(--ink-blue) !important;
+}
+body .rv-header .rv-nav {
+  box-sizing: border-box;
+  width: min(1280px, calc(100% - 48px)) !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  margin: 0 auto !important;
+}
+body .rv-header .rv-dealer,
+body .rv-landing-page .rv-header .rv-dealer {
+  min-height: 40px !important;
+  border: 1px solid var(--sky-blue) !important;
+  border-radius: 8px !important;
+  color: #FFFFFF !important;
+  background: var(--sky-blue) !important;
+  box-shadow: none !important;
+}
+body .rv-header .rv-dealer:hover,
+body .rv-landing-page .rv-header .rv-dealer:hover { background: var(--deep-ocean-hover) !important; }
+
+/* Landing journey flow: remove the legacy orange process markers. */
+body .rv-landing-page .rv-process-arrow,
+body .rv-landing-page .rv-process-arrow svg { color: var(--sky-blue) !important; stroke: currentColor; }
+
+/* Buy Cars hero: clean image-led background, with unchanged catalogue content. */
+.rv-market-hero {
+  height: 292px;
+  background: var(--deep-ocean) !important;
+}
+.rv-market-hero-image {
+  z-index: -2;
+  width: 60%;
+  height: 100%;
+  object-position: center 58%;
+  opacity: .96;
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+  filter: saturate(1.03) contrast(1.02);
+}
+.rv-market-hero::before {
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(11,59,96,.98) 0%, rgba(11,59,96,.92) 38%, rgba(11,59,96,.55) 58%, rgba(11,59,96,.08) 82%) !important;
+}
+.rv-market-hero-wedge {
+  z-index: -1;
+  left: 44%;
+  width: 2px;
+  background: var(--sky-blue) !important;
+  box-shadow: 0 0 0 10px rgba(45,156,219,.1);
+}
+@media (max-width: 760px) {
+  .rv-market-hero { height: 270px; }
+  .rv-market-hero-image { width: 84%; opacity: .58; clip-path: none; }
+  .rv-market-hero::before { background: linear-gradient(90deg, rgba(11,59,96,.94), rgba(11,59,96,.68) 64%, rgba(11,59,96,.3)) !important; }
+  .rv-market-hero-wedge { display: none; }
+}
+
+/* Seller hero artwork: dimensional blue panel with a focused image reveal. */
+.seller-page > section:first-of-type { background: var(--deep-ocean) !important; }
+.seller-page > section:first-of-type {
+  min-height: 460px !important;
+  padding-top: 70px !important;
+  padding-bottom: 36px !important;
+}
+.seller-page > section:first-of-type::before {
+  position: absolute;
+  z-index: -5;
+  inset: 0 46% 0 0;
+  background: linear-gradient(135deg, var(--deep-ocean), var(--deep-ocean-hover));
+  clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+  content: '';
+  pointer-events: none;
+}
+.seller-page > section:first-of-type::after { display: none; }
+.seller-page > section:first-of-type > div:last-child {
+  min-height: 354px !important;
+  align-items: center !important;
+}
+.seller-page > section:first-of-type > .seller-hero-photo {
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: auto !important;
+  width: 54% !important;
+  height: 100% !important;
+  opacity: 1 !important;
+  object-position: center !important;
+  filter: saturate(1.04) contrast(1.03);
+  clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+  transform: scale(1.025);
+}
+.seller-page > section:first-of-type > [class*='bg-gradient-to-r'] { background: transparent !important; }
+@media (max-width: 800px) {
+  .seller-page > section:first-of-type { min-height: 520px !important; padding-top: 76px !important; }
+  .seller-page > section:first-of-type::before { inset-right: 18%; clip-path: none; }
+  .seller-page > section:first-of-type::after { display: none; }
+  .seller-page > section:first-of-type > div:last-child { min-height: 408px !important; }
+  .seller-page > section:first-of-type > .seller-hero-photo { width: 84% !important; opacity: .5 !important; clip-path: none; }
+}
+
+
+@media (max-width: 600px) {
+  body .rv-header { height: 68px !important; min-height: 68px !important; }
+  body .rv-header .rv-nav { width: calc(100% - 32px) !important; height: 64px !important; min-height: 64px !important; }
+}
+
+/* Legacy-accent normalization: all interactive states use the current blue system. */
+body .btn-primary:hover:not(:disabled),
+body .rv-page .rv-primary:hover,
+body .rv-page .rv-dealer:hover,
+body .rv-page .rv-hero-search button:hover,
+body .rv-market-search-button:hover,
+body .rv-market-browse:hover,
+body .rv-home-search.rv-hero-search button:hover { color: #FFFFFF !important; background: var(--deep-ocean-hover) !important; border-color: var(--deep-ocean-hover) !important; }
+body .btn-outline:hover:not(:disabled),
+body .icon-btn:hover:not(:disabled),
+body .ui-pagination button:hover:not(:disabled),
+body .rv-selected-filters button:hover,
+body .rv-discovery a:hover,
+body .rv-landing-page .rv-discovery-row > div a:hover { color: var(--deep-ocean) !important; border-color: var(--sky-blue) !important; background: var(--ice-blue) !important; }
+body .rv-marketplace-card:hover,
+body .rv-marketplace .rv-vehicle-card:hover { border-color: var(--sky-blue) !important; }
+body .rv-gallery-thumbs button.is-active,
+body .rv-filter-group select:focus,
+body .field:focus { border-color: var(--sky-blue) !important; box-shadow: 0 0 0 3px rgba(45,156,219,.15) !important; }
+body .rv-favorite.is-favorite,
+body .rv-marketplace-card-footer > a:hover,
+body .rv-selected-filters .rv-filter-clear,
+body .sell-docs > svg { color: var(--sky-blue) !important; }
+body .rv-detail-panel form button,
+body .rv-detail-panel form button:hover:not(:disabled),
+body .rv-mobile-enquiry { color: #FFFFFF !important; border-color: var(--deep-ocean) !important; background: var(--deep-ocean) !important; }
+body .rv-detail-panel form button:hover:not(:disabled),
+body .rv-mobile-enquiry:hover { border-color: var(--deep-ocean-hover) !important; background: var(--deep-ocean-hover) !important; }
+body .rv-marketplace-card-footer > a {
+  display: inline-flex !important;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--deep-ocean) !important;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #FFFFFF !important;
+  background: var(--deep-ocean) !important;
+  font-weight: 750;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: inset 0 -2px var(--sky-blue);
+}
+body .rv-marketplace-card-footer > a:hover {
+  color: #FFFFFF !important;
+  border-color: var(--deep-ocean-hover) !important;
+  background: var(--deep-ocean-hover) !important;
+  box-shadow: inset 0 -2px #FFFFFF;
+}
+
+/* Vehicle card footer: keep the commercial detail and its CTA from sharing
+   insufficient horizontal space on compact marketplace cards. */
+body .rv-marketplace-card {
+  container-type: inline-size;
+}
+body .rv-marketplace-card-footer {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 10px 12px !important;
+}
+body .rv-marketplace-card-footer > b {
+  min-width: 0;
+  font-size: 17px !important;
+  line-height: 1.2;
+}
+
+@container (max-width: 390px) {
+  body .rv-marketplace-card-footer {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 9px !important;
+  }
+  body .rv-marketplace-card-footer > small,
+  body .rv-marketplace-card-footer > b,
+  body .rv-marketplace-card-footer > a {
+    grid-column: 1 !important;
+  }
+  body .rv-marketplace-card-footer > a {
+    width: 100%;
+    min-height: 40px;
+    justify-self: stretch;
+    font-size: 14px;
+  }
+}
+body .account-side nav a.is-active { color: var(--deep-ocean) !important; background: var(--ice-blue) !important; box-shadow: inset 3px 0 var(--sky-blue) !important; }
+body .lifecycle-stages .is-active span,
+body .form-progress .is-current span,
+body .ui-timeline .is-current span { color: #FFFFFF !important; border-color: var(--sky-blue) !important; background: var(--sky-blue) !important; }
+body .workspace-hero,
+body .app-shell .profile-hero { border-bottom-color: var(--sky-blue) !important; }
+body .workspace-hero::after,
+body .dashboard-metrics .metric-card::before { background: var(--sky-blue) !important; }
+body .rv-mobile-quick a:last-child { color: #FFFFFF !important; background: var(--sky-blue) !important; }
+
+/* Internal control centre retains its established navy-and-gold identity.
+   Public marketplace pages deliberately continue to use the blue system above. */
+.app-shell {
+  --control-navy: #0A263E;
+  --control-navy-deep: #061C30;
+  --control-navy-soft: #183C5A;
+  --control-gold: #D9A541;
+  --control-gold-light: #E7C779;
+  --control-line: #DCE5ED;
+  --control-canvas: #F4F7FA;
+}
+.app-shell > .app-sidebar {
+  background: radial-gradient(ellipse at 10% 0%, rgba(52,107,148,.24), transparent 38%), linear-gradient(160deg, #081A2C 0%, #0B2742 52%, #0D3553 100%) !important;
+  border-right-color: rgba(255,255,255,.08) !important;
+  box-shadow: 12px 0 34px rgba(5,25,45,.15) !important;
+}
+.app-shell .app-sidebar::before { background: linear-gradient(180deg, var(--control-gold-light) 0%, rgba(225,189,109,.16) 38%, transparent 76%) !important; }
+.app-shell .sidebar-brand-mark { border-color: rgba(235,199,115,.42) !important; background: linear-gradient(145deg, #FFFFFF 0%, #F5F1E7 100%) !important; }
+.app-shell .sidebar-brand-mark::after { background: linear-gradient(90deg, #E6C46E, #FFF0B5, #BD8A35) !important; }
+.app-shell .sidebar-brand-spark,
+.app-shell .sidebar-profile-icon,
+.app-shell .sidebar-collapse-toggle { color: var(--control-gold-light) !important; }
+.app-shell .sidebar-profile-icon { border-color: rgba(225,189,109,.24) !important; background: rgba(225,189,109,.1) !important; }
+.app-shell .sidebar-link::before { background: var(--control-gold-light) !important; }
+.app-shell .sidebar-link:hover .sidebar-link-icon { border-color: rgba(231,199,121,.25) !important; color: #F0D48F !important; background: rgba(231,199,121,.09) !important; }
+.app-shell .sidebar-link.nav-active,
+.app-shell .sidebar-link.nav-active:hover {
+  color: #FFFFFF !important;
+  border-color: rgba(231,199,121,.2) !important;
+  background: linear-gradient(100deg, rgba(222,185,103,.2), rgba(222,185,103,.075)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.045), 0 5px 15px rgba(0,0,0,.09) !important;
+}
+.app-shell .sidebar-link.nav-active .sidebar-link-icon { color: #FFFFFF !important; border-color: rgba(231,199,121,.38) !important; background: rgba(231,199,121,.13) !important; }
+.app-shell .sidebar-collapse-toggle { border-color: rgba(231,199,121,.46) !important; background: var(--control-navy-deep) !important; }
+.app-shell .sidebar-collapse-toggle:hover { color: var(--control-navy-deep) !important; background: var(--control-gold-light) !important; }
+.app-shell .topbar {
+  color: #FFFFFF !important;
+  border-top: 0 !important;
+  border-bottom: 4px solid var(--control-gold) !important;
+  background: var(--control-navy-deep) !important;
+  box-shadow: none !important;
+}
+.app-shell .topbar .text-champagne { color: var(--control-gold) !important; }
+.app-shell .topbar .notification-trigger,
+.app-shell .topbar .bg-slate-50,
+.app-shell .topbar .bg-white { color: #FFFFFF !important; border-color: rgba(198,219,236,.22) !important; background: rgba(255,255,255,.08) !important; }
+.app-shell .topbar .bg-champagne { color: #FFFFFF !important; background: var(--control-gold) !important; }
+.app-shell .topbar .notification-trigger:hover,
+.app-shell .topbar .notification-trigger.is-open { border-color: var(--control-gold-light) !important; background: rgba(217,165,65,.18) !important; }
+.app-shell .workspace { background: var(--control-canvas) !important; }
+.app-shell .workspace-hero,
+.app-shell .profile-hero,
+.app-shell .operations-dashboard > .workspace-hero {
+  border-bottom: 2px solid var(--control-gold) !important;
+  background: linear-gradient(118deg, #10243A 0%, #18324C 72%, #214460 100%) !important;
+  box-shadow: 0 12px 30px rgba(16,36,58,.11) !important;
+}
+.app-shell .workspace-hero::after,
+.app-shell .dashboard-metrics .metric-card::before { background: var(--control-gold) !important; }
+.app-shell .btn-primary { color: #10243A !important; border-color: var(--control-gold) !important; background: var(--control-gold) !important; }
+.app-shell .btn-primary:hover:not(:disabled) { color: #FFFFFF !important; border-color: #B88328 !important; background: #B88328 !important; }
+

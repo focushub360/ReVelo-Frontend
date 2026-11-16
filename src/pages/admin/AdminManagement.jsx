@@ -53,7 +53,7 @@ export function AdminManagement() {
         description="Provision secure dealership administrator accounts. Each admin is linked to one selected active dealership and receives access only to that tenant."
       >
         <button
-          className="rounded-xl bg-[#b6dd52] px-4 py-3 text-sm font-bold text-[#071d36] shadow-lg transition hover:bg-[#c8e878]"
+          className="btn-primary px-4 py-3 text-sm shadow-lg"
           onClick={() => setShow(!show)}
         >
           {show ? 'Close provisioning' : 'Provision Dealer Admin'}

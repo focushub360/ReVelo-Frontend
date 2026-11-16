@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, ArrowRight, CarFront, Search } from 'lucide-react';
+import { ArrowRight, CarFront, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api.js';
-import reveloLogo from '../assets/revelo-logo.png';
+import { PublicHeader } from './PublicExperience.jsx';
 
 const money = (value) => `₹${Number(value).toLocaleString('en-IN')}`;
 
@@ -31,17 +31,7 @@ export default function PublicVehicleCatalog() {
 
   return (
     <main className="min-h-screen bg-[#f7f7f2] text-[#10253b]">
-      <header className="bg-[#0a1d31] px-5 py-5 sm:px-10">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5 text-white">
-            <img src={reveloLogo} alt="ReVelo" className="h-10 w-10 object-contain" />
-            <span className="text-xl font-bold">ReVelo</span>
-          </Link>
-          <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-200 hover:text-white">
-            <ArrowLeft size={16} /> Home
-          </Link>
-        </div>
-      </header>
+      <PublicHeader />
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-10">
         <p className="text-xs font-bold uppercase tracking-[.2em] text-[#547437]">Available vehicles</p>

@@ -5,32 +5,34 @@ import PublicSellerLanding from '../components/PublicSellerLanding.jsx';
 import PublicDocumentVerification from '../components/PublicDocumentVerification.jsx';
 import PublicHome from '../components/PublicHome.jsx';
 import { Login } from '../pages/Login.jsx';
-import { AdminGate } from '../pages/admin/AdminGate.jsx';
 import PublicVehicleCatalog from '../pages/PublicVehicleCatalog.jsx';
 import { Shell } from './Shell.jsx';
 import { Cars, CarDetail, DealerApplication, Landing, PortalHome, SellJourneyPage } from '../pages/PublicExperience.jsx';
 import { AccountPortal } from '../pages/AccountPortal.jsx';
+import { ScrollToTop } from './ScrollToTop.jsx';
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/cars" element={<Cars />} />
-      <Route path="/cars/:listingId" element={<CarDetail />} />
-      <Route path="/home" element={<PublicHome />} />
-      <Route path="/buy-cars" element={<PublicVehicleCatalog />} />
-      <Route path="/sell-your-car" element={<PublicSellerLanding />} />
-      <Route path="/sell-your-car/start" element={<PublicSellerForm />} />
-      <Route path="/sell" element={<SellJourneyPage />} />
-      <Route path="/accept-invitation" element={<AcceptInvitation />} />
-      <Route path="/verify-documents" element={<PublicDocumentVerification />} />
-      <Route path="/become-a-dealer" element={<DealerApplication />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/dealer/login" element={<Login />} />
-      <Route path="/account/login" element={<Login />} />
-      <Route path="/account/:section?" element={<AccountPortal />} />
-      <Route path="/admins" element={<AdminGate />} />
-      <Route path="/*" element={<Shell />} />
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/cars" element={<Cars />} />
+        <Route path="/cars/:listingId" element={<CarDetail />} />
+        <Route path="/home" element={<PublicHome />} />
+        <Route path="/buy-cars" element={<PublicVehicleCatalog />} />
+        <Route path="/sell-your-car" element={<PublicSellerLanding />} />
+        <Route path="/sell-your-car/start" element={<PublicSellerForm />} />
+        <Route path="/sell" element={<SellJourneyPage />} />
+        <Route path="/accept-invitation" element={<AcceptInvitation />} />
+        <Route path="/verify-documents" element={<PublicDocumentVerification />} />
+        <Route path="/become-a-dealer" element={<DealerApplication />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dealer/login" element={<Login />} />
+        <Route path="/account/login" element={<Login />} />
+        <Route path="/account/:section?" element={<AccountPortal />} />
+        <Route path="/*" element={<Shell />} />
+      </Routes>
+    </>
   );
 }

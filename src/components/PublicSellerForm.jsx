@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, LockKeyhole, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
-import reveloLogo from '../assets/revelo-logo.png';
+import { PublicHeader } from '../pages/PublicExperience.jsx';
 
 const contactKeys = new Set(['name', 'phone', 'email', 'line1', 'locality', 'city', 'state', 'postalCode']);
 const vehicleKeys = new Set(['registration', 'make', 'model', 'year', 'fuelType', 'transmission', 'odometer', 'expectedPrice']);
@@ -35,16 +35,8 @@ export default function PublicSellerForm() {
   const finish = (event) => { event.preventDefault(); if (submissionStarted.current || submit.isPending || submission) return; if (!validateStep()) return; if (!consent) return showNotice('Please confirm your consent before submitting.'); submissionStarted.current = true; submit.mutate(); };
   if (submission) return <><ThankYou submission={submission}/><Snackbar notice={notice} onClose={() => setNotice(null)}/></>;
   return (
-    <main className="min-h-screen bg-[#f7f7f2]">
-      <header className="bg-[#0a1d31] px-5 py-5 sm:px-10">
-        <div className="mx-auto flex max-w-5xl items-center justify-between">
-          <Link to="/sell-your-car" className="flex items-center gap-3 text-white">
-            <img src={reveloLogo} alt="ReVelo" className="h-10 w-10 object-contain" />
-            <b className="text-xl">ReVelo</b>
-          </Link>
-          <span className="text-sm text-slate-300">Sell your car</span>
-        </div>
-      </header>
+    <main className="seller-form-page min-h-screen bg-[#f7f7f2]">
+      <PublicHeader />
       <section className="mx-auto max-w-5xl px-5 py-10 sm:px-8">
         <div className="mb-10 max-w-2xl">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#547437]">Seller enquiry</p>

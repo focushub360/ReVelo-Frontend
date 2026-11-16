@@ -14,9 +14,12 @@ import {
   Filter,
   Fuel,
   Gauge,
+  HandCoins,
   Heart,
+  House,
   MapPin,
   Menu,
+  Building2,
   Search,
   Settings2,
   SlidersHorizontal,
@@ -25,8 +28,9 @@ import {
 import { api } from '../lib/api.js';
 import logo from '../assets/revelo-logo.png';
 import heroCar from '../assets/revelo-hero-car-v2.png';
+import blueHero from '../assets/revelo-blue-hero.png';
+import landingHeroVideo from '../assets/revelo-landing-hero.mp4';
 import sellHandover from '../assets/revelo-sell-handover-v1.png';
-import carLineup from '../assets/revelo-car-lineup-3d.png';
 import { CarTransition } from '../components/CarTransition.jsx';
 import { SellJourney } from '../components/SellJourney.jsx';
 import '../styles/publicExperience.css';
@@ -55,7 +59,9 @@ function Hero({ start }) {
   };
   return (
     <section className="rv-hero rv-hero-full rv-home-hero">
-      <img className="rv-home-3d-banner" src={carLineup} alt="" aria-hidden="true" />
+      <video className="rv-home-hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true">
+        <source src={landingHeroVideo} type="video/mp4" />
+      </video>
       <div className="rv-container rv-home-hero-inner">
         <div className="rv-home-hero-copy">
           <p className="rv-home-eyebrow"><span /> THE REVELO EXPERIENCE <i /> BUY · SELL · DRIVE</p>
@@ -114,6 +120,19 @@ function Hero({ start }) {
           <button type="submit"><Search size={16} /> Find a car</button>
         </form>
       </div>
+      <nav className="rv-landing-nav" aria-label="Explore ReVelo">
+        {[
+          ['/', 'Home', House],
+          ['/cars', 'Buy cars', CarFront],
+          ['/sell-your-car', 'Sell your car', HandCoins],
+          ['/become-a-dealer', 'Become a dealer', Building2],
+        ].map(([to, label, Icon]) => (
+          <NavLink key={to} to={to} end={to === '/'} className="rv-landing-nav-link" title={label}>
+            <span className="rv-landing-nav-icon" aria-hidden="true"><Icon size={20} /></span>
+            <strong className="rv-landing-nav-title">{label}</strong>
+          </NavLink>
+        ))}
+      </nav>
     </section>
   );
 }
@@ -247,7 +266,7 @@ export function Cars() {
     <PublicLayout className="rv-marketplace-page">
       <main className="rv-marketplace">
         <section className="rv-market-hero">
-          <img className="rv-market-hero-image" src={heroCar} alt="" />
+          <img className="rv-market-hero-image" src={blueHero} alt="" />
           <div className="rv-market-hero-copy">
             <p className="rv-market-eyebrow">Explore our inventory <span /></p>
             <h1>Find the Perfect<br />Pre-Owned <em>Car</em></h1>

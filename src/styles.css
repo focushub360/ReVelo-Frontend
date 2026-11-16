@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --ink: #172333;
-  --muted: #64748b;
-  --canvas: #f4f6f8;
-  --line: #e2e8f0;
-  --blue: #2878c8;
-  --navy: #101c2c;
-  --navy-soft: #18283c;
-  --champagne: #c69a52;
+  --ink: #20242B;
+  --muted: #6B7280;
+  --canvas: #F5F5F3;
+  --line: #D6D9DE;
+  --blue: #414852;
+  --navy: #20242B;
+  --navy-soft: #414852;
+  --champagne: #F07836;
 }
 
 /* Shared ReVelo operations palette across public and authenticated surfaces. */
-.rv-page { --navy:#071d36; --blue:#2478d4; --ink:#10233b; --muted:#68788a; --line:#dce5ec; --wash:#edf2f6; --champagne:#d6aa29; --lime:#b6dd52; }
+.rv-page { --navy:#20242B; --blue:#414852; --ink:#20242B; --muted:#6B7280; --line:#D6D9DE; --wash:#F5F5F3; --champagne:#F07836; --lime:#F07836; }
 .rv-page .rv-dealer,.rv-page .rv-primary { background:#071d36; box-shadow:0 7px 16px rgba(7,29,54,.2); }
 .rv-page .rv-dealer:hover,.rv-page .rv-primary:hover { background:#0a2948; }
 .rv-page .rv-hero h1 em { color:#b7dbff; }

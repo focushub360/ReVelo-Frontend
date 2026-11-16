@@ -4,6 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './styles.css';
 import App from './App.jsx';
+import './styles/titanium.css';
+
+document.documentElement.dataset.theme = 'light';
+document.documentElement.style.colorScheme = 'light';
 
 // Public listing images originate from dealer-managed storage. Keep an unavailable
 // asset from leaving a broken-image icon in otherwise complete vehicle cards.
